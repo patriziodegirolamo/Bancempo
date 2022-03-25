@@ -3,8 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Lab2/app/src/main/res/drawable/ic_baseline_alternate_email_24.xml" value="0.2265" />
+        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Lab2/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.2265" />
+        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Lab2/app/src/main/res/drawable/ic_icons8_nome_64.xml" value="0.2265" />
+        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Lab2/app/src/main/res/drawable/ic_icons8_skills_24.xml" value="0.2265" />
+        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Lab2/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Lab2/app/src/main/res/layout/activity_show_profile.xml" value="0.22826086956521738" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19610507246376813" />
-        <entry key="app/src/main/res/layout/activity_show_profile.xml" value="0.17942504882812502" />
+        <entry key="app/src/main/res/layout/activity_show_profile.xml" value="0.1" />
       </map>
     </option>
   </component>

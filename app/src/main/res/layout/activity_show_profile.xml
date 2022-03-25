@@ -50,10 +50,11 @@
                     android:padding="1dp">
 
                     <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:padding="1dp"
-                        android:src="@drawable/ic_baseline_location_on_24"></ImageView>
+                        android:src="@drawable/ic_baseline_location_on_24"
+                        app:srcCompat="@drawable/ic_icons8_nome_64"></ImageView>
 
                     <TextView
                         android:id="@+id/textViewFullName"
@@ -155,7 +156,7 @@
                     android:padding="1dp">
 
                     <ImageView
-                        android:layout_width="35dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="35dp"
                         android:padding="1dp"
                         android:src="@drawable/ic_baseline_location_on_24"></ImageView>
@@ -207,10 +208,11 @@
                     android:padding="1dp">
 
                     <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:padding="1dp"
-                        android:src="@drawable/ic_baseline_location_on_24"></ImageView>
+                        android:src="@drawable/ic_baseline_location_on_24"
+                        app:srcCompat="@drawable/ic_baseline_alternate_email_24"></ImageView>
 
                     <TextView
                         android:id="@+id/textViewNickname"
@@ -259,10 +261,11 @@
                     android:padding="1dp">
 
                     <ImageView
-                        android:layout_width="35dp"
-                        android:layout_height="35dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:padding="1dp"
-                        android:src="@drawable/ic_baseline_location_on_24"></ImageView>
+                        android:src="@drawable/ic_baseline_location_on_24"
+                        app:srcCompat="@drawable/ic_baseline_email_24"></ImageView>
 
                     <TextView
                         android:id="@+id/textViewEmail"
