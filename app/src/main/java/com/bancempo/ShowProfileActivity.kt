@@ -1,26 +1,32 @@
 package com.bancempo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.compose.material.Text
 
 class ShowProfileActivity : AppCompatActivity() {
+
+    val photo = findViewById<ImageView>(R.id.profile_pic)
+    val fullName = findViewById<TextView>(R.id.full_name)
+    val nickname = findViewById<TextView>(R.id.textViewNickname)
+    val email = findViewById<TextView>(R.id.textViewEmail)
+    val location = findViewById<TextView>(R.id.textViewLocation)
+    val skills = findViewById<TextView>(R.id.textViewSkills)
+    //val description = findViewById<TextView>(R.id.)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
-        val photo = R.string.app_name
-        val fullName = R.string.full_name
-        val nickname = R.string.nickname
-        val email = R.string.email
-        val location = R.string.location
-        val skills = R.string.skills
-        val description = R.string.description
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -32,14 +38,18 @@ class ShowProfileActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.edit_profile -> {
-                val text = "Hello toast!"
-                val duration = Toast.LENGTH_SHORT
-
-                val toast = Toast.makeText(applicationContext, text, duration)
-                toast.show()
+                editProfile()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun editProfile() {
+        val i = Intent(this, EditProfileActivity::class.java).apply {
+            putExtra("com.bancempo.FULLNAME", fullName.text.toString())
+        }
+        startActivityForResult(i, 0)
+        startActivity(i)
     }
 }

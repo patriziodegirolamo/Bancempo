@@ -29,7 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_pic"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                         android:src="@drawable/ic_icons8_nome_64"
                         app:srcCompat="@drawable/ic_icons8_nome_64"></ImageView>
 
-                    <TextView
+                    <EditText
                         android:id="@+id/textViewFullName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
