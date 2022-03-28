@@ -41,7 +41,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
     private fun editProfile() {
         val photo = findViewById<ImageView>(R.id.profile_pic)
-        val fullName = findViewById<TextView>(R.id.full_name)
+        val fullName = findViewById<TextView>(R.id.textViewFullName)
         val nickname = findViewById<TextView>(R.id.textViewNickname)
         val email = findViewById<TextView>(R.id.textViewEmail)
         val location = findViewById<TextView>(R.id.textViewLocation)
@@ -49,9 +49,9 @@ class ShowProfileActivity : AppCompatActivity() {
         val description = findViewById<TextView>(R.id.textViewDescription)
 
         val i = Intent(this, EditProfileActivity::class.java).apply {
-            putExtra("com.bancempo.FULLNAME", findViewById<TextView>(R.id.full_name).text.toString())
+            putExtra("com.bancempo.FULLNAME", fullName.text.toString())
         }
-        //startActivityForResult(i, 0)
+        startActivityForResult(i, 0)
         //startActivity(i)
     }
 }

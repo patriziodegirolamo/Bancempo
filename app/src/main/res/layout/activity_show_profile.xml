@@ -9,14 +9,16 @@
 
     <ImageView
         android:id="@+id/profile_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="135dp"
         android:layout_marginTop="48dp"
+        android:contentDescription="@string/profile_pic"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/profile_pic_default" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/full_name"

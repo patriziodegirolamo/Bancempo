@@ -4,19 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".EditProfileActivity">
 
 
     <ImageView
         android:id="@+id/profile_pic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="220dp"
+        android:layout_height="135dp"
         android:layout_marginTop="48dp"
+        android:contentDescription="@string/profile_pic"
+        android:scaleType="centerInside"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:srcCompat="@drawable/profile_pic_default" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/full_name"
@@ -57,10 +60,11 @@
                         app:srcCompat="@drawable/ic_icons8_nome_64"></ImageView>
 
                     <EditText
-                        android:id="@+id/textViewFullName"
+                        android:id="@+id/editTextFullName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
+                        android:inputType="textPersonName"
                         android:text="@string/full_name"
                         android:textColor="#F8554A4A"
                         android:textSize="16sp"
@@ -78,10 +82,10 @@
         app:cardCornerRadius="15dp"
         app:cardElevation="10dp"
         app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toTopOf="@+id/cardViewDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewAddress"
-        app:layout_constraintBottom_toTopOf="@+id/cardViewDescription"
         tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout
@@ -110,10 +114,11 @@
                         app:srcCompat="@drawable/ic_icons8_skills_24"></ImageView>
 
                     <EditText
-                        android:id="@+id/textViewSkills"
+                        android:id="@+id/editTextSkills"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
+                        android:inputType="textAutoCorrect"
                         android:text="@string/skills"
                         android:textColor="#F8554A4A"
                         android:textSize="16sp"
@@ -162,10 +167,11 @@
                         android:src="@drawable/ic_baseline_location_on_24"></ImageView>
 
                     <EditText
-                        android:id="@+id/textViewLocation"
+                        android:id="@+id/editTextLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
+                        android:inputType="textPostalAddress"
                         android:text="@string/location"
                         android:textColor="#F8554A4A"
                         android:textSize="16sp"
@@ -214,7 +220,7 @@
                         android:src="@drawable/ic_baseline_description_24"></ImageView>
 
                     <EditText
-                        android:id="@+id/textViewDescription"
+                        android:id="@+id/editTextDescription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -266,10 +272,11 @@
                         android:src="@drawable/ic_baseline_alternate_email_24"></ImageView>
 
                     <EditText
-                        android:id="@+id/textViewNickname"
+                        android:id="@+id/editTextNickname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
+                        android:inputType="textNoSuggestions"
                         android:text="@string/nickname"
                         android:textColor="#F8554A4A"
                         android:textSize="16sp"
@@ -319,10 +326,11 @@
                         app:srcCompat="@drawable/ic_baseline_email_24"></ImageView>
 
                     <EditText
-                        android:id="@+id/textViewEmail"
+                        android:id="@+id/editTextEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
+                        android:inputType="textWebEmailAddress"
                         android:text="@string/email"
                         android:textColor="#F8554A4A"
                         android:textSize="16sp"
@@ -333,5 +341,15 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="83dp"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
+        app:layout_constraintEnd_toEndOf="@+id/profile_pic"
+        app:layout_constraintStart_toStartOf="@+id/profile_pic"
+        app:layout_constraintTop_toTopOf="@+id/profile_pic"
+        app:srcCompat="@drawable/ic_baseline_camera_alt_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
