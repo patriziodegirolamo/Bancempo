@@ -78,12 +78,11 @@
         app:cardCornerRadius="15dp"
         app:cardElevation="10dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardViewAddress"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintBottom_toTopOf="@+id/cardViewDescription"
+        tools:layout_editor_absoluteX="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -171,6 +170,59 @@
                         android:textColor="#F8554A4A"
                         android:textSize="16sp"
                         android:textStyle="bold|normal" />
+
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewDescription"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="10dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardViewSkills">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="1dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:padding="1dp"
+                        android:src="@drawable/ic_baseline_description_24"></ImageView>
+
+                    <TextView
+                        android:id="@+id/textViewDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/description"
+                        android:textColor="#F8554A4A"
+                        android:textSize="16sp"
+                        android:textStyle="bold|normal"
+                        android:inputType="textNoSuggestions|textMultiLine"/>
 
                 </LinearLayout>
             </RelativeLayout>

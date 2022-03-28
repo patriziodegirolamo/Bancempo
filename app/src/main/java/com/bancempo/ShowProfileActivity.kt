@@ -15,13 +15,7 @@ import androidx.compose.material.Text
 
 class ShowProfileActivity : AppCompatActivity() {
 
-    val photo = findViewById<ImageView>(R.id.profile_pic)
-    val fullName = findViewById<TextView>(R.id.full_name)
-    val nickname = findViewById<TextView>(R.id.textViewNickname)
-    val email = findViewById<TextView>(R.id.textViewEmail)
-    val location = findViewById<TextView>(R.id.textViewLocation)
-    val skills = findViewById<TextView>(R.id.textViewSkills)
-    //val description = findViewById<TextView>(R.id.)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +40,18 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     private fun editProfile() {
+        val photo = findViewById<ImageView>(R.id.profile_pic)
+        val fullName = findViewById<TextView>(R.id.full_name)
+        val nickname = findViewById<TextView>(R.id.textViewNickname)
+        val email = findViewById<TextView>(R.id.textViewEmail)
+        val location = findViewById<TextView>(R.id.textViewLocation)
+        val skills = findViewById<TextView>(R.id.textViewSkills)
+        val description = findViewById<TextView>(R.id.textViewDescription)
+
         val i = Intent(this, EditProfileActivity::class.java).apply {
-            putExtra("com.bancempo.FULLNAME", fullName.text.toString())
+            putExtra("com.bancempo.FULLNAME", findViewById<TextView>(R.id.full_name).text.toString())
         }
-        startActivityForResult(i, 0)
-        startActivity(i)
+        //startActivityForResult(i, 0)
+        //startActivity(i)
     }
 }
