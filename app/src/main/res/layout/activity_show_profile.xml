@@ -45,11 +45,8 @@
                 app:cardCornerRadius="15dp"
                 app:cardElevation="10dp"
                 app:cardUseCompatPadding="true"
-                app:layout_constraintBottom_toTopOf="@+id/cardViewNickname"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_pic"
-                app:layout_constraintVertical_bias="1.0">
+                app:layout_constraintStart_toStartOf="parent">
 
 
                 <LinearLayout
@@ -103,8 +100,7 @@
                 app:cardElevation="10dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_pic">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -154,9 +150,7 @@
                 app:cardElevation="10dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardViewNickname">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -199,19 +193,16 @@
 
             </androidx.cardview.widget.CardView>
 
-
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewSkills"
+                android:id="@+id/cardViewDescription"
                 android:layout_width="409dp"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="10dp"
                 app:cardUseCompatPadding="true"
-                app:layout_constraintBottom_toTopOf="@+id/cardViewDescription"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardViewAddress"
-                tools:layout_editor_absoluteX="0dp">
+                tools:layout_marginTop="12dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -233,17 +224,17 @@
 
                             <ImageView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="35dp"
                                 android:padding="1dp"
-                                android:src="@drawable/ic_icons8_skills_24"
-                                app:srcCompat="@drawable/ic_icons8_skills_24"></ImageView>
+                                android:src="@drawable/ic_baseline_description_24"></ImageView>
 
                             <TextView
-                                android:id="@+id/textViewSkills"
+                                android:id="@+id/textViewDescription"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
-                                android:text="@string/skills"
+                                android:inputType="textNoSuggestions|textMultiLine"
+                                android:text="@string/description"
                                 android:textColor="#F8554A4A"
                                 android:textSize="16sp"
                                 android:textStyle="bold|normal" />
@@ -262,9 +253,7 @@
                 app:cardElevation="10dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardViewEmail">
+                app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -306,17 +295,17 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewDescription"
+                android:id="@+id/cardViewSkills"
                 android:layout_width="409dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="10dp"
                 app:cardUseCompatPadding="true"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardViewSkills">
+                tools:layout_editor_absoluteX="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -338,17 +327,17 @@
 
                             <ImageView
                                 android:layout_width="wrap_content"
-                                android:layout_height="35dp"
+                                android:layout_height="wrap_content"
                                 android:padding="1dp"
-                                android:src="@drawable/ic_baseline_description_24"></ImageView>
+                                android:src="@drawable/ic_icons8_skills_24"
+                                app:srcCompat="@drawable/ic_icons8_skills_24"></ImageView>
 
                             <TextView
-                                android:id="@+id/textViewDescription"
+                                android:id="@+id/textViewSkills"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="5dp"
-                                android:inputType="textNoSuggestions|textMultiLine"
-                                android:text="@string/description"
+                                android:text="@string/skills"
                                 android:textColor="#F8554A4A"
                                 android:textSize="16sp"
                                 android:textStyle="bold|normal" />
