@@ -62,10 +62,6 @@
         </RelativeLayout>
 
 
-
-
-
-
         <androidx.cardview.widget.CardView
             android:id="@+id/full_name"
             android:layout_width="409dp"
@@ -151,7 +147,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="1dp"
-                            android:src="@drawable/ic_baseline_alternate_email_24"></ImageView>
+                            android:src="@drawable/ic_icons8_posta_elettronica_30"></ImageView>
 
                         <EditText
                             android:id="@+id/editTextNickname"
@@ -202,8 +198,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="1dp"
-                            android:src="@drawable/ic_baseline_email_24"
-                            app:srcCompat="@drawable/ic_baseline_email_24"></ImageView>
+                            android:src="@drawable/ic_icons8_email_64"
+                            app:srcCompat="@drawable/ic_icons8_email_64"></ImageView>
 
                         <EditText
                             android:id="@+id/editTextEmail"
@@ -257,7 +253,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="35dp"
                             android:padding="1dp"
-                            android:src="@drawable/ic_baseline_location_on_24"></ImageView>
+                            android:src="@drawable/ic_icons8_segnaposto_50"></ImageView>
 
                         <EditText
                             android:id="@+id/editTextLocation"
@@ -311,7 +307,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="35dp"
                             android:padding="1dp"
-                            android:src="@drawable/ic_baseline_description_24"></ImageView>
+                            android:src="@drawable/ic_icons8_documento_50"></ImageView>
 
                         <EditText
                             android:id="@+id/editTextDescription"
