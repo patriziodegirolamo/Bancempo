@@ -1,19 +1,17 @@
 package com.bancempo
 
-import android.R.attr.button
+import android.R.attr
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.ContextMenu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat.startActivityForResult
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -124,8 +122,12 @@ class EditProfileActivity : AppCompatActivity() {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
             val imageBitmap = data.extras?.get("data") as Bitmap
             findViewById<ImageView>(R.id.profile_pic).setImageBitmap(imageBitmap)
-        } else if (requestCode == SELECT_PICTURE){
-            //val imageBitmap = data.extras?.get("data") as Bitmap
+        } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null){
+            // Get the url of the image from data
+            val selectedImageUri: Uri? = data.data
+            // update the preview image in the layout
+            findViewById<ImageView>(R.id.profile_pic).setImageURI(selectedImageUri)
+        //val imageBitmap = data.extras?.get("data") as Bitmap
             //findViewById<ImageView>(R.id.profile_pic).setImageBitmap(imageBitmap)
         } else {
             super.onActivityResult(requestCode, resultCode, data)
