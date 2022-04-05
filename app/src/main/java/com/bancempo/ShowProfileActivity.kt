@@ -1,27 +1,75 @@
 package com.bancempo
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.compose.setContent
-import androidx.appcompat.view.menu.MenuBuilder
-import androidx.compose.material.Text
+import androidx.appcompat.app.AppCompatActivity
 
 class ShowProfileActivity : AppCompatActivity() {
-
-
+    lateinit var fullName : TextView;
+    lateinit var photo : ImageView
+    lateinit var nickname : TextView
+    lateinit var email : TextView
+    lateinit var location : TextView
+    lateinit var skills : TextView
+    lateinit var description : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
 
+        fullName = findViewById<TextView>(R.id.textViewFullName)
+        photo = findViewById<ImageView>(R.id.profile_pic)
+        nickname = findViewById<TextView>(R.id.textViewNickname)
+        email = findViewById<TextView>(R.id.textViewEmail)
+        location = findViewById<TextView>(R.id.textViewLocation)
+        skills = findViewById<TextView>(R.id.textViewSkills)
+        description = findViewById<TextView>(R.id.textViewDescription)
+
+        if (savedInstanceState != null) {
+            //PHOTO: fullName.text = savedInstanceState.getString("full_name");
+            fullName.text = savedInstanceState.getString("full_name");
+            nickname.text = savedInstanceState.getString("nickname");
+            email.text = savedInstanceState.getString("email");
+            location.text = savedInstanceState.getString("location");
+            skills.text = savedInstanceState.getString("skills")
+            description.text = savedInstanceState.getString("description")
+            println("restoring from instance state")
+        }
+
+        else{
+            val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
+
+            fullName.text = sharedPref.getString(getString(R.string.full_name), "");
+            nickname.text = sharedPref.getString(getString(R.string.nickname), "");
+            email.text = sharedPref.getString(getString(R.string.email), "");
+            location.text = sharedPref.getString(getString(R.string.location), "");
+            skills.text = sharedPref.getString(getString(R.string.skills), "");
+            description.text = sharedPref.getString(getString(R.string.description), "");
+
+            println(getString(R.string.email))
+            println(sharedPref.getString(getString(R.string.email), ""))
+            println("loading from sharedPrefs")
+        }
+
+
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("full_name", fullName.text.toString())
+        outState.putString("nickname", nickname.text.toString())
+        outState.putString("email", email.text.toString())
+        outState.putString("location", location.text.toString())
+        outState.putString("skills", skills.text.toString())
+        outState.putString("description", description.text.toString())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -41,14 +89,6 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     private fun editProfile() {
-        val photo = findViewById<ImageView>(R.id.profile_pic)
-        val fullName = findViewById<TextView>(R.id.textViewFullName)
-        val nickname = findViewById<TextView>(R.id.textViewNickname)
-        val email = findViewById<TextView>(R.id.textViewEmail)
-        val location = findViewById<TextView>(R.id.textViewLocation)
-        val skills = findViewById<TextView>(R.id.textViewSkills)
-        val description = findViewById<TextView>(R.id.textViewDescription)
-
         val i = Intent(this, EditProfileActivity::class.java)
         //i.putExtra("com.bancempo.PHOTO", photo.tag.toString())
         i.putExtra("com.bancempo.FULL_NAME", fullName.text.toString())
@@ -59,9 +99,7 @@ class ShowProfileActivity : AppCompatActivity() {
         i.putExtra("com.bancempo.DESCRIPTION", description.text.toString())
 
         startActivityForResult(i, 0)
-        //startActivity(i)
 
-        //newString= extras.getString(“STRING_I_NEED”);
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -80,8 +118,23 @@ class ShowProfileActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.textViewSkills).setText(data.getStringExtra("com.bancempo.SKILLS"))
             //val description =
             findViewById<TextView>(R.id.textViewDescription).setText(data.getStringExtra("com.bancempo.DESCRIPTION"))
+
+
+            //save all the textviews in the shared_preferences file
+            val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
+            with (sharedPref.edit()) {
+                putString(getString(R.string.full_name), findViewById<TextView>(R.id.textViewFullName).text.toString());
+                putString(getString(R.string.nickname), findViewById<TextView>(R.id.textViewNickname).text.toString());
+                putString(getString(R.string.email), findViewById<TextView>(R.id.textViewEmail).text.toString());
+                putString(getString(R.string.location), findViewById<TextView>(R.id.textViewLocation).text.toString());
+                putString(getString(R.string.skills), findViewById<TextView>(R.id.textViewSkills).text.toString());
+                putString(getString(R.string.description), findViewById<TextView>(R.id.textViewDescription).text.toString());
+                apply()
+            }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
+
+
 }
