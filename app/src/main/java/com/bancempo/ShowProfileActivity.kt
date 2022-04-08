@@ -4,12 +4,15 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import java.io.ByteArrayOutputStream
 
 class ShowProfileActivity : AppCompatActivity() {
     lateinit var fullName : TextView;
@@ -90,7 +93,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
     private fun editProfile() {
         val i = Intent(this, EditProfileActivity::class.java)
-        //i.putExtra("com.bancempo.PHOTO", photo.tag.toString())
+
         i.putExtra("com.bancempo.FULL_NAME", fullName.text.toString())
         i.putExtra("com.bancempo.NICKNAME", nickname.text.toString())
         i.putExtra("com.bancempo.EMAIL", email.text.toString())
@@ -105,7 +108,10 @@ class ShowProfileActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
-            //val photo = findViewById<ImageView>(R.id.profile_pic)
+            val byte_array = data.getByteArrayExtra("com.bancempo.PHOTO");
+            if(byte_array != null){
+                val photo = findViewById<ImageView>(R.id.profile_pic).setImageBitmap(BitmapFactory.decodeByteArray(byte_array, 0, byte_array.size))
+            }
             //val fullName =
             findViewById<TextView>(R.id.textViewFullName).setText(data.getStringExtra("com.bancempo.FULL_NAME"))
             //val nickname =
@@ -118,7 +124,6 @@ class ShowProfileActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.textViewSkills).setText(data.getStringExtra("com.bancempo.SKILLS"))
             //val description =
             findViewById<TextView>(R.id.textViewDescription).setText(data.getStringExtra("com.bancempo.DESCRIPTION"))
-
 
             //save all the textviews in the shared_preferences file
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return

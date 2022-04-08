@@ -1,36 +1,38 @@
 package com.bancempo
 
-import android.R.attr
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import java.io.File
-import java.net.URI
+import java.io.ByteArrayOutputStream
 
 
 class EditProfileActivity : AppCompatActivity() {
 
     val REQUEST_IMAGE_CAPTURE = 1
     val SELECT_PICTURE = 200
+    var bitmap_photo :Bitmap? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
-        //NON FUNZIONA
-        //val uri:Uri = Uri.parse(intent.getStringExtra("com.bancempo.PHOTO"));
-        //val photo = findViewById<ImageView>(R.id.profile_pic).setImageURI(uri);
+        val bytearr = intent.getByteArrayExtra("com.bancempo.PHOTO");
+        if( bytearr != null){
+            val bmp = BitmapFactory.decodeByteArray(bytearr, 0, bytearr.size);
+            val image = findViewById<ImageView>(R.id.profile_pic)
+            image.setImageBitmap(Bitmap.createScaledBitmap(bmp, image.width, image.height, false))
+        }
 
         val fullName =
             findViewById<TextView>(R.id.editTextFullName).setText(intent.getStringExtra("com.bancempo.FULL_NAME"))
@@ -75,12 +77,21 @@ class EditProfileActivity : AppCompatActivity() {
         popup.show()
     }
 
+    @SuppressLint("WrongThread")
     override fun onBackPressed() {
         val i = Intent(this, ShowProfileActivity::class.java)
-        //val uri:Uri = Uri.parse(findViewById<ImageView>(R.id.profile_pic).tag.toString())
-        //println(uri)
 
-        //i.putExtra("com.bancempo.PHOTO", uri.toString())
+        if (bitmap_photo != null){
+            println(bitmap_photo);
+            val stream = ByteArrayOutputStream()
+            bitmap_photo?.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            val byteArray = stream.toByteArray();
+            i.putExtra("com.bancempo.PHOTO", byteArray);
+        }
+        else{
+            println("NO bitmap");
+        }
+
         i.putExtra("com.bancempo.FULL_NAME", findViewById<TextView>(R.id.editTextFullName).text.toString())
         i.putExtra("com.bancempo.NICKNAME", findViewById<TextView>(R.id.editTextNickname).text.toString())
         i.putExtra("com.bancempo.EMAIL", findViewById<TextView>(R.id.editTextEmail).text.toString())
@@ -106,11 +117,8 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
-            val imageBitmap = data.extras?.get("data") as Bitmap
-            findViewById<ImageView>(R.id.profile_pic).setImageBitmap(imageBitmap)
-
-
-            //TODO: salva la bitmap su disco
+            bitmap_photo = data.extras?.get("data") as Bitmap;
+            findViewById<ImageView>(R.id.profile_pic).setImageBitmap(bitmap_photo)
 
 
         } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null){
