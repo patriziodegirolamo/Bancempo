@@ -3,6 +3,7 @@ package com.bancempo
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,7 +16,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import java.io.ByteArrayOutputStream
+import java.io.*
 
 
 class EditProfileActivity : AppCompatActivity() {
@@ -29,13 +30,7 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
-        val byte_array = intent.getByteArrayExtra("com.bancempo.PHOTO");
-
-        if(byte_array != null){
-            //val photo = findViewById<ImageView>(R.id.profile_pic).setImageBitmap(decodeBase64(intent.getStringExtra("com.bancempo.PHOTO")))
-            val photo = findViewById<ImageView>(R.id.profile_pic).setImageBitmap(BitmapFactory.decodeByteArray(byte_array, 0, byte_array.size))
-
-        }
+        val photo = findViewById<ImageView>(R.id.profile_pic).setImageBitmap(decodeBase64(intent.getStringExtra("com.bancempo.PHOTO")))
 
         val fullName =
             findViewById<TextView>(R.id.editTextFullName).setText(intent.getStringExtra("com.bancempo.FULL_NAME"))
@@ -86,21 +81,20 @@ class EditProfileActivity : AppCompatActivity() {
 
         //ENCODE bitmap
         if (bitmap_photo != null){
-            println(bitmap_photo);
-            val stream = ByteArrayOutputStream()
-            bitmap_photo?.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val byteArray = stream.toByteArray();
-            i.putExtra("com.bancempo.PHOTO", byteArray);
+            val path = saveToInternalStorage(bitmap_photo!!) + "profile.png";
+
+            //println(path)
+            i.putExtra("com.bancempo.PHOTO", encodeTobase64(bitmap_photo!!));
             i.putExtra("com.bancempo.PHOTO_PROFILE", "bitmap");
         }
         else if (uri_photo != null){
             i.putExtra("com.bancempo.PHOTO", uri_photo.toString());
             i.putExtra("com.bancempo.PHOTO_PROFILE", "uri");
-            println("URI");
+            //println("URI");
         }
         else{
             i.putExtra("com.bancempo.PHOTO_PROFILE", "no");
-            println("nothing");
+            //println("nothing");
         }
 
         i.putExtra("com.bancempo.FULL_NAME", findViewById<TextView>(R.id.editTextFullName).text.toString())
@@ -111,7 +105,7 @@ class EditProfileActivity : AppCompatActivity() {
         i.putExtra("com.bancempo.DESCRIPTION", findViewById<TextView>(R.id.editTextDescription).text.toString())
 
 
-        println("pressing back button")
+        //println("pressing back button")
         setResult(Activity.RESULT_OK, i)
         super.onBackPressed()
     }
@@ -136,6 +130,7 @@ class EditProfileActivity : AppCompatActivity() {
             uri_photo = data.data
             // update the preview image in the layout
             findViewById<ImageView>(R.id.profile_pic).setImageURI(uri_photo)
+            println("uri_photo $uri_photo")
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -147,7 +142,7 @@ class EditProfileActivity : AppCompatActivity() {
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val b = baos.toByteArray()
         val imageEncoded: String = Base64.encodeToString(b, Base64.DEFAULT)
-        Log.d("Image Log:", imageEncoded)
+        //Log.d("Image Log:", imageEncoded)
         return imageEncoded
     }
 
@@ -158,5 +153,40 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
 
+    private fun saveToInternalStorage(bitmapImage: Bitmap): String? {
+        val cw = ContextWrapper(applicationContext)
+        // path to /data/data/yourapp/app_data/imageDir
+        val directory: File = cw.getDir("imageDir", MODE_PRIVATE)
+        // Create imageDir
+        val mypath = File(directory, "profile.png")
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(mypath)
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close()
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        return directory.getAbsolutePath()
+    }
+
+    private fun loadImageFromStorage(path: String) {
+        try {
+            val f = File(path, "profile.png")
+            val b = BitmapFactory.decodeStream(FileInputStream(f))
+            val img = findViewById<View>(R.id.profile_pic) as ImageView
+            img.setImageBitmap(b)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+    }
 }
 
