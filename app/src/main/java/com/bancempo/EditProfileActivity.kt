@@ -103,9 +103,9 @@ class EditProfileActivity : AppCompatActivity() {
         i.putExtra("com.bancempo.LOCATION", findViewById<TextView>(R.id.editTextLocation).text.toString())
         i.putExtra("com.bancempo.SKILLS", findViewById<TextView>(R.id.editTextSkills).text.toString())
         i.putExtra("com.bancempo.DESCRIPTION", findViewById<TextView>(R.id.editTextDescription).text.toString())
+        i
 
-
-        //println("pressing back button")
+        //println("pressng back button")
         setResult(Activity.RESULT_OK, i)
         super.onBackPressed()
     }
