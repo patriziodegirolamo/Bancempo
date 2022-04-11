@@ -30,16 +30,16 @@
                 android:paddingTop="10dp"
                 android:src="@drawable/profile_pic_default"
                 app:civ_border_color="#FF000000"
-                app:civ_border_width="2dp" />
+                app:civ_border_width="1dp" />
 
             <ImageButton
                 android:id="@+id/changeImageButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="13dp"
-                android:layout_marginBottom="119dp"
                 android:contentDescription="@string/select_image_gallery"
                 app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
                 app:layout_constraintEnd_toEndOf="@+id/profile_pic"
