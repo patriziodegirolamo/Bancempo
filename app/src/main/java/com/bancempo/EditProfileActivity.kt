@@ -139,7 +139,7 @@ class EditProfileActivity : AppCompatActivity() {
     /*------------------------------------  UTILITIES  -------------------------------------------*/
     fun encodeTobase64(image: Bitmap): String? {
         val baos = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        image.compress(Bitmap.CompressFormat.PNG, 100, baos)
         val b = baos.toByteArray()
         val imageEncoded: String = Base64.encodeToString(b, Base64.DEFAULT)
         //Log.d("Image Log:", imageEncoded)
