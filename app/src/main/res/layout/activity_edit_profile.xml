@@ -49,8 +49,9 @@
                     android:id="@+id/changeImageButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:layout_marginStart="220dp"
-                    android:layout_marginTop="150dp"
+                    android:layout_marginStart="230dp"
+                    android:layout_marginTop="121dp"
+                    android:layout_marginEnd="133dp"
                     android:contentDescription="@string/select_image_gallery"
                     app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
                     app:layout_constraintEnd_toEndOf="@+id/profile_pic"
@@ -58,6 +59,7 @@
                     app:layout_constraintTop_toTopOf="@+id/profile_pic"
                     app:srcCompat="@drawable/ic_baseline_camera_alt_24"
                     tools:ignore="SpeakableTextPresentCheck" />
+
             </RelativeLayout>
 
 
