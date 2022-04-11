@@ -11,8 +11,9 @@ import android.os.Bundle
 import android.util.Base64
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
+import android.view.ViewTreeObserver
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
 import java.io.ByteArrayOutputStream
@@ -29,12 +30,17 @@ class ShowProfileActivity : AppCompatActivity() {
     lateinit var skills : TextView
     lateinit var description : TextView
 
+    var w: Int = 0
+    var h: Int = 0
+
     var image:String = "";
     var uri:Uri? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
+
+        val sv = findViewById<ScrollView>(R.id.sv)
 
         fullName = findViewById<TextView>(R.id.textViewFullName)
         photo = findViewById<ImageView>(R.id.profile_pic)
@@ -43,6 +49,19 @@ class ShowProfileActivity : AppCompatActivity() {
         location = findViewById<TextView>(R.id.textViewLocation)
         skills = findViewById<TextView>(R.id.textViewSkills)
         description = findViewById<TextView>(R.id.textViewDescription)
+
+     /*   sv.viewTreeObserver.addOnGlobalLayoutListener(object:ViewTreeObserver.OnGlobalLayoutListener{
+            override fun onGlobalLayout() {
+                h = sv.height
+                w = sv.width
+                Log.d("Layout", "v1.requestLayout(): $w,$h")
+                photo.post{photo.layoutParams = LinearLayout.LayoutParams(w,h/3)}
+                sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })
+
+
+*/
 
         if (savedInstanceState != null) {
 
