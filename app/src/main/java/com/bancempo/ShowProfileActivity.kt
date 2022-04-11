@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -22,7 +24,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 
 class ShowProfileActivity : AppCompatActivity() {
-    lateinit var fullName : TextView;
+    lateinit var fullName : TextView
     lateinit var photo : ImageView
     lateinit var nickname : TextView
     lateinit var email : TextView
@@ -30,18 +32,19 @@ class ShowProfileActivity : AppCompatActivity() {
     lateinit var skills : TextView
     lateinit var description : TextView
 
+    lateinit var orientation : String
     var w: Int = 0
     var h: Int = 0
 
-    var image:String = "";
-    var uri:Uri? = null;
+    var image:String = ""
+    var uri:Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
 
         val sv = findViewById<ScrollView>(R.id.sv)
-
+        val v1 = findViewById<LinearLayout>(R.id.v1)
         fullName = findViewById<TextView>(R.id.textViewFullName)
         photo = findViewById<ImageView>(R.id.profile_pic)
         nickname = findViewById<TextView>(R.id.textViewNickname)
@@ -50,18 +53,33 @@ class ShowProfileActivity : AppCompatActivity() {
         skills = findViewById<TextView>(R.id.textViewSkills)
         description = findViewById<TextView>(R.id.textViewDescription)
 
-     /*   sv.viewTreeObserver.addOnGlobalLayoutListener(object:ViewTreeObserver.OnGlobalLayoutListener{
-            override fun onGlobalLayout() {
-                h = sv.height
-                w = sv.width
-                Log.d("Layout", "v1.requestLayout(): $w,$h")
-                photo.post{photo.layoutParams = LinearLayout.LayoutParams(w,h/3)}
-                sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        })
+        val orientation: Int = this.resources.configuration.orientation
+
+        if (orientation === Configuration.ORIENTATION_LANDSCAPE ) {
+            v1.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    h = v1.height
+                    w = v1.width
+                    Log.d("Layout", "v1.requestLayout(): $w,$h")
+                    photo.post { photo.layoutParams = LinearLayout.LayoutParams(w / 3, h) }
+                    v1.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
 
 
-*/
+        } else {
+            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    h = sv.height
+                    w = sv.width
+                    Log.d("Layout", "v1.requestLayout(): $w,$h")
+                    photo.post { photo.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
+                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        }
 
         if (savedInstanceState != null) {
 
