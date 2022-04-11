@@ -128,44 +128,18 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <EditText
+                        android:id="@+id/editTextNickname"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="8dp">
+                        android:layout_margin="5dp"
+                        android:drawableLeft="@drawable/ic_baseline_alternate_email_24"
+                        android:hint="@string/nickname"
+                        android:inputType="textNoSuggestions"
+                        android:textColor="#F8554A4A"
+                        android:textSize="16sp"
+                        android:textStyle="bold|normal" />
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:gravity="center"
-                                android:orientation="horizontal"
-                                android:padding="1dp">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:padding="1dp"
-                                    android:src="@drawable/ic_icons8_posta_elettronica_30"></ImageView>
-
-                                <EditText
-                                    android:id="@+id/editTextNickname"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:hint="@string/nickname"
-                                    android:inputType="textNoSuggestions"
-                                    android:textColor="#F8554A4A"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold|normal" />
-
-                            </LinearLayout>
-                        </RelativeLayout>
-                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView

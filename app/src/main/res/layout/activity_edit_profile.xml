@@ -64,7 +64,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/full_name"
-            android:layout_width="409dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             app:cardCornerRadius="15dp"
@@ -79,38 +79,33 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="1dp">
 
-                    <LinearLayout
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="1dp">
+                        android:padding="1dp"
+                        android:src="@drawable/ic_icons8_nome_64"
+                        app:srcCompat="@drawable/ic_icons8_nome_64"></ImageView>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="1dp"
-                            android:src="@drawable/ic_icons8_nome_64"
-                            app:srcCompat="@drawable/ic_icons8_nome_64"></ImageView>
+                    <EditText
+                        android:id="@+id/editTextFullName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:hint="@string/full_name"
+                        android:inputType="textPersonName"
+                        android:textColor="#F8554A4A"
+                        android:textSize="16sp"
+                        android:textStyle="bold|normal" />
 
-                        <EditText
-                            android:id="@+id/editTextFullName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:hint="@string/full_name"
-                            android:inputType="textPersonName"
-                            android:textColor="#F8554A4A"
-                            android:textSize="16sp"
-                            android:textStyle="bold|normal" />
+                </LinearLayout>
 
-                    </LinearLayout>
-                </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -131,37 +126,32 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="1dp">
 
-                    <LinearLayout
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="1dp">
+                        android:padding="1dp"
+                        android:src="@drawable/ic_icons8_posta_elettronica_30"></ImageView>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="1dp"
-                            android:src="@drawable/ic_icons8_posta_elettronica_30"></ImageView>
+                    <EditText
+                        android:id="@+id/editTextNickname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:hint="@string/nickname"
+                        android:inputType="textNoSuggestions"
+                        android:textColor="#F8554A4A"
+                        android:textSize="16sp"
+                        android:textStyle="bold|normal" />
 
-                        <EditText
-                            android:id="@+id/editTextNickname"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:hint="@string/nickname"
-                            android:inputType="textNoSuggestions"
-                            android:textColor="#F8554A4A"
-                            android:textSize="16sp"
-                            android:textStyle="bold|normal" />
+                </LinearLayout>
 
-                    </LinearLayout>
-                </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -182,38 +172,33 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="1dp">
 
-                    <LinearLayout
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="1dp">
+                        android:padding="1dp"
+                        android:src="@drawable/ic_icons8_email_64"
+                        app:srcCompat="@drawable/ic_icons8_email_64"></ImageView>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="1dp"
-                            android:src="@drawable/ic_icons8_email_64"
-                            app:srcCompat="@drawable/ic_icons8_email_64"></ImageView>
+                    <EditText
+                        android:id="@+id/editTextEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:hint="@string/email"
+                        android:inputType="textWebEmailAddress"
+                        android:textColor="#F8554A4A"
+                        android:textSize="16sp"
+                        android:textStyle="bold|normal" />
 
-                        <EditText
-                            android:id="@+id/editTextEmail"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:hint="@string/email"
-                            android:inputType="textWebEmailAddress"
-                            android:textColor="#F8554A4A"
-                            android:textSize="16sp"
-                            android:textStyle="bold|normal" />
+                </LinearLayout>
 
-                    </LinearLayout>
-                </RelativeLayout>
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
@@ -237,37 +222,32 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="1dp">
 
-                    <LinearLayout
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:padding="1dp"
+                        android:src="@drawable/ic_icons8_segnaposto_50"></ImageView>
+
+                    <EditText
+                        android:id="@+id/editTextLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="1dp">
+                        android:layout_margin="5dp"
+                        android:hint="@string/location"
+                        android:inputType="textPostalAddress"
+                        android:textColor="#F8554A4A"
+                        android:textSize="16sp"
+                        android:textStyle="bold|normal" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="35dp"
-                            android:padding="1dp"
-                            android:src="@drawable/ic_icons8_segnaposto_50"></ImageView>
+                </LinearLayout>
 
-                        <EditText
-                            android:id="@+id/editTextLocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:hint="@string/location"
-                            android:inputType="textPostalAddress"
-                            android:textColor="#F8554A4A"
-                            android:textSize="16sp"
-                            android:textStyle="bold|normal" />
-
-                    </LinearLayout>
-                </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -291,37 +271,32 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="1dp">
 
-                    <LinearLayout
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:padding="1dp"
+                        android:src="@drawable/ic_icons8_documento_50"></ImageView>
+
+                    <EditText
+                        android:id="@+id/editTextDescription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="1dp">
+                        android:layout_margin="5dp"
+                        android:hint="@string/description"
+                        android:inputType="textNoSuggestions|textMultiLine"
+                        android:textColor="#F8554A4A"
+                        android:textSize="16sp"
+                        android:textStyle="bold|normal" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="35dp"
-                            android:padding="1dp"
-                            android:src="@drawable/ic_icons8_documento_50"></ImageView>
+                </LinearLayout>
 
-                        <EditText
-                            android:id="@+id/editTextDescription"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:hint="@string/description"
-                            android:inputType="textNoSuggestions|textMultiLine"
-                            android:textColor="#F8554A4A"
-                            android:textSize="16sp"
-                            android:textStyle="bold|normal" />
-
-                    </LinearLayout>
-                </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -345,38 +320,33 @@
                 android:orientation="vertical"
                 android:padding="8dp">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="1dp">
 
-                    <LinearLayout
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="1dp">
+                        android:padding="1dp"
+                        android:src="@drawable/ic_icons8_skills_24"
+                        app:srcCompat="@drawable/ic_icons8_skills_24"></ImageView>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="1dp"
-                            android:src="@drawable/ic_icons8_skills_24"
-                            app:srcCompat="@drawable/ic_icons8_skills_24"></ImageView>
+                    <EditText
+                        android:id="@+id/editTextSkills"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:hint="@string/skills"
+                        android:inputType="textAutoCorrect"
+                        android:textColor="#F8554A4A"
+                        android:textSize="16sp"
+                        android:textStyle="bold|normal" />
 
-                        <EditText
-                            android:id="@+id/editTextSkills"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="5dp"
-                            android:hint="@string/skills"
-                            android:inputType="textAutoCorrect"
-                            android:textColor="#F8554A4A"
-                            android:textSize="16sp"
-                            android:textStyle="bold|normal" />
+                </LinearLayout>
 
-                    </LinearLayout>
-                </RelativeLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
