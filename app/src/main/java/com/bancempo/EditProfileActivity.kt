@@ -78,25 +78,21 @@ class EditProfileActivity : AppCompatActivity() {
     @SuppressLint("WrongThread")
     override fun onBackPressed() {
         val i = Intent(this, ShowProfileActivity::class.java)
-
         //ENCODE bitmap
         if (bitmap_photo != null){
-            val path = saveToInternalStorage(bitmap_photo!!) + "profile.png";
-
-            //println(path)
-            i.putExtra("com.bancempo.PHOTO", encodeTobase64(bitmap_photo!!));
-            i.putExtra("com.bancempo.PHOTO_PROFILE", "bitmap");
+            saveToInternalStorage(bitmap_photo!!) + "profile.png"
         }
         else if (uri_photo != null){
-            i.putExtra("com.bancempo.PHOTO", uri_photo.toString());
-            i.putExtra("com.bancempo.PHOTO_PROFILE", "uri");
+            bitmap_photo = MediaStore.Images.Media.getBitmap(contentResolver, uri_photo)
+            saveToInternalStorage(bitmap_photo!!) + "profile.png"
             //println("URI");
         }
         else{
             i.putExtra("com.bancempo.PHOTO_PROFILE", "no");
             //println("nothing");
         }
-
+        i.putExtra("com.bancempo.PHOTO", encodeTobase64(bitmap_photo!!));
+        i.putExtra("com.bancempo.PHOTO_PROFILE", "bitmap");
         i.putExtra("com.bancempo.FULL_NAME", findViewById<TextView>(R.id.editTextFullName).text.toString())
         i.putExtra("com.bancempo.NICKNAME", findViewById<TextView>(R.id.editTextNickname).text.toString())
         i.putExtra("com.bancempo.EMAIL", findViewById<TextView>(R.id.editTextEmail).text.toString())
@@ -128,6 +124,7 @@ class EditProfileActivity : AppCompatActivity() {
         } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null){
             // Get the url of the image from data
             uri_photo = data.data
+
             // update the preview image in the layout
             findViewById<ImageView>(R.id.profile_pic).setImageURI(uri_photo)
             println("uri_photo $uri_photo")

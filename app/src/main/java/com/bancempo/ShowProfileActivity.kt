@@ -4,21 +4,17 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.util.Base64
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
-import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -51,19 +47,19 @@ class ShowProfileActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
 
             image = savedInstanceState.getString("image").toString();
-            val photodaripristinare = savedInstanceState.getString("photo");
+            val photoToRestore = savedInstanceState.getString("photo");
             println("prova2");
             println("___>$image");
             loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
 
             if(image == "bitmap"){
                 println("saving bitmap")
-                if (photodaripristinare != null) {
-                    loadImageFromStorage(photodaripristinare)
+                if (photoToRestore != null) {
+                    loadImageFromStorage(photoToRestore)
                 }
             }
             else if (image =="uri"){
-                println("saving uri ${Uri.parse(photodaripristinare)}")
+                println("saving uri ${Uri.parse(photoToRestore)}")
                 //photo.setImageURI(Uri.parse(photodaripristinare));
                 //photo.setImageURI(Uri.parse(photodaripristinare));
                 //photo.setImageURI(uri);
