@@ -26,6 +26,10 @@
                 android:id="@+id/profile_pic"
                 android:layout_width="170dp"
                 android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="0dp"
                 android:contentDescription="@string/profile_pic"
                 android:paddingTop="10dp"
                 android:src="@drawable/profile_pic_default"
@@ -34,17 +38,17 @@
 
             <ImageButton
                 android:id="@+id/changeImageButton"
-                android:layout_width="wrap_content"
+                android:layout_width="49dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginStart="107dp"
+                android:layout_marginTop="247dp"
+                android:layout_marginEnd="13dp"
+                android:layout_marginBottom="126dp"
                 android:contentDescription="@string/select_image_gallery"
-                app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
-                app:layout_constraintEnd_toEndOf="@+id/profile_pic"
-                app:layout_constraintStart_toStartOf="@+id/profile_pic"
-                app:layout_constraintTop_toTopOf="@+id/profile_pic"
                 app:srcCompat="@drawable/ic_baseline_camera_alt_24"
                 tools:ignore="SpeakableTextPresentCheck" />
 
