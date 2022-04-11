@@ -25,18 +25,15 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_pic"
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:contentDescription="@string/profile_pic"
-                android:paddingTop="16dp"
-                android:scaleType="centerInside"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.498"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/profile_pic_default" />
+                android:paddingTop="10dp"
+                android:src="@drawable/profile_pic_default"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp" />
 
             <LinearLayout
                 android:id="@+id/v2"
