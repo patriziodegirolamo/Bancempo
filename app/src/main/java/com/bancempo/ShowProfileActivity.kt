@@ -13,6 +13,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -54,63 +55,60 @@ class ShowProfileActivity : AppCompatActivity() {
 
         val orientation: Int = this.resources.configuration.orientation
 
-          if (orientation === Configuration.ORIENTATION_LANDSCAPE ) {
-              v1.viewTreeObserver.addOnGlobalLayoutListener(object :
-                  ViewTreeObserver.OnGlobalLayoutListener {
-                  override fun onGlobalLayout() {
-                      h = v1.height
-                      w = v1.width
-                      Log.d("Layout", "v1.requestLayout(): $w,$h")
-                      photo.post { photo.layoutParams = LinearLayout.LayoutParams(w / 3, h) }
-                      v1.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                  }
-              })
+        if (orientation === Configuration.ORIENTATION_LANDSCAPE ) {
+            v1.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    h = v1.height
+                    w = v1.width
+                    Log.d("Layout", "v1.requestLayout(): $w,$h")
+                    photo.post { photo.layoutParams = LinearLayout.LayoutParams(w / 3, h) }
+                    v1.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
 
 
-          } else {
-              sv.viewTreeObserver.addOnGlobalLayoutListener(object :
-                  ViewTreeObserver.OnGlobalLayoutListener {
-                  override fun onGlobalLayout() {
-                      h = sv.height
-                      w = sv.width
-                      Log.d("Layout", "v1.requestLayout(): $w,$h")
-                      photo.post { photo.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
-                      sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                  }
-              })
-          }
-
-
-
+        } else {
+            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    h = sv.height
+                    w = sv.width
+                    Log.d("Layout", "v1.requestLayout(): $w,$h")
+                    photo.post { photo.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
+                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        }
 
         if (savedInstanceState != null) {
 
             image = savedInstanceState.getString("image").toString();
-            val photodaripristinare = savedInstanceState.getString("photo");
-            println("prova2")
-            println("___>$image")
+            val photoToRestore = savedInstanceState.getString("photo");
+            println("prova2");
+            println("___>$image");
             loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
 
             if(image == "bitmap"){
                 println("saving bitmap")
-                if (photodaripristinare != null) {
-                    loadImageFromStorage(photodaripristinare)
+                if (photoToRestore != null) {
+                    loadImageFromStorage(photoToRestore)
                 }
             }
             else if (image =="uri"){
-                println("saving uri ${Uri.parse(photodaripristinare)}")
-                //photo.setImageURI(Uri.parse(photodaripristinare))
-                //photo.setImageURI(Uri.parse(photodaripristinare))
-                //photo.setImageURI(uri)
+                println("saving uri ${Uri.parse(photoToRestore)}")
+                //photo.setImageURI(Uri.parse(photodaripristinare));
+                //photo.setImageURI(Uri.parse(photodaripristinare));
+                //photo.setImageURI(uri);
             }
             else{
 
             }
 
-            fullName.text = savedInstanceState.getString("full_name")
-            nickname.text = savedInstanceState.getString("nickname")
+            fullName.text = savedInstanceState.getString("full_name");
+            nickname.text = savedInstanceState.getString("nickname");
             email.text = savedInstanceState.getString("email");
-            location.text = savedInstanceState.getString("location")
+            location.text = savedInstanceState.getString("location");
             skills.text = savedInstanceState.getString("skills")
             description.text = savedInstanceState.getString("description")
             //println("restoring from instance state")
@@ -121,13 +119,14 @@ class ShowProfileActivity : AppCompatActivity() {
             loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
 
-            fullName.text = sharedPref.getString(getString(R.string.full_name), "")
-            nickname.text = sharedPref.getString(getString(R.string.nickname), "")
-            email.text = sharedPref.getString(getString(R.string.email), "")
-            location.text = sharedPref.getString(getString(R.string.location), "")
-            skills.text = sharedPref.getString(getString(R.string.skills), "")
-            description.text = sharedPref.getString(getString(R.string.description), "")
-            println("loading from sharedPrefs")
+            fullName.text = sharedPref.getString(getString(R.string.full_name), "");
+            nickname.text = sharedPref.getString(getString(R.string.nickname), "");
+            email.text = sharedPref.getString(getString(R.string.email), "");
+            location.text = sharedPref.getString(getString(R.string.location), "");
+            skills.text = sharedPref.getString(getString(R.string.skills), "");
+            description.text = sharedPref.getString(getString(R.string.description), "");
+            println("prova3333");
+            println("loading from sharedPrefs");
         }
 
 
@@ -136,6 +135,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
     @SuppressLint("SdCardPath")
     override fun onSaveInstanceState(outState: Bundle) {
+        println("prova4");
         super.onSaveInstanceState(outState)
         outState.putString("full_name", fullName.text.toString())
         outState.putString("nickname", nickname.text.toString())
@@ -143,7 +143,7 @@ class ShowProfileActivity : AppCompatActivity() {
         outState.putString("location", location.text.toString())
         outState.putString("skills", skills.text.toString())
         outState.putString("description", description.text.toString())
-        outState.putString("image", image)
+        outState.putString("image", image);
 
         //outState.putString("photo", )
         //val photo_profile = intent.getStringExtra("com.bancempo.PHOTO_PROFILE")
@@ -151,12 +151,12 @@ class ShowProfileActivity : AppCompatActivity() {
             outState.putString("photo", "/data/user/0/com.bancempo/app_imageDir")
         }
         else if(image == "uri"){
-            outState.putString("photo", uri.toString())
+            outState.putString("photo", uri.toString());
         }
         else {
 
         }
-        println("PHOTO PROFILE: $image")
+        println("PHOTO PROFILE: $image");
         //outState.putString("photo", encodeTobase64(photo.drawToBitmap()))
         //println("outstate" + outState.toString())
     }
@@ -179,6 +179,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
     private fun editProfile() {
         val i = Intent(this, EditProfileActivity::class.java)
+        println("prova5");
         i.putExtra("com.bancempo.PHOTO", encodeTobase64(photo.drawToBitmap()))
         i.putExtra("com.bancempo.FULL_NAME", fullName.text.toString())
         i.putExtra("com.bancempo.NICKNAME", nickname.text.toString())
@@ -192,6 +193,7 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        println("prova6");
 
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             val photo_profile = data.getStringExtra("com.bancempo.PHOTO_PROFILE")
@@ -203,8 +205,8 @@ class ShowProfileActivity : AppCompatActivity() {
             else if (photo_profile == "uri"){
                 image = "uri"
                 //println("EXTRACTING URI");
-                uri = Uri.parse(data.getStringExtra("com.bancempo.PHOTO"))
-                val photo = findViewById<ImageView>(R.id.profile_pic).setImageURI(uri)
+                uri = Uri.parse(data.getStringExtra("com.bancempo.PHOTO"));
+                val photo = findViewById<ImageView>(R.id.profile_pic).setImageURI(uri);
             }
             else{
                 //println("EXTRACTING none");
@@ -243,7 +245,7 @@ class ShowProfileActivity : AppCompatActivity() {
     /*------------------------------------  UTILITIES  -------------------------------------------*/
     fun encodeTobase64(image: Bitmap): String? {
         val baos = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val b = baos.toByteArray()
         val imageEncoded: String = Base64.encodeToString(b, Base64.DEFAULT)
         //Log.d("Image Log:", imageEncoded)
@@ -266,7 +268,5 @@ class ShowProfileActivity : AppCompatActivity() {
             e.printStackTrace()
         }
     }
-
-
 
 }
