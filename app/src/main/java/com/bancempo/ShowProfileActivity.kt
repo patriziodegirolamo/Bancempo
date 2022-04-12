@@ -36,9 +36,14 @@ class ShowProfileActivity : AppCompatActivity() {
     var image:String = "";
     var uri:Uri? = null;
 
+    lateinit var orientation : String
+    var w: Int = 0
+    var h: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
+
 
         fullName = findViewById<TextView>(R.id.textViewFullName)
         photo = findViewById<ImageView>(R.id.profile_pic)
@@ -48,10 +53,17 @@ class ShowProfileActivity : AppCompatActivity() {
         skills = findViewById<TextView>(R.id.textViewSkills)
         description = findViewById<TextView>(R.id.textViewDescription)
 
+        val orientation: Int = this.resources.configuration.orientation
+
+
+
         if (savedInstanceState != null) {
+
             image = savedInstanceState.getString("image").toString();
             val photodaripristinare = savedInstanceState.getString("photo");
+            println("prova2");
             println("___>$image");
+            loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
 
             if(image == "bitmap"){
                 println("saving bitmap")
@@ -60,11 +72,7 @@ class ShowProfileActivity : AppCompatActivity() {
                 }
             }
             else if (image =="uri"){
-                //println("saving uri ${Uri.parse(photodaripristinare)}")
-                if (photodaripristinare != null) {
-                    println("NUOVA FOTO DA RIPR $photodaripristinare")
-                    loadImageFromStorage(photodaripristinare)
-                }
+                println("saving uri ${Uri.parse(photodaripristinare)}")
                 //photo.setImageURI(Uri.parse(photodaripristinare));
                 //photo.setImageURI(Uri.parse(photodaripristinare));
                 //photo.setImageURI(uri);
@@ -82,6 +90,7 @@ class ShowProfileActivity : AppCompatActivity() {
         }
 
         else{
+
             loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
             val stringJSON:String? = sharedPref.getString("bancempoJSON", "")
@@ -95,8 +104,8 @@ class ShowProfileActivity : AppCompatActivity() {
                 skills.text = jObject.getString(getString(R.string.skills));
                 description.text = jObject.getString(getString(R.string.description));
             }
-
-            println("loading from sharedPrefs")
+            println("prova3333");
+            println("loading from sharedPrefs");
         }
 
 
@@ -105,6 +114,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
     @SuppressLint("SdCardPath")
     override fun onSaveInstanceState(outState: Bundle) {
+        println("prova4");
         super.onSaveInstanceState(outState)
         outState.putString("full_name", fullName.text.toString())
         outState.putString("nickname", nickname.text.toString())
@@ -148,7 +158,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
     private fun editProfile() {
         val i = Intent(this, EditProfileActivity::class.java)
-
+        println("prova5");
         i.putExtra("com.bancempo.PHOTO", EditProfileActivity().encodeTobase64(photo.drawToBitmap()))
         i.putExtra("com.bancempo.FULL_NAME", fullName.text.toString())
         i.putExtra("com.bancempo.NICKNAME", nickname.text.toString())
@@ -162,6 +172,7 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        println("prova6");
 
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             val photo_profile = data.getStringExtra("com.bancempo.PHOTO_PROFILE")
@@ -171,7 +182,7 @@ class ShowProfileActivity : AppCompatActivity() {
                 val photo = findViewById<ImageView>(R.id.profile_pic).setImageBitmap(EditProfileActivity().decodeBase64(data.getStringExtra("com.bancempo.PHOTO")))
             }
             else if (photo_profile == "uri"){
-                image = "uri"
+                image = "uri";
                 //println("EXTRACTING URI");
                 uri = Uri.parse(data.getStringExtra("com.bancempo.PHOTO"));
                 val photo = findViewById<ImageView>(R.id.profile_pic).setImageURI(uri);
@@ -202,10 +213,19 @@ class ShowProfileActivity : AppCompatActivity() {
             jObject.put(getString(R.string.skills), findViewById<TextView>(R.id.textViewSkills).text.toString());
             jObject.put(getString(R.string.description), findViewById<TextView>(R.id.textViewDescription).text.toString());
 
-
             //save all the textviews in the shared_preferences file
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
             with (sharedPref.edit()) {
+                /*
+                putString(getString(R.string.full_name), findViewById<TextView>(R.id.textViewFullName).text.toString());
+                putString(getString(R.string.nickname), findViewById<TextView>(R.id.textViewNickname).text.toString());
+                putString(getString(R.string.email), findViewById<TextView>(R.id.textViewEmail).text.toString());
+                putString(getString(R.string.location), findViewById<TextView>(R.id.textViewLocation).text.toString());
+                putString(getString(R.string.skills), findViewById<TextView>(R.id.textViewSkills).text.toString());
+                putString(getString(R.string.description), findViewById<TextView>(R.id.textViewDescription).text.toString());
+
+
+                 */
                 putString("bancempoJSON", jObject.toString());
                 apply()
             }
@@ -215,6 +235,7 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     /*------------------------------------  UTILITIES  -------------------------------------------*/
+
 
     private fun loadImageFromStorage(path: String) {
         try {
@@ -226,5 +247,4 @@ class ShowProfileActivity : AppCompatActivity() {
             e.printStackTrace()
         }
     }
-
 }
