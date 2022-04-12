@@ -16,26 +16,30 @@
         tools:layout_editor_absoluteX="2dp"
         tools:layout_editor_absoluteY="0dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_pic"
+        <LinearLayout
+            android:id="@+id/v5"
             android:layout_width="170dp"
             android:layout_height="match_parent"
-            android:contentDescription="@string/profile_pic"
-            android:paddingStart="16dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="8dp"
-            android:src="@drawable/profile_pic_default"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp" />
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="horizontal">
 
-
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_pic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/profile_pic"
+                android:src="@drawable/profile_pic_default"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp" />
+        </LinearLayout>
 
 
         <ScrollView
             android:id="@+id/sv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
+            android:layout_gravity="center_vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -47,14 +51,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center"
                 android:orientation="vertical">
 
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/full_name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="12dp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="10dp"
                     app:cardUseCompatPadding="true"
@@ -81,8 +88,9 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewNickname"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="12dp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="10dp"
                     app:cardUseCompatPadding="true"
@@ -106,8 +114,9 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewEmail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="12dp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="10dp"
                     app:cardUseCompatPadding="true"
@@ -133,8 +142,9 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewAddress"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="12dp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="10dp"
                     app:cardUseCompatPadding="true"
@@ -159,8 +169,9 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="12dp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="10dp"
                     app:cardUseCompatPadding="true"
@@ -186,9 +197,10 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewSkills"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
+                    android:layout_weight="1"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="10dp"
                     app:cardUseCompatPadding="true"
