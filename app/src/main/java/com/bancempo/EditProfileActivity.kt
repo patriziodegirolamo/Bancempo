@@ -103,9 +103,9 @@ class EditProfileActivity : AppCompatActivity() {
         i.putExtra("com.bancempo.LOCATION", findViewById<TextView>(R.id.editTextLocation).text.toString())
         i.putExtra("com.bancempo.SKILLS", findViewById<TextView>(R.id.editTextSkills).text.toString())
         i.putExtra("com.bancempo.DESCRIPTION", findViewById<TextView>(R.id.editTextDescription).text.toString())
-        i
 
-        //println("pressng back button")
+
+        //println("pressing back button")
         setResult(Activity.RESULT_OK, i)
         super.onBackPressed()
     }
@@ -139,7 +139,7 @@ class EditProfileActivity : AppCompatActivity() {
     /*------------------------------------  UTILITIES  -------------------------------------------*/
     fun encodeTobase64(image: Bitmap): String? {
         val baos = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val b = baos.toByteArray()
         val imageEncoded: String = Base64.encodeToString(b, Base64.DEFAULT)
         //Log.d("Image Log:", imageEncoded)

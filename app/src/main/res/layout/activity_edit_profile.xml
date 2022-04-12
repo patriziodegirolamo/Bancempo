@@ -30,20 +30,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_pic"
-                    android:layout_width="220dp"
-                    android:layout_height="135dp"
-                    android:layout_marginStart="80dp"
-                    android:layout_marginTop="48dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
                     android:contentDescription="@string/profile_pic"
-                    android:scaleType="centerInside"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.498"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/profile_pic_default"
-                    tools:ignore="ImageContrastCheck" />
+                    android:paddingTop="10dp"
+                    android:src="@drawable/profile_pic_default"
+                    app:civ_border_color="#FF000000"
+                    app:civ_border_width="1dp" />
 
                 <ImageButton
                     android:id="@+id/changeImageButton"
