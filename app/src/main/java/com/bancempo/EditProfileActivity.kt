@@ -73,7 +73,7 @@ class EditProfileActivity : AppCompatActivity() {
                     h = v1.height
                     w = v1.width
                     Log.d("Layout", "v1.requestLayout(): $w,$h")
-                    v5.post { v5.layoutParams = LinearLayout.LayoutParams(w / 3, h) }
+                    //v5.post { v5.layoutParams = LinearLayout.LayoutParams(w / 3, h) }
                     v1.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             })
