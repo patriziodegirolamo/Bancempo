@@ -22,6 +22,8 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.drawToBitmap
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -36,6 +38,8 @@ class ShowProfileActivity : AppCompatActivity() {
     lateinit var location : TextView
     lateinit var skills : TextView
     lateinit var description : TextView
+
+    lateinit var chipGroup : ChipGroup
 
     lateinit var orientation : String
     var w: Int = 0
@@ -57,6 +61,7 @@ class ShowProfileActivity : AppCompatActivity() {
         location = findViewById<TextView>(R.id.textViewLocation)
         skills = findViewById<TextView>(R.id.textViewSkills)
         description = findViewById<TextView>(R.id.textViewDescription)
+        chipGroup = findViewById<ChipGroup>(R.id.chipGroup)
 
         val orientation: Int = this.resources.configuration.orientation
 
@@ -95,8 +100,23 @@ class ShowProfileActivity : AppCompatActivity() {
             nickname.text = savedInstanceState.getString("nickname");
             email.text = savedInstanceState.getString("email");
             location.text = savedInstanceState.getString("location");
-            skills.text = savedInstanceState.getString("skills")
             description.text = savedInstanceState.getString("description")
+
+            val skillsString = savedInstanceState.getString("skills")
+            println("SKILLSTRING VISUALIZZAZIONE $skillsString")
+            chipGroup.removeAllViews()
+            if (skillsString != null) {
+                skillsString.split(",").forEach {
+                    var chip = Chip(this);
+                    println("CHIP VISUALIZZAZIONE ${it}")
+                    if(!it.isEmpty()) {
+                        chip.setText(it);
+                        println("CHIP VISUALIZZAZIONE $chip")
+                        chipGroup.addView(chip);
+                    }
+                }
+            }
+
             println("restoring from instance state")
         }
 
@@ -110,8 +130,20 @@ class ShowProfileActivity : AppCompatActivity() {
                 nickname.text = jObject.getString(getString(R.string.nickname));
                 email.text = jObject.getString(getString(R.string.email));
                 location.text = jObject.getString(getString(R.string.location));
-                skills.text = jObject.getString(getString(R.string.skills));
                 description.text = jObject.getString(getString(R.string.description));
+
+                val skillsString = jObject.getString(getString(R.string.skills));
+                println("SKILLSTRING JSON $skillsString")
+                chipGroup.removeAllViews()
+                if (skillsString != null) {
+                    skillsString.split(",").forEach {
+                        var chip = Chip(this);
+                        if(!it.isEmpty()) {
+                            chip.setText(it);
+                            chipGroup.addView(chip);
+                        }
+                    }
+                }
             }
             println("loading from sharedPrefs");
         }
@@ -127,9 +159,15 @@ class ShowProfileActivity : AppCompatActivity() {
         outState.putString("nickname", nickname.text.toString())
         outState.putString("email", email.text.toString())
         outState.putString("location", location.text.toString())
-        outState.putString("skills", skills.text.toString())
         outState.putString("description", description.text.toString())
 
+        var chipText = ""
+        for (i in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(i) as Chip
+            chipText += "${chip.text},"
+        }
+        println("SAVEINSTANCESTATE $chipText")
+        outState.putString("skills", chipText)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -155,8 +193,14 @@ class ShowProfileActivity : AppCompatActivity() {
         i.putExtra("com.bancempo.NICKNAME", nickname.text.toString())
         i.putExtra("com.bancempo.EMAIL", email.text.toString())
         i.putExtra("com.bancempo.LOCATION", location.text.toString())
-        i.putExtra("com.bancempo.SKILLS", skills.text.toString())
         i.putExtra("com.bancempo.DESCRIPTION", description.text.toString())
+
+        var chipText = ""
+        for (i in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(i) as Chip
+            chipText += "${chip.text},"
+        }
+        i.putExtra("com.bancempo.SKILLS", chipText)
 
         startActivityForResult(i, 0)
 
@@ -172,16 +216,34 @@ class ShowProfileActivity : AppCompatActivity() {
             nickname.text = data.getStringExtra("com.bancempo.NICKNAME")
             email.text = data.getStringExtra("com.bancempo.EMAIL")
             location.text = data.getStringExtra("com.bancempo.LOCATION")
-            skills.text = data.getStringExtra("com.bancempo.SKILLS")
             description.text = data.getStringExtra("com.bancempo.DESCRIPTION")
+
+            val skillsString = data.getStringExtra("com.bancempo.SKILLS")
+            println("SKILLSTRING ONACTIVITYRESULT $skillsString")
+            chipGroup.removeAllViews()
+            if (skillsString != null) {
+                skillsString.split(",").forEach {
+                    var chip = Chip(this);
+                    if(!it.isEmpty()) {
+                        chip.setText(it);
+                        chipGroup.addView(chip);
+                    }
+                }
+            }
 
             val jObject = JSONObject()
             jObject.put(getString(R.string.full_name), fullName.text.toString())
             jObject.put(getString(R.string.nickname), nickname.text.toString());
             jObject.put(getString(R.string.email), email.text.toString());
             jObject.put(getString(R.string.location), location.text.toString());
-            jObject.put(getString(R.string.skills), skills.text.toString());
             jObject.put(getString(R.string.description), description.text.toString());
+
+            var chipText = ""
+            for (i in 0 until chipGroup.childCount) {
+                val chip = chipGroup.getChildAt(i) as Chip
+                chipText += "${chip.text},"
+            }
+            jObject.put(getString(R.string.skills), chipText);
 
             //save all the textviews in the shared_preferences file
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return

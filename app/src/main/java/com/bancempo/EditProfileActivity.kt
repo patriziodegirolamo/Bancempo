@@ -22,6 +22,9 @@ import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.forEach
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import java.io.*
 
 
@@ -35,6 +38,10 @@ class EditProfileActivity : AppCompatActivity() {
     lateinit var skills : TextView
     lateinit var description : TextView
     lateinit var editPicture : ImageButton
+
+    lateinit var editText: EditText;
+    lateinit var addchipbutton: ImageButton;
+    lateinit var chipGroup: ChipGroup;
 
     val REQUEST_IMAGE_CAPTURE = 1
     val SELECT_PICTURE = 200
@@ -63,6 +70,18 @@ class EditProfileActivity : AppCompatActivity() {
         location = findViewById<TextView>(R.id.editTextLocation)
         skills = findViewById<TextView>(R.id.editTextSkills)
         description = findViewById<TextView>(R.id.editTextDescription)
+
+        editText = findViewById<EditText>(R.id.editTextSkills);
+        addchipbutton = findViewById<ImageButton>(R.id.addchipbutton)
+        chipGroup = findViewById<ChipGroup>(R.id.chipGroup);
+
+        addchipbutton.setOnClickListener{
+            if(!editText.text.toString().isEmpty()){
+                addChip(editText.text.toString());
+
+                editText.setText("");
+            }
+        }
 
         val orientation: Int = this.resources.configuration.orientation
 
@@ -98,8 +117,25 @@ class EditProfileActivity : AppCompatActivity() {
             nickname.text = savedInstanceState.getString("nickname");
             email.text = savedInstanceState.getString("email");
             location.text = savedInstanceState.getString("location");
-            skills.text = savedInstanceState.getString("skills")
             description.text = savedInstanceState.getString("description")
+
+            val skillsString = savedInstanceState.getString("skills")
+            println("SKILLSTRING SAVEDINSTANCESTATE EDIT $skillsString")
+            if (skillsString != null) {
+                chipGroup.removeAllViews()
+                skillsString.split(",").forEach {
+                    var chip = Chip(this);
+                    if(!it.isEmpty()) {
+                        chip.setText(it);
+                        chip.isCloseIconVisible = true;
+
+                        chip.setOnCloseIconClickListener {
+                            chipGroup.removeView(chip)
+                        }
+                        chipGroup.addView(chip);
+                    }
+                }
+            }
 
             println("restoring from instance state")
         }
@@ -112,8 +148,25 @@ class EditProfileActivity : AppCompatActivity() {
             nickname.text = intent.getStringExtra("com.bancempo.NICKNAME")
             email.text = intent.getStringExtra("com.bancempo.EMAIL")
             location.text = intent.getStringExtra("com.bancempo.LOCATION")
-            skills.text = intent.getStringExtra("com.bancempo.SKILLS")
             description.text = intent.getStringExtra("com.bancempo.DESCRIPTION")
+
+            val skillsString = intent.getStringExtra("com.bancempo.SKILLS")
+            println("SKILLSTRING INTENT EDIT$skillsString")
+            chipGroup.removeAllViews()
+            if (skillsString != null) {
+                skillsString.split(",").forEach {
+                    var chip = Chip(this);
+                    if(!it.isEmpty()) {
+                        chip.setText(it);
+                        chip.isCloseIconVisible = true;
+
+                        chip.setOnCloseIconClickListener {
+                            chipGroup.removeView(chip)
+                        }
+                        chipGroup.addView(chip);
+                    }
+                }
+            }
 
         }
         editPicture.setOnClickListener {
@@ -128,8 +181,16 @@ class EditProfileActivity : AppCompatActivity() {
         outState.putString("nickname", nickname.text.toString())
         outState.putString("email", email.text.toString())
         outState.putString("location", location.text.toString())
-        outState.putString("skills", skills.text.toString())
         outState.putString("description", description.text.toString())
+
+        var chipText = ""
+        for (i in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(i) as Chip
+            chipText += "${chip.text},"
+        }
+        outState.putString("skills", chipText)
+
+        println("PROVA CHIPSTEXT ${skills.text.toString()}");
     }
     private fun showPopup(v: View) {
         val popup = PopupMenu(this, v)
@@ -174,8 +235,15 @@ class EditProfileActivity : AppCompatActivity() {
         i.putExtra("com.bancempo.NICKNAME", findViewById<TextView>(R.id.editTextNickname).text.toString())
         i.putExtra("com.bancempo.EMAIL", findViewById<TextView>(R.id.editTextEmail).text.toString())
         i.putExtra("com.bancempo.LOCATION", findViewById<TextView>(R.id.editTextLocation).text.toString())
-        i.putExtra("com.bancempo.SKILLS", findViewById<TextView>(R.id.editTextSkills).text.toString())
         i.putExtra("com.bancempo.DESCRIPTION", findViewById<TextView>(R.id.editTextDescription).text.toString())
+
+        var chipText = ""
+        for (i in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(i) as Chip
+            chipText += "${chip.text},"
+        }
+        println("CHIPTEXT BACKPRESSED $chipText")
+        i.putExtra("com.bancempo.SKILLS", chipText)
 
         setResult(Activity.RESULT_OK, i)
         super.onBackPressed()
@@ -223,6 +291,18 @@ class EditProfileActivity : AppCompatActivity() {
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun addChip(text: String) {
+        val chip = Chip(this)
+        chip.text = text
+
+        chip.isCloseIconVisible = true;
+
+        chip.setOnCloseIconClickListener{
+            chipGroup.removeView(chip)
+        }
+        chipGroup.addView(chip)
     }
 
     /*------------------------------------  UTILITIES  -------------------------------------------*/
