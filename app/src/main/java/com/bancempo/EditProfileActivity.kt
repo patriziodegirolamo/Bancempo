@@ -25,8 +25,20 @@ import java.io.*
 
 class EditProfileActivity : AppCompatActivity() {
 
+    lateinit var fullName : TextView;
+    lateinit var photo : ImageView
+    lateinit var nickname : TextView
+    lateinit var email : TextView
+    lateinit var location : TextView
+    lateinit var skills : TextView
+    lateinit var description : TextView
+    lateinit var editPicture : ImageButton
+
     val REQUEST_IMAGE_CAPTURE = 1
     val SELECT_PICTURE = 200
+
+
+    //var uri_or_bitmap:String = "";
     var bitmap_photo :Bitmap? = null;
     var uri_photo :Uri? = null;
 
@@ -34,27 +46,55 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
-        val photo = findViewById<ImageView>(R.id.profile_pic).setImageBitmap(decodeBase64(intent.getStringExtra("com.bancempo.PHOTO")))
+        photo = findViewById<ImageView>(R.id.profile_pic)
+        editPicture = findViewById<ImageButton>(R.id.changeImageButton)
+        fullName = findViewById<TextView>(R.id.editTextFullName)
+        nickname = findViewById<TextView>(R.id.editTextNickname)
+        email = findViewById<TextView>(R.id.editTextEmail)
+        location = findViewById<TextView>(R.id.editTextLocation)
+        skills = findViewById<TextView>(R.id.editTextSkills)
+        description = findViewById<TextView>(R.id.editTextDescription)
 
-        val fullName =
-            findViewById<TextView>(R.id.editTextFullName).setText(intent.getStringExtra("com.bancempo.FULL_NAME"))
-        val nickname =
-            findViewById<TextView>(R.id.editTextNickname).setText(intent.getStringExtra("com.bancempo.NICKNAME"))
-        val email =
-            findViewById<TextView>(R.id.editTextEmail).setText(intent.getStringExtra("com.bancempo.EMAIL"))
-        val location =
-            findViewById<TextView>(R.id.editTextLocation).setText(intent.getStringExtra("com.bancempo.LOCATION"))
-        val skills =
-            findViewById<TextView>(R.id.editTextSkills).setText(intent.getStringExtra("com.bancempo.SKILLS"))
-        val description =
-            findViewById<TextView>(R.id.editTextDescription).setText(intent.getStringExtra("com.bancempo.DESCRIPTION"))
 
-        val editPicture = findViewById<ImageButton>(R.id.changeImageButton)
+        if (savedInstanceState != null) {
+            loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
+            fullName.text = savedInstanceState.getString("full_name");
+            nickname.text = savedInstanceState.getString("nickname");
+            email.text = savedInstanceState.getString("email");
+            location.text = savedInstanceState.getString("location");
+            skills.text = savedInstanceState.getString("skills")
+            description.text = savedInstanceState.getString("description")
+
+            println("restoring from instance state")
+        }
+
+        else{
+            val bmp = decodeBase64(intent.getStringExtra("com.bancempo.PHOTO"))
+            photo.setImageBitmap(bmp)
+
+            fullName.text = intent.getStringExtra("com.bancempo.FULL_NAME")
+            nickname.text = intent.getStringExtra("com.bancempo.NICKNAME")
+            email.text = intent.getStringExtra("com.bancempo.EMAIL")
+            location.text = intent.getStringExtra("com.bancempo.LOCATION")
+            skills.text = intent.getStringExtra("com.bancempo.SKILLS")
+            description.text = intent.getStringExtra("com.bancempo.DESCRIPTION")
+
+        }
         editPicture.setOnClickListener {
             showPopup(editPicture)
         }
     }
 
+    @SuppressLint("SdCardPath")
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("full_name", fullName.text.toString())
+        outState.putString("nickname", nickname.text.toString())
+        outState.putString("email", email.text.toString())
+        outState.putString("location", location.text.toString())
+        outState.putString("skills", skills.text.toString())
+        outState.putString("description", description.text.toString())
+    }
     private fun showPopup(v: View) {
         val popup = PopupMenu(this, v)
         popup.menuInflater.inflate(R.menu.menu_profile_picture, popup.menu)
@@ -86,36 +126,12 @@ class EditProfileActivity : AppCompatActivity() {
 
         //ENCODE bitmap
         if (bitmap_photo != null){
-            val path = saveToInternalStorage(bitmap_photo!!) + "profile.jpeg";
-
-            //println(path)
+            println("EDIT_ BITMAP    ${encodeTobase64(bitmap_photo!!)}")
             i.putExtra("com.bancempo.PHOTO", encodeTobase64(bitmap_photo!!));
-            i.putExtra("com.bancempo.PHOTO_PROFILE", "bitmap");
         }
         else if (uri_photo != null){
-            val bmp:Bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri_photo);
-
-            val ins: InputStream? = applicationContext.contentResolver.openInputStream(uri_photo!!)
-            val ei = ExifInterface(ins!!)
-
-            val or = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-            val rotatedBitmap: Bitmap = when (or) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bmp, 90f);
-                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bmp, 180f)
-                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bmp, 270f)
-                ExifInterface.ORIENTATION_NORMAL -> bmp
-                else -> bmp
-            }
-
-            saveToInternalStorage(rotatedBitmap) + "profile.jpeg";
-
+            println("EDIT_ URI    $uri_photo")
             i.putExtra("com.bancempo.PHOTO", uri_photo.toString());
-            i.putExtra("com.bancempo.PHOTO_PROFILE", "uri");
-            //println("URI");
-        }
-        else{
-            i.putExtra("com.bancempo.PHOTO_PROFILE", "no");
-            //println("nothing");
         }
 
         i.putExtra("com.bancempo.FULL_NAME", findViewById<TextView>(R.id.editTextFullName).text.toString())
@@ -125,8 +141,6 @@ class EditProfileActivity : AppCompatActivity() {
         i.putExtra("com.bancempo.SKILLS", findViewById<TextView>(R.id.editTextSkills).text.toString())
         i.putExtra("com.bancempo.DESCRIPTION", findViewById<TextView>(R.id.editTextDescription).text.toString())
 
-
-        //println("pressing back button")
         setResult(Activity.RESULT_OK, i)
         super.onBackPressed()
     }
@@ -144,14 +158,32 @@ class EditProfileActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
             bitmap_photo = data.extras?.get("data") as Bitmap;
+            saveToInternalStorage(bitmap_photo!!) + "profile.jpeg";
             findViewById<ImageView>(R.id.profile_pic).setImageBitmap(bitmap_photo)
 
         } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null){
             // Get the url of the image from data
             uri_photo = data.data
             // update the preview image in the layout
+
+            //uri_or_bitmap = "uri"
+            val bmp:Bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri_photo);
+
+            val ins: InputStream? = applicationContext.contentResolver.openInputStream(uri_photo!!)
+            val ei = ExifInterface(ins!!)
+
+            val or = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            val rotatedBitmap: Bitmap = when (or) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bmp, 90f);
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bmp, 180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bmp, 270f)
+                ExifInterface.ORIENTATION_NORMAL -> bmp
+                else -> bmp
+            }
+
+            saveToInternalStorage(rotatedBitmap) + "profile.jpeg";
+
             findViewById<ImageView>(R.id.profile_pic).setImageURI(uri_photo)
-            println("uri_photo $uri_photo")
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
@@ -207,6 +239,17 @@ class EditProfileActivity : AppCompatActivity() {
             source, 0, 0, source.width, source.height,
             matrix, true
         )
+    }
+
+    fun loadImageFromStorage(path: String) {
+        try {
+            val f = File(path, "profile.jpeg")
+            val b = BitmapFactory.decodeStream(FileInputStream(f))
+            val img = findViewById<ImageView>(R.id.profile_pic)
+            img.setImageBitmap(b)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
     }
 
 }
