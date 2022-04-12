@@ -4,10 +4,13 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.ContextWrapper
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Base64
@@ -15,6 +18,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import java.io.*
 
@@ -75,19 +79,36 @@ class EditProfileActivity : AppCompatActivity() {
         popup.show()
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("WrongThread")
     override fun onBackPressed() {
         val i = Intent(this, ShowProfileActivity::class.java)
 
         //ENCODE bitmap
         if (bitmap_photo != null){
-            val path = saveToInternalStorage(bitmap_photo!!) + "profile.png";
+            val path = saveToInternalStorage(bitmap_photo!!) + "profile.jpeg";
 
             //println(path)
             i.putExtra("com.bancempo.PHOTO", encodeTobase64(bitmap_photo!!));
             i.putExtra("com.bancempo.PHOTO_PROFILE", "bitmap");
         }
         else if (uri_photo != null){
+            val bmp:Bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri_photo);
+
+            val ins: InputStream? = applicationContext.contentResolver.openInputStream(uri_photo!!)
+            val ei = ExifInterface(ins!!)
+
+            val or = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            val rotatedBitmap: Bitmap = when (or) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bmp, 90f);
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bmp, 180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bmp, 270f)
+                ExifInterface.ORIENTATION_NORMAL -> bmp
+                else -> bmp
+            }
+
+            saveToInternalStorage(rotatedBitmap) + "profile.jpeg";
+
             i.putExtra("com.bancempo.PHOTO", uri_photo.toString());
             i.putExtra("com.bancempo.PHOTO_PROFILE", "uri");
             //println("URI");
@@ -158,12 +179,12 @@ class EditProfileActivity : AppCompatActivity() {
         // path to /data/data/yourapp/app_data/imageDir
         val directory: File = cw.getDir("imageDir", MODE_PRIVATE)
         // Create imageDir
-        val mypath = File(directory, "profile.png")
+        val mypath = File(directory, "profile.jpeg")
         var fos: FileOutputStream? = null
         try {
             fos = FileOutputStream(mypath)
             // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -178,15 +199,15 @@ class EditProfileActivity : AppCompatActivity() {
         return directory.getAbsolutePath()
     }
 
-    private fun loadImageFromStorage(path: String) {
-        try {
-            val f = File(path, "profile.png")
-            val b = BitmapFactory.decodeStream(FileInputStream(f))
-            val img = findViewById<View>(R.id.profile_pic) as ImageView
-            img.setImageBitmap(b)
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        }
+
+    fun rotateImage(source: Bitmap, angle: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(angle)
+        return Bitmap.createBitmap(
+            source, 0, 0, source.width, source.height,
+            matrix, true
+        )
     }
+
 }
 
