@@ -60,7 +60,11 @@ class ShowProfileActivity : AppCompatActivity() {
                 }
             }
             else if (image =="uri"){
-                println("saving uri ${Uri.parse(photodaripristinare)}")
+                //println("saving uri ${Uri.parse(photodaripristinare)}")
+                if (photodaripristinare != null) {
+                    println("NUOVA FOTO DA RIPR $photodaripristinare")
+                    loadImageFromStorage(photodaripristinare)
+                }
                 //photo.setImageURI(Uri.parse(photodaripristinare));
                 //photo.setImageURI(Uri.parse(photodaripristinare));
                 //photo.setImageURI(uri);
@@ -78,14 +82,19 @@ class ShowProfileActivity : AppCompatActivity() {
         }
 
         else{
+            loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
-
-            fullName.text = sharedPref.getString(getString(R.string.full_name), "");
-            nickname.text = sharedPref.getString(getString(R.string.nickname), "");
-            email.text = sharedPref.getString(getString(R.string.email), "");
-            location.text = sharedPref.getString(getString(R.string.location), "");
-            skills.text = sharedPref.getString(getString(R.string.skills), "");
-            description.text = sharedPref.getString(getString(R.string.description), "");
+            val stringJSON:String? = sharedPref.getString("bancempoJSON", "")
+            var jObject: JSONObject? = null;
+            if(stringJSON != null && stringJSON != "") {
+                jObject = JSONObject(stringJSON);
+                fullName.text = jObject.getString(getString(R.string.full_name));
+                nickname.text = jObject.getString(getString(R.string.nickname));
+                email.text = jObject.getString(getString(R.string.email));
+                location.text = jObject.getString(getString(R.string.location));
+                skills.text = jObject.getString(getString(R.string.skills));
+                description.text = jObject.getString(getString(R.string.description));
+            }
 
             println("loading from sharedPrefs")
         }
@@ -140,7 +149,7 @@ class ShowProfileActivity : AppCompatActivity() {
     private fun editProfile() {
         val i = Intent(this, EditProfileActivity::class.java)
 
-        i.putExtra("com.bancempo.PHOTO", encodeTobase64(photo.drawToBitmap()))
+        i.putExtra("com.bancempo.PHOTO", EditProfileActivity().encodeTobase64(photo.drawToBitmap()))
         i.putExtra("com.bancempo.FULL_NAME", fullName.text.toString())
         i.putExtra("com.bancempo.NICKNAME", nickname.text.toString())
         i.putExtra("com.bancempo.EMAIL", email.text.toString())
@@ -159,7 +168,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
             if( photo_profile == "bitmap"){
                 image = "bitmap";
-                val photo = findViewById<ImageView>(R.id.profile_pic).setImageBitmap(decodeBase64(data.getStringExtra("com.bancempo.PHOTO")))
+                val photo = findViewById<ImageView>(R.id.profile_pic).setImageBitmap(EditProfileActivity().decodeBase64(data.getStringExtra("com.bancempo.PHOTO")))
             }
             else if (photo_profile == "uri"){
                 image = "uri"
@@ -185,15 +194,19 @@ class ShowProfileActivity : AppCompatActivity() {
             //val description =
             findViewById<TextView>(R.id.textViewDescription).setText(data.getStringExtra("com.bancempo.DESCRIPTION"))
 
+            val jObject = JSONObject()
+            jObject.put(getString(R.string.full_name), findViewById<TextView>(R.id.textViewFullName).text.toString())
+            jObject.put(getString(R.string.nickname), findViewById<TextView>(R.id.textViewNickname).text.toString());
+            jObject.put(getString(R.string.email), findViewById<TextView>(R.id.textViewEmail).text.toString());
+            jObject.put(getString(R.string.location), findViewById<TextView>(R.id.textViewLocation).text.toString());
+            jObject.put(getString(R.string.skills), findViewById<TextView>(R.id.textViewSkills).text.toString());
+            jObject.put(getString(R.string.description), findViewById<TextView>(R.id.textViewDescription).text.toString());
+
+
             //save all the textviews in the shared_preferences file
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
             with (sharedPref.edit()) {
-                putString(getString(R.string.full_name), findViewById<TextView>(R.id.textViewFullName).text.toString());
-                putString(getString(R.string.nickname), findViewById<TextView>(R.id.textViewNickname).text.toString());
-                putString(getString(R.string.email), findViewById<TextView>(R.id.textViewEmail).text.toString());
-                putString(getString(R.string.location), findViewById<TextView>(R.id.textViewLocation).text.toString());
-                putString(getString(R.string.skills), findViewById<TextView>(R.id.textViewSkills).text.toString());
-                putString(getString(R.string.description), findViewById<TextView>(R.id.textViewDescription).text.toString());
+                putString("bancempoJSON", jObject.toString());
                 apply()
             }
         } else {
@@ -202,24 +215,10 @@ class ShowProfileActivity : AppCompatActivity() {
     }
 
     /*------------------------------------  UTILITIES  -------------------------------------------*/
-    fun encodeTobase64(image: Bitmap): String? {
-        val baos = ByteArrayOutputStream()
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val b = baos.toByteArray()
-        val imageEncoded: String = Base64.encodeToString(b, Base64.DEFAULT)
-        //Log.d("Image Log:", imageEncoded)
-        return imageEncoded
-    }
-
-    fun decodeBase64(input: String?): Bitmap? {
-        val decodedByte: ByteArray = Base64.decode(input, 0)
-        return BitmapFactory
-            .decodeByteArray(decodedByte, 0, decodedByte.size)
-    }
 
     private fun loadImageFromStorage(path: String) {
         try {
-            val f = File(path, "profile.png")
+            val f = File(path, "profile.jpeg")
             val b = BitmapFactory.decodeStream(FileInputStream(f))
             val img = findViewById<ImageView>(R.id.profile_pic)
             img.setImageBitmap(b)
