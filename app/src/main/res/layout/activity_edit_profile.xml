@@ -8,7 +8,7 @@
     tools:context=".EditProfileActivity">
 
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/sv2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,6 +20,7 @@
 
 
         <LinearLayout
+            android:id="@+id/v1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -27,13 +28,14 @@
 
 
             <RelativeLayout
+                android:id="@+id/rl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_pic"
                     android:layout_width="match_parent"
-                    android:layout_height="170dp"
+                    android:layout_height="match_parent"
                     android:contentDescription="@string/profile_pic"
                     android:paddingTop="10dp"
                     android:src="@drawable/profile_pic_default"
@@ -59,6 +61,7 @@
 
 
             <LinearLayout
+                android:id="@+id/v2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="16dp"

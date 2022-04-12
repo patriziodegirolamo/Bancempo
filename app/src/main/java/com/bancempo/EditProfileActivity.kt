@@ -7,6 +7,7 @@ import android.content.ContextWrapper
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -17,6 +18,7 @@ import android.util.Base64
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -37,6 +39,9 @@ class EditProfileActivity : AppCompatActivity() {
     val REQUEST_IMAGE_CAPTURE = 1
     val SELECT_PICTURE = 200
 
+    lateinit var orientation : String
+    var w: Int = 0
+    var h: Int = 0
 
     //var uri_or_bitmap:String = "";
     var bitmap_photo :Bitmap? = null;
@@ -46,6 +51,10 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
+        val sv = findViewById<ScrollView>(R.id.sv2)
+        val v1 = findViewById<LinearLayout>(R.id.v1)
+        val v5 = findViewById<RelativeLayout>(R.id.rl)
+
         photo = findViewById<ImageView>(R.id.profile_pic)
         editPicture = findViewById<ImageButton>(R.id.changeImageButton)
         fullName = findViewById<TextView>(R.id.editTextFullName)
@@ -54,6 +63,33 @@ class EditProfileActivity : AppCompatActivity() {
         location = findViewById<TextView>(R.id.editTextLocation)
         skills = findViewById<TextView>(R.id.editTextSkills)
         description = findViewById<TextView>(R.id.editTextDescription)
+
+        val orientation: Int = this.resources.configuration.orientation
+
+        if (orientation === Configuration.ORIENTATION_LANDSCAPE ) {
+            v1.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    h = v1.height
+                    w = v1.width
+                    Log.d("Layout", "v1.requestLayout(): $w,$h")
+                    v5.post { v5.layoutParams = LinearLayout.LayoutParams(w / 3, h) }
+                    v1.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+
+        } else {
+            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
+                ViewTreeObserver.OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    h = sv.height
+                    w = sv.width
+                    Log.d("Layout", "v1.requestLayout(): $w,$h")
+                    v5.post { v5.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
+                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                }
+            })
+        }
 
 
         if (savedInstanceState != null) {
