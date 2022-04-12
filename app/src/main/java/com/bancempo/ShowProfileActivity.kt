@@ -63,6 +63,7 @@ class ShowProfileActivity : AppCompatActivity() {
         description = findViewById<TextView>(R.id.textViewDescription)
         chipGroup = findViewById<ChipGroup>(R.id.chipGroup)
 
+
         val orientation: Int = this.resources.configuration.orientation
 
         if (orientation === Configuration.ORIENTATION_LANDSCAPE ) {
