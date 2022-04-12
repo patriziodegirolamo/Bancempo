@@ -5,16 +5,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.content.SharedPreferences
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -25,13 +20,12 @@ import androidx.core.view.drawToBitmap
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.json.JSONObject
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 
 class ShowProfileActivity : AppCompatActivity() {
-    lateinit var fullName : TextView;
+    lateinit var fullName : TextView
     lateinit var photo : ImageView
     lateinit var nickname : TextView
     lateinit var email : TextView
@@ -41,7 +35,6 @@ class ShowProfileActivity : AppCompatActivity() {
 
     lateinit var chipGroup : ChipGroup
 
-    lateinit var orientation : String
     var w: Int = 0
     var h: Int = 0
 
@@ -97,56 +90,48 @@ class ShowProfileActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
 
 
-            fullName.text = savedInstanceState.getString("full_name");
-            nickname.text = savedInstanceState.getString("nickname");
-            email.text = savedInstanceState.getString("email");
-            location.text = savedInstanceState.getString("location");
+            fullName.text = savedInstanceState.getString("full_name")
+            nickname.text = savedInstanceState.getString("nickname")
+            email.text = savedInstanceState.getString("email")
+            location.text = savedInstanceState.getString("location")
             description.text = savedInstanceState.getString("description")
 
             val skillsString = savedInstanceState.getString("skills")
-            println("SKILLSTRING VISUALIZZAZIONE $skillsString")
             chipGroup.removeAllViews()
             if (skillsString != null) {
                 skillsString.split(",").forEach {
-                    var chip = Chip(this);
-                    println("CHIP VISUALIZZAZIONE ${it}")
+                    var chip = Chip(this)
                     if(!it.isEmpty()) {
-                        chip.setText(it);
-                        println("CHIP VISUALIZZAZIONE $chip")
-                        chipGroup.addView(chip);
+                        chip.setText(it)
+                        chipGroup.addView(chip)
                     }
                 }
             }
-
-            println("restoring from instance state")
         }
 
         else{
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
             val stringJSON:String? = sharedPref.getString("bancempoJSON", "")
-            var jObject: JSONObject? = null;
+            var jObject: JSONObject? = null
             if(stringJSON != null && stringJSON != "") {
-                jObject = JSONObject(stringJSON);
-                fullName.text = jObject.getString(getString(R.string.full_name));
-                nickname.text = jObject.getString(getString(R.string.nickname));
-                email.text = jObject.getString(getString(R.string.email));
-                location.text = jObject.getString(getString(R.string.location));
-                description.text = jObject.getString(getString(R.string.description));
-
-                val skillsString = jObject.getString(getString(R.string.skills));
-                println("SKILLSTRING JSON $skillsString")
+                jObject = JSONObject(stringJSON)
+                fullName.text = jObject.getString(getString(R.string.full_name))
+                nickname.text = jObject.getString(getString(R.string.nickname))
+                email.text = jObject.getString(getString(R.string.email))
+                location.text = jObject.getString(getString(R.string.location))
+                description.text = jObject.getString(getString(R.string.description))
+                val skillsString = jObject.getString(getString(R.string.skills))
                 chipGroup.removeAllViews()
                 if (skillsString != null) {
                     skillsString.split(",").forEach {
-                        var chip = Chip(this);
+                        var chip = Chip(this)
                         if(!it.isEmpty()) {
-                            chip.setText(it);
-                            chipGroup.addView(chip);
+                            chip.setText(it)
+                            chipGroup.addView(chip)
                         }
                     }
                 }
             }
-            println("loading from sharedPrefs");
         }
 
 
@@ -167,7 +152,6 @@ class ShowProfileActivity : AppCompatActivity() {
             val chip = chipGroup.getChildAt(i) as Chip
             chipText += "${chip.text},"
         }
-        println("SAVEINSTANCESTATE $chipText")
         outState.putString("skills", chipText)
     }
 
@@ -209,7 +193,6 @@ class ShowProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        println("RETURN TO SHOW");
         if (requestCode == 0 && resultCode == Activity.RESULT_OK && data != null) {
             loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
 
@@ -220,36 +203,35 @@ class ShowProfileActivity : AppCompatActivity() {
             description.text = data.getStringExtra("com.bancempo.DESCRIPTION")
 
             val skillsString = data.getStringExtra("com.bancempo.SKILLS")
-            println("SKILLSTRING ONACTIVITYRESULT $skillsString")
             chipGroup.removeAllViews()
             if (skillsString != null) {
                 skillsString.split(",").forEach {
-                    var chip = Chip(this);
+                    var chip = Chip(this)
                     if(!it.isEmpty()) {
-                        chip.setText(it);
-                        chipGroup.addView(chip);
+                        chip.setText(it)
+                        chipGroup.addView(chip)
                     }
                 }
             }
 
             val jObject = JSONObject()
             jObject.put(getString(R.string.full_name), fullName.text.toString())
-            jObject.put(getString(R.string.nickname), nickname.text.toString());
-            jObject.put(getString(R.string.email), email.text.toString());
-            jObject.put(getString(R.string.location), location.text.toString());
-            jObject.put(getString(R.string.description), description.text.toString());
+            jObject.put(getString(R.string.nickname), nickname.text.toString())
+            jObject.put(getString(R.string.email), email.text.toString())
+            jObject.put(getString(R.string.location), location.text.toString())
+            jObject.put(getString(R.string.description), description.text.toString())
 
             var chipText = ""
             for (i in 0 until chipGroup.childCount) {
                 val chip = chipGroup.getChildAt(i) as Chip
                 chipText += "${chip.text},"
             }
-            jObject.put(getString(R.string.skills), chipText);
+            jObject.put(getString(R.string.skills), chipText)
 
             //save all the textviews in the shared_preferences file
             val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
             with (sharedPref.edit()) {
-                putString("bancempoJSON", jObject.toString());
+                putString("bancempoJSON", jObject.toString())
                 apply()
             }
         } else {

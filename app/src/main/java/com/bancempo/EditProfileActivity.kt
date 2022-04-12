@@ -22,7 +22,6 @@ import android.view.ViewTreeObserver
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.forEach
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import java.io.*
@@ -30,7 +29,7 @@ import java.io.*
 
 class EditProfileActivity : AppCompatActivity() {
 
-    lateinit var fullName : TextView;
+    lateinit var fullName : TextView
     lateinit var photo : ImageView
     lateinit var nickname : TextView
     lateinit var email : TextView
@@ -39,20 +38,19 @@ class EditProfileActivity : AppCompatActivity() {
     lateinit var description : TextView
     lateinit var editPicture : ImageButton
 
-    lateinit var editText: EditText;
-    lateinit var addchipbutton: ImageButton;
-    lateinit var chipGroup: ChipGroup;
+    lateinit var editText: EditText
+    lateinit var addchipbutton: ImageButton
+    lateinit var chipGroup: ChipGroup
 
     val REQUEST_IMAGE_CAPTURE = 1
     val SELECT_PICTURE = 200
 
-    lateinit var orientation : String
     var w: Int = 0
     var h: Int = 0
 
-    //var uri_or_bitmap:String = "";
-    var bitmap_photo :Bitmap? = null;
-    var uri_photo :Uri? = null;
+    //var uri_or_bitmap:String = ""
+    var bitmap_photo :Bitmap? = null
+    var uri_photo :Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,15 +69,15 @@ class EditProfileActivity : AppCompatActivity() {
         skills = findViewById<TextView>(R.id.editTextSkills)
         description = findViewById<TextView>(R.id.editTextDescription)
 
-        editText = findViewById<EditText>(R.id.editTextSkills);
+        editText = findViewById<EditText>(R.id.editTextSkills)
         addchipbutton = findViewById<ImageButton>(R.id.addchipbutton)
-        chipGroup = findViewById<ChipGroup>(R.id.chipGroup);
+        chipGroup = findViewById<ChipGroup>(R.id.chipGroup)
 
         addchipbutton.setOnClickListener{
             if(!editText.text.toString().isEmpty()){
-                addChip(editText.text.toString());
+                addChip(editText.text.toString())
 
-                editText.setText("");
+                editText.setText("")
             }
         }
 
@@ -113,31 +111,28 @@ class EditProfileActivity : AppCompatActivity() {
 
         if (savedInstanceState != null) {
             loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
-            fullName.text = savedInstanceState.getString("full_name");
-            nickname.text = savedInstanceState.getString("nickname");
-            email.text = savedInstanceState.getString("email");
-            location.text = savedInstanceState.getString("location");
+            fullName.text = savedInstanceState.getString("full_name")
+            nickname.text = savedInstanceState.getString("nickname")
+            email.text = savedInstanceState.getString("email")
+            location.text = savedInstanceState.getString("location")
             description.text = savedInstanceState.getString("description")
 
             val skillsString = savedInstanceState.getString("skills")
-            println("SKILLSTRING SAVEDINSTANCESTATE EDIT $skillsString")
             if (skillsString != null) {
                 chipGroup.removeAllViews()
                 skillsString.split(",").forEach {
-                    var chip = Chip(this);
+                    var chip = Chip(this)
                     if(!it.isEmpty()) {
-                        chip.setText(it);
-                        chip.isCloseIconVisible = true;
+                        chip.setText(it)
+                        chip.isCloseIconVisible = true
 
                         chip.setOnCloseIconClickListener {
                             chipGroup.removeView(chip)
                         }
-                        chipGroup.addView(chip);
+                        chipGroup.addView(chip)
                     }
                 }
             }
-
-            println("restoring from instance state")
         }
 
         else{
@@ -151,19 +146,18 @@ class EditProfileActivity : AppCompatActivity() {
             description.text = intent.getStringExtra("com.bancempo.DESCRIPTION")
 
             val skillsString = intent.getStringExtra("com.bancempo.SKILLS")
-            println("SKILLSTRING INTENT EDIT$skillsString")
             chipGroup.removeAllViews()
             if (skillsString != null) {
                 skillsString.split(",").forEach {
-                    var chip = Chip(this);
+                    var chip = Chip(this)
                     if(!it.isEmpty()) {
-                        chip.setText(it);
-                        chip.isCloseIconVisible = true;
+                        chip.setText(it)
+                        chip.isCloseIconVisible = true
 
                         chip.setOnCloseIconClickListener {
                             chipGroup.removeView(chip)
                         }
-                        chipGroup.addView(chip);
+                        chipGroup.addView(chip)
                     }
                 }
             }
@@ -189,8 +183,6 @@ class EditProfileActivity : AppCompatActivity() {
             chipText += "${chip.text},"
         }
         outState.putString("skills", chipText)
-
-        println("PROVA CHIPSTEXT ${skills.text.toString()}");
     }
     private fun showPopup(v: View) {
         val popup = PopupMenu(this, v)
@@ -223,12 +215,10 @@ class EditProfileActivity : AppCompatActivity() {
 
         //ENCODE bitmap
         if (bitmap_photo != null){
-            println("EDIT_ BITMAP    ${encodeTobase64(bitmap_photo!!)}")
-            i.putExtra("com.bancempo.PHOTO", encodeTobase64(bitmap_photo!!));
+            i.putExtra("com.bancempo.PHOTO", encodeTobase64(bitmap_photo!!))
         }
         else if (uri_photo != null){
-            println("EDIT_ URI    $uri_photo")
-            i.putExtra("com.bancempo.PHOTO", uri_photo.toString());
+            i.putExtra("com.bancempo.PHOTO", uri_photo.toString())
         }
 
         i.putExtra("com.bancempo.FULL_NAME", findViewById<TextView>(R.id.editTextFullName).text.toString())
@@ -242,7 +232,7 @@ class EditProfileActivity : AppCompatActivity() {
             val chip = chipGroup.getChildAt(i) as Chip
             chipText += "${chip.text},"
         }
-        println("CHIPTEXT BACKPRESSED $chipText")
+
         i.putExtra("com.bancempo.SKILLS", chipText)
 
         setResult(Activity.RESULT_OK, i)
@@ -261,8 +251,8 @@ class EditProfileActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
-            bitmap_photo = data.extras?.get("data") as Bitmap;
-            saveToInternalStorage(bitmap_photo!!) + "profile.jpeg";
+            bitmap_photo = data.extras?.get("data") as Bitmap
+            saveToInternalStorage(bitmap_photo!!) + "profile.jpeg"
             findViewById<ImageView>(R.id.profile_pic).setImageBitmap(bitmap_photo)
 
         } else if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null){
@@ -271,21 +261,21 @@ class EditProfileActivity : AppCompatActivity() {
             // update the preview image in the layout
 
             //uri_or_bitmap = "uri"
-            val bmp:Bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri_photo);
+            val bmp:Bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri_photo)
 
             val ins: InputStream? = applicationContext.contentResolver.openInputStream(uri_photo!!)
             val ei = ExifInterface(ins!!)
 
-            val or = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            val or = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
             val rotatedBitmap: Bitmap = when (or) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bmp, 90f);
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bmp, 90f)
                 ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bmp, 180f)
                 ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bmp, 270f)
                 ExifInterface.ORIENTATION_NORMAL -> bmp
                 else -> bmp
             }
 
-            saveToInternalStorage(rotatedBitmap) + "profile.jpeg";
+            saveToInternalStorage(rotatedBitmap) + "profile.jpeg"
 
             findViewById<ImageView>(R.id.profile_pic).setImageURI(uri_photo)
         } else {
@@ -297,7 +287,7 @@ class EditProfileActivity : AppCompatActivity() {
         val chip = Chip(this)
         chip.text = text
 
-        chip.isCloseIconVisible = true;
+        chip.isCloseIconVisible = true
 
         chip.setOnCloseIconClickListener{
             chipGroup.removeView(chip)
