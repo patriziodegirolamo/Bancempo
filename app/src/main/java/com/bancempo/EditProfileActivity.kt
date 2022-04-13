@@ -347,11 +347,13 @@ class EditProfileActivity : AppCompatActivity() {
         )
     }
 
-    fun loadImageFromStorage(path: String) {
+    private fun loadImageFromStorage(path: String) {
         try {
             val f = File(path, "profile.jpeg")
-            val b = BitmapFactory.decodeStream(FileInputStream(f))
+            val fis = FileInputStream(f)
+            val b = BitmapFactory.decodeStream(fis)
             val img = findViewById<ImageView>(R.id.profile_pic)
+            fis.close()
             img.setImageBitmap(b)
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
