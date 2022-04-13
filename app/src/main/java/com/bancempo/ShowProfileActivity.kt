@@ -42,10 +42,6 @@ class ShowProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_profile)
 
-        val sv = findViewById<ScrollView>(R.id.sv)
-        val v1 = findViewById<LinearLayout>(R.id.v1)
-        val v5 = findViewById<LinearLayout>(R.id.v5)
-
 
         fullName = findViewById<TextView>(R.id.textViewFullName)
         photo = findViewById<ImageView>(R.id.profile_pic)
@@ -59,30 +55,6 @@ class ShowProfileActivity : AppCompatActivity() {
 
         val orientation: Int = this.resources.configuration.orientation
 
-        if (orientation === Configuration.ORIENTATION_LANDSCAPE ) {
-            v1.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    h = v1.height
-                    w = v1.width
-                    Log.d("Layout", "v1.requestLayout(): $w,$h")
-                    //v5.post { v5.layoutParams = LinearLayout.LayoutParams(w / 3, h) }
-                    v1.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
-
-        } else {
-            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    h = sv.height
-                    w = sv.width
-                    Log.d("Layout", "v1.requestLayout(): $w,$h")
-                    v5.post { v5.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
-                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
-        }
 
 
         loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
@@ -98,7 +70,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
             val skillsString = savedInstanceState.getString("skills")
             chipGroup.removeAllViews()
-            if (skillsString != null) {
+            if (skillsString != null && skillsString != "") {
                 skillsString.split(",").forEach {
                     var chip = Chip(this)
                     if(!it.isEmpty()) {
@@ -122,7 +94,7 @@ class ShowProfileActivity : AppCompatActivity() {
                 description.text = jObject.getString(getString(R.string.description))
                 val skillsString = jObject.getString(getString(R.string.skills))
                 chipGroup.removeAllViews()
-                if (skillsString != null) {
+                if (skillsString != "") {
                     skillsString.split(",").forEach {
                         var chip = Chip(this)
                         if(!it.isEmpty()) {
@@ -204,7 +176,7 @@ class ShowProfileActivity : AppCompatActivity() {
 
             val skillsString = data.getStringExtra("com.bancempo.SKILLS")
             chipGroup.removeAllViews()
-            if (skillsString != null) {
+            if (skillsString != null && skillsString != "") {
                 skillsString.split(",").forEach {
                     var chip = Chip(this)
                     if(!it.isEmpty()) {

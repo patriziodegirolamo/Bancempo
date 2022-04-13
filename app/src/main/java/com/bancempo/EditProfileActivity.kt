@@ -56,10 +56,6 @@ class EditProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
-        val sv = findViewById<ScrollView>(R.id.sv2)
-        val v1 = findViewById<LinearLayout>(R.id.v1)
-        val v5 = findViewById<RelativeLayout>(R.id.rl)
-
         photo = findViewById<ImageView>(R.id.profile_pic)
         editPicture = findViewById<ImageButton>(R.id.changeImageButton)
         fullName = findViewById<TextView>(R.id.editTextFullName)
@@ -83,6 +79,7 @@ class EditProfileActivity : AppCompatActivity() {
 
         val orientation: Int = this.resources.configuration.orientation
 
+        /*
         if (orientation === Configuration.ORIENTATION_LANDSCAPE ) {
             v1.viewTreeObserver.addOnGlobalLayoutListener(object :
                 ViewTreeObserver.OnGlobalLayoutListener {
@@ -107,6 +104,8 @@ class EditProfileActivity : AppCompatActivity() {
                 }
             })
         }
+
+         */
 
 
         if (savedInstanceState != null) {
@@ -147,7 +146,7 @@ class EditProfileActivity : AppCompatActivity() {
 
             val skillsString = intent.getStringExtra("com.bancempo.SKILLS")
             chipGroup.removeAllViews()
-            if (skillsString != null) {
+            if (skillsString != null && skillsString != "") {
                 skillsString.split(",").forEach {
                     var chip = Chip(this)
                     if(!it.isEmpty()) {
@@ -275,6 +274,7 @@ class EditProfileActivity : AppCompatActivity() {
                 else -> bmp
             }
 
+            ins.close()
             saveToInternalStorage(rotatedBitmap) + "profile.jpeg"
 
             findViewById<ImageView>(R.id.profile_pic).setImageURI(uri_photo)
@@ -302,6 +302,7 @@ class EditProfileActivity : AppCompatActivity() {
         val b = baos.toByteArray()
         val imageEncoded: String = Base64.encodeToString(b, Base64.DEFAULT)
         //Log.d("Image Log:", imageEncoded)
+        baos.close()
         return imageEncoded
     }
 
@@ -318,21 +319,14 @@ class EditProfileActivity : AppCompatActivity() {
         val directory: File = cw.getDir("imageDir", MODE_PRIVATE)
         // Create imageDir
         val mypath = File(directory, "profile.jpeg")
-        var fos: FileOutputStream? = null
+        val fos: FileOutputStream?
         try {
             fos = FileOutputStream(mypath)
             // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage.compress(Bitmap.CompressFormat.JPEG, 100, fos)
+            fos.close()
         } catch (e: Exception) {
             e.printStackTrace()
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close()
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
         }
         return directory.getAbsolutePath()
     }
@@ -341,6 +335,7 @@ class EditProfileActivity : AppCompatActivity() {
     fun rotateImage(source: Bitmap, angle: Float): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(angle)
+
         return Bitmap.createBitmap(
             source, 0, 0, source.width, source.height,
             matrix, true
