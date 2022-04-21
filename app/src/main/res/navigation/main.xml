@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/editProfileFragment">
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.bancempo.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" >
+        <action
+            android:id="@+id/action_editProfileFragment_to_showProfileFragment"
+            app:destination="@id/showProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showProfileFragment"
+        android:name="com.bancempo.ShowProfileFragment"
+        android:label="ShowProfileFragment" >
+        <action
+            android:id="@+id/action_showProfileFragment_to_timeSlotListFragment"
+            app:destination="@id/timeSlotListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/timeSlotDetailsFragment"
+        android:name="com.bancempo.TimeSlotDetailsFragment"
+        android:label="TimeSlotDetailsFragment" >
+        <action
+            android:id="@+id/action_timeSlotDetailsFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/timeSlotEditFragment"
+        android:name="com.bancempo.TimeSlotEditFragment"
+        android:label="TimeSlotEditFragment" >
+        <action
+            android:id="@+id/action_timeSlotEditFragment_to_timeSlotDetailsFragment"
+            app:destination="@id/timeSlotDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/timeSlotListFragment"
+        android:name="com.bancempo.TimeSlotListFragment"
+        android:label="TimeSlotListFragment" >
+        <action
+            android:id="@+id/action_timeSlotListFragment_to_timeSlotEditFragment"
+            app:destination="@id/timeSlotEditFragment" />
+    </fragment>
+</navigation>

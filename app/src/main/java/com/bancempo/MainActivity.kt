@@ -7,7 +7,10 @@ import android.os.Bundle
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val i = Intent(this, ShowProfileActivity::class.java)
-        startActivity(i)
+
+        setContentView(R.layout.activity_main)
+
+        //val i = Intent(this, ShowProfileActivity::class.java)
+        //startActivity(i)
     }
 }
