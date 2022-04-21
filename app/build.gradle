@@ -29,6 +29,12 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
+
 }
 
 dependencies {
@@ -57,4 +63,7 @@ dependencies {
     // UI Tests
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.1.1'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    //nav drawer
+    implementation "com.google.android.material:material:1.5.0"
 }

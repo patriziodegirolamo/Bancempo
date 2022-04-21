@@ -45,17 +45,7 @@
             android:id="@+id/action_timeSlotDetailsFragment_to_showProfileFragment"
             app:destination="@id/showProfileFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/timeSlotEditFragment"
-        android:name="com.bancempo.TimeSlotEditFragment"
-        android:label="TimeSlotEditFragment" >
-        <action
-            android:id="@+id/action_timeSlotEditFragment_to_timeSlotListFragment"
-            app:destination="@id/timeSlotListFragment" />
-        <action
-            android:id="@+id/action_timeSlotEditFragment_to_showProfileFragment"
-            app:destination="@id/showProfileFragment" />
-    </fragment>
+
     <fragment
         android:id="@+id/timeSlotListFragment"
         android:name="com.bancempo.TimeSlotListFragment"
