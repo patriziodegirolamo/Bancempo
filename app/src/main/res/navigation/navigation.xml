@@ -6,7 +6,7 @@
     app:startDestination="@id/timeSlotListFragment">
 
     <fragment
-        android:id="@+id/editProfileFragment"
+        android:id="@+id/timeSlotEditFragment"
         android:name="com.bancempo.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" >
@@ -23,7 +23,7 @@
         android:label="ShowProfileFragment" >
         <action
             android:id="@+id/action_showProfileFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
+            app:destination="@id/timeSlotEditFragment" />
         <action
             android:id="@+id/action_showProfileFragment_self"
             app:destination="@id/showProfileFragment" />

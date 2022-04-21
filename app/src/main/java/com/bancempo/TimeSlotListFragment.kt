@@ -14,12 +14,13 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list){
         val buttonProfile = view.findViewById<Button>(R.id.buttonProfile)
         val buttonList = view.findViewById<Button>(R.id.buttonList)
 
+
         buttonProfile.setOnClickListener{
             findNavController().navigate(R.id.action_timeSlotListFragment_to_showProfileFragment)
         }
 
         buttonList.setOnClickListener{
-            findNavController().navigate(R.id.action_timeSlotListFragment_self)
+            findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment)
         }
     }
 }
