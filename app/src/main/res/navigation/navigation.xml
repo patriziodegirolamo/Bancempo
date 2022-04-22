@@ -8,8 +8,7 @@
     <fragment
         android:id="@+id/timeSlotEditFragment"
         android:name="com.bancempo.EditProfileFragment"
-        android:label="fragment_edit_profile"
-        tools:layout="@layout/fragment_edit_profile" >
+        >
         <action
             android:id="@+id/action_editProfileFragment_to_showProfileFragment"
             app:destination="@id/showProfileFragment" />
@@ -20,7 +19,7 @@
     <fragment
         android:id="@+id/showProfileFragment"
         android:name="com.bancempo.ShowProfileFragment"
-        android:label="ShowProfileFragment" >
+        >
         <action
             android:id="@+id/action_showProfileFragment_to_editProfileFragment"
             app:destination="@id/timeSlotEditFragment" />
@@ -34,7 +33,7 @@
     <fragment
         android:id="@+id/timeSlotDetailsFragment"
         android:name="com.bancempo.TimeSlotDetailsFragment"
-        android:label="TimeSlotDetailsFragment" >
+        >
         <action
             android:id="@+id/action_timeSlotDetailsFragment_to_timeSlotEditFragment"
             app:destination="@id/timeSlotEditFragment" />
@@ -49,7 +48,7 @@
     <fragment
         android:id="@+id/timeSlotListFragment"
         android:name="com.bancempo.TimeSlotListFragment"
-        android:label="TimeSlotListFragment" >
+        >
         <action
             android:id="@+id/action_timeSlotListFragment_to_timeSlotEditFragment"
             app:destination="@id/timeSlotEditFragment" />
