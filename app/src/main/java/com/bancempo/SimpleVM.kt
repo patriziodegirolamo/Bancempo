@@ -1,3 +1,4 @@
+/*
 package com.bancempo
 
 import android.app.Application
@@ -29,3 +30,4 @@ class SimpleVM(application: Application): AndroidViewModel(application) {
     }
 
 }
+ */

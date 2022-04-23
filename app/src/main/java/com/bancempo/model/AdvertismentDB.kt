@@ -1,3 +1,4 @@
+/*
 package com.bancempo.model
 
 import android.content.Context
@@ -30,3 +31,5 @@ abstract class AdvertismentDB : RoomDatabase() {
 
     }
 }
+
+ */

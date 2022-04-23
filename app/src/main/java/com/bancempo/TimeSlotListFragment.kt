@@ -1,24 +1,22 @@
 package com.bancempo
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+
 
 class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
-    var newPos = 0
-
-    var sadvs = listOf<SmallAdv>()
-    val vm by viewModels<SimpleVM>()
-
-    //serve solo per fare il clear della lista!
-    var firstTime = true
+    var sadvs = mutableListOf<SmallAdv>()
 
     lateinit var llm: LinearLayoutManager
     lateinit var adapter: SmallAdvAdapter
@@ -32,32 +30,32 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
 
+
         llm = LinearLayoutManager(context)
         adapter = SmallAdvAdapter(sadvs)
+
+        val gson = Gson()
+        val sharedPref = context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
+        if( sharedPref == null ){
+            with(sharedPref?.edit()){
+                this?.putString("json_advs_list", "")
+            }?.apply()
+        }
+
+        val stringJSON:String? = sharedPref?.getString("json_advs_list", "")
+        if(stringJSON != null && stringJSON != ""){
+            val myType = object : TypeToken<MutableList<SmallAdv>>() {}.type
+            sadvs = gson.fromJson<MutableList<SmallAdv>>(stringJSON, myType)
+        }
+
+        if (sadvs.isEmpty()) {
+            Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
+        }
+
+        llm.stackFromEnd = true
+        llm.reverseLayout = true
         rv.layoutManager = llm
-        rv.adapter = adapter
-
-        vm.totAdv.observe(viewLifecycleOwner) {
-
-        }
-        vm.advs.observe(viewLifecycleOwner) { list ->
-            if (firstTime) {
-                //vm.clear()
-            }
-            newPos = list.size
-            //list.forEach{println("----------------------------------${it.toString()}")}
-            sadvs = list.map { it.toSmallAdv() }
-            if (list.isEmpty()) {
-                Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
-            }
-
-            println("---------------initialize list inside")
-            rv.layoutManager = llm
-            rv.adapter = SmallAdvAdapter(sadvs)
-            firstTime = false
-
-        }
-
+        rv.adapter = SmallAdvAdapter(sadvs)
 
         buttonProfile.setOnClickListener {
             findNavController().navigate(R.id.action_timeSlotListFragment_to_showProfileFragment)
@@ -67,16 +65,32 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment)
         }
 
+
         fab.setOnClickListener {
-            vm.add(newPos)
+            val adv = SmallAdv("advertisment${sadvs.size}", "${sadvs.size}/11/2022")
+            sadvs.add(adv)
 
-            println("-----------------add elem to list")
 
+            adapter.notifyItemInserted(0)
             llm.stackFromEnd = true
-            adapter.notifyItemInserted(newPos)
+            llm.reverseLayout = true
+            rv.layoutManager = llm
+            rv.adapter = SmallAdvAdapter(sadvs)
+
+
+            val gson = Gson()
+            val jsonAdvList = gson.toJson(sadvs)
+
+            val sharedPref = context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
+            with(sharedPref?.edit()){
+                this?.putString("json_advs_list", jsonAdvList)
+            }?.apply()
+
         }
 
+
     }
+
 
 
 }

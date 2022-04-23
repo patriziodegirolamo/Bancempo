@@ -1,3 +1,4 @@
+/*
 package com.bancempo.model
 
 import android.app.Application
@@ -24,3 +25,5 @@ class AdvRepository(application: Application) {
 
     fun clear() : Unit = advDao.clear()
 }
+
+ */

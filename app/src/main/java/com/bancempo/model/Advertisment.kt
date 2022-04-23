@@ -1,3 +1,4 @@
+/*
 package com.bancempo.model
 
 import androidx.room.Entity
@@ -17,3 +18,5 @@ class Advertisment {
 
     fun toSmallAdv() : SmallAdv = SmallAdv(title, date)
 }
+
+ */

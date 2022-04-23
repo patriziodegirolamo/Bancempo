@@ -1,3 +1,4 @@
+/*
 package com.bancempo.model
 
 import androidx.lifecycle.LiveData
@@ -20,3 +21,4 @@ interface AdvDAO {
     @Query("DELETE from advertisments")
     fun clear()
 }
+*/
