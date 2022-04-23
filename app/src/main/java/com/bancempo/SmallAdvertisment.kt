@@ -1,9 +1,16 @@
 package com.bancempo
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -45,9 +52,15 @@ class SmallAdvAdapter(val data: List<SmallAdv>) : RecyclerView.Adapter<SmallAdvA
 
         }
 
+        holder.itemView.setOnClickListener{
+            //TODO passare come argomenti: title, data, ecc
+            val bundle = Bundle()
+            bundle.putString("title", data[position].title)
+            bundle.putString("date", data[position].date)
 
+            findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment, bundle)
+        }
     }
 
     override fun getItemCount(): Int = data.size
 }
-
