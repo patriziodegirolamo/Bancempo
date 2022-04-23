@@ -10,7 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 data class SmallAdv(val title:String, val date:String) {
 }
 
-class SmallAdvAdapter(val data: MutableList<SmallAdv>) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
+class SmallAdvAdapter(val data: List<SmallAdv>) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
         val title: TextView = v.findViewById(R.id.tvSmallAdvTitle)
         val date: TextView = v.findViewById(R.id.tvsmallAdvDate)

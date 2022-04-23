@@ -3,17 +3,26 @@ package com.bancempo
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list){
+class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     var newPos = 0
-    lateinit var adapter : SmallAdvAdapter
-    lateinit var llm : LinearLayoutManager
+
+    var sadvs = listOf<SmallAdv>()
+    val vm by viewModels<SimpleVM>()
+
+    //serve solo per fare il clear della lista!
+    var firstTime = true
+
+    lateinit var llm: LinearLayoutManager
+    lateinit var adapter: SmallAdvAdapter
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -23,50 +32,51 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list){
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
 
-        val advs:MutableList<SmallAdv> = createInitialListOfAdvs(15)
+        llm = LinearLayoutManager(context)
+        adapter = SmallAdvAdapter(sadvs)
+        rv.layoutManager = llm
+        rv.adapter = adapter
 
-        buttonProfile.setOnClickListener{
+        vm.totAdv.observe(viewLifecycleOwner) {
+
+        }
+        vm.advs.observe(viewLifecycleOwner) { list ->
+            if (firstTime) {
+                //vm.clear()
+            }
+            newPos = list.size
+            //list.forEach{println("----------------------------------${it.toString()}")}
+            sadvs = list.map { it.toSmallAdv() }
+            if (list.isEmpty()) {
+                Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
+            }
+
+            println("---------------initialize list inside")
+            rv.layoutManager = llm
+            rv.adapter = SmallAdvAdapter(sadvs)
+            firstTime = false
+
+        }
+
+
+        buttonProfile.setOnClickListener {
             findNavController().navigate(R.id.action_timeSlotListFragment_to_showProfileFragment)
         }
 
-        buttonList.setOnClickListener{
+        buttonList.setOnClickListener {
             findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment)
         }
 
-        //se schiaccio il fab (a runtime!), setto llm e adapter
-        fab.setOnClickListener{
-            advs.add(newPos, SmallAdv("adv${newPos}", "${newPos}/01/12"))
-            newPos++
+        fab.setOnClickListener {
+            vm.add(newPos)
 
-            //ricarico adapter e llm
-            adapter = SmallAdvAdapter(advs)
-            llm = LinearLayoutManager(context)
+            println("-----------------add elem to list")
 
-            //setto adapter e llm
             llm.stackFromEnd = true
-            adapter.notifyItemInserted(advs.size)
-
-            //setto la view
-            rv.layoutManager = llm
-            rv.adapter = adapter
-
+            adapter.notifyItemInserted(newPos)
         }
 
-        //di default setto llm e adapter
-        llm = LinearLayoutManager(context)
-        adapter = SmallAdvAdapter(advs)
-        rv.layoutManager = llm
-        rv.adapter = adapter
     }
 
-    private fun createInitialListOfAdvs(n: Int): MutableList<SmallAdv>{
-        val l = mutableListOf<SmallAdv>()
-        newPos = n
-        for(i in 0..n-1){
-            val k = SmallAdv("adv${i}", "${i}/01/12")
-            l.add(k)
-        }
-        return l
-    }
 
 }
