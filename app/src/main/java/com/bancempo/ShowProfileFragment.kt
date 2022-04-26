@@ -13,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.core.view.drawToBitmap
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.json.JSONObject
@@ -33,11 +35,9 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
 
     lateinit var chipGroup : ChipGroup
 
-    var w: Int = 0
-    var h: Int = 0
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
 
         fullName = view.findViewById<TextView>(R.id.textViewFullName)
@@ -48,10 +48,6 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         skills = view.findViewById<TextView>(R.id.textViewSkills)
         description = view.findViewById<TextView>(R.id.textViewDescription)
         chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
-
-
-        val orientation: Int = this.resources.configuration.orientation
-
 
 
         loadImageFromStorage("/data/user/0/com.bancempo/app_imageDir")
@@ -69,7 +65,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             chipGroup.removeAllViews()
             if (skillsString != null && skillsString != "") {
                 skillsString.split(",").forEach {
-                    var chip = Chip(activity)
+                    val chip = Chip(activity)
                     if(!it.isEmpty()) {
                         chip.setText(it)
                         chipGroup.addView(chip)
@@ -81,7 +77,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         else{
             val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
             val stringJSON:String? = sharedPref.getString("bancempoJSON", "")
-            var jObject: JSONObject? = null
+            val jObject: JSONObject?
             if(stringJSON != null && stringJSON != "") {
                 jObject = JSONObject(stringJSON)
                 fullName.text = jObject.getString(getString(R.string.full_name))
@@ -125,6 +121,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
+        println("----------------on create menu!")
         inflater.inflate(R.menu.menu_profile, menu)
     }
 
@@ -140,6 +137,13 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
 
     private fun editProfile() {
         val i = Intent(activity, EditProfileActivity::class.java)
+
+        val bundle = Bundle()
+
+        bundle.putString("com.bancempo.FULL_NAME", fullName.text.toString())
+        findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment, bundle)
+
+        /*
         i.putExtra("com.bancempo.PHOTO", encodeToBase64(photo.drawToBitmap()))
         i.putExtra("com.bancempo.FULL_NAME", fullName.text.toString())
         i.putExtra("com.bancempo.NICKNAME", nickname.text.toString())
@@ -148,13 +152,17 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         i.putExtra("com.bancempo.DESCRIPTION", description.text.toString())
 
         var chipText = ""
-        for (i in 0 until chipGroup.childCount) {
-            val chip = chipGroup.getChildAt(i) as Chip
+        for (j in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(j) as Chip
             chipText += "${chip.text},"
         }
         i.putExtra("com.bancempo.SKILLS", chipText)
 
+
+
         startActivityForResult(i, 0)
+
+        */
 
     }
 
@@ -173,7 +181,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             chipGroup.removeAllViews()
             if (skillsString != null && skillsString != "") {
                 skillsString.split(",").forEach {
-                    var chip = Chip(activity)
+                    val chip = Chip(activity)
                     if(!it.isEmpty()) {
                         chip.setText(it)
                         chipGroup.addView(chip)
@@ -221,7 +229,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         }
     }
 
-    fun encodeToBase64(image: Bitmap): String? {
+    fun encodeToBase64(image: Bitmap): String {
         val baos = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val b = baos.toByteArray()

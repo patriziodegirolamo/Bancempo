@@ -1,5 +1,5 @@
 package com.bancempo
-/*
+
 
 
 import android.annotation.SuppressLint
@@ -29,14 +29,14 @@ import java.io.*
 
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
-    lateinit var fullName : TextView
-    lateinit var photo : ImageView
-    lateinit var nickname : TextView
-    lateinit var email : TextView
-    lateinit var location : TextView
-    lateinit var skills : TextView
-    lateinit var description : TextView
-    lateinit var editPicture : ImageButton
+    lateinit var fullName: TextView
+    lateinit var photo: ImageView
+    lateinit var nickname: TextView
+    lateinit var email: TextView
+    lateinit var location: TextView
+    lateinit var skills: TextView
+    lateinit var description: TextView
+    lateinit var editPicture: ImageButton
 
     lateinit var editText: EditText
     lateinit var addchipbutton: ImageButton
@@ -49,11 +49,13 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     var h: Int = 0
 
     //var uri_or_bitmap:String = ""
-    var bitmap_photo : Bitmap? = null
-    var uri_photo : Uri? = null
-    
+    var bitmap_photo: Bitmap? = null
+    var uri_photo: Uri? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        /*
         val tv = view.findViewById<TextView>(R.id.textView)
         tv.setOnClickListener{
             findNavController().navigate(R.id.action_editProfileFragment_to_showProfileFragment)
@@ -82,33 +84,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         val orientation: Int = this.resources.configuration.orientation
 
-        /*
-        if (orientation === Configuration.ORIENTATION_LANDSCAPE ) {
-            v1.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    h = v1.height
-                    w = v1.width
-                    Log.d("Layout", "v1.requestLayout(): $w,$h")
-                    //v5.post { v5.layoutParams = LinearLayout.LayoutParams(w / 3, h) }
-                    v1.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
-
-        } else {
-            sv.viewTreeObserver.addOnGlobalLayoutListener(object :
-                ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    h = sv.height
-                    w = sv.width
-                    Log.d("Layout", "v1.requestLayout(): $w,$h")
-                    v5.post { v5.layoutParams = LinearLayout.LayoutParams(w, h / 3) }
-                    sv.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                }
-            })
-        }
-
-         */
 
 
         if (savedInstanceState != null) {
@@ -168,11 +143,20 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         editPicture.setOnClickListener {
             showPopup(editPicture)
         }
+
+
+
+
+         */
     }
 
+
+
+    /*
     @SuppressLint("SdCardPath")
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+
         outState.putString("full_name", fullName.text.toString())
         outState.putString("nickname", nickname.text.toString())
         outState.putString("email", email.text.toString())
@@ -185,9 +169,15 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             chipText += "${chip.text},"
         }
         outState.putString("skills", chipText)
+
+
     }
 
+
+     */
+    /*
     private fun showPopup(v: View) {
+
         val popup = PopupMenu(this, v)
         popup.menuInflater.inflate(R.menu.menu_profile_picture, popup.menu)
 
@@ -211,6 +201,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         popup.show()
     }
 
+     */
+
+    /*
     @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("WrongThread")
     override fun onBackPressed() {
@@ -242,6 +235,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         super.onBackPressed()
     }
 
+     */
+
+    /*
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
@@ -252,6 +248,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
     }
 
+     */
+
+    /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             bitmap_photo = data.extras?.get("data") as Bitmap
@@ -287,6 +286,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
     }
 
+
+     */
+    /*
     private fun addChip(text: String) {
         val chip = Chip(this)
         chip.text = text
@@ -298,6 +300,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
         chipGroup.addView(chip)
     }
+
+     */
 
 
     fun encodeToBase64(image: Bitmap): String? {
@@ -317,6 +321,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     }
 
 
+    /*
     private fun saveToInternalStorage(bitmapImage: Bitmap): String? {
         val cw = ContextWrapper(applicationContext)
         // path to /data/data/yourapp/app_data/imageDir
@@ -335,6 +340,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         return directory.getAbsolutePath()
     }
 
+     */
+
 
     fun rotateImage(source: Bitmap, angle: Float): Bitmap {
         val matrix = Matrix()
@@ -346,6 +353,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         )
     }
 
+    /*
     private fun loadImageFromStorage(path: String) {
         try {
             val f = File(path, "profile.jpeg")
@@ -358,8 +366,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             e.printStackTrace()
         }
     }
+
+     */
+
+     */
     
 }
-
-*/
- */
