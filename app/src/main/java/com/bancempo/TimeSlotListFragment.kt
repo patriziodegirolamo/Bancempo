@@ -14,7 +14,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-
 class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     var sadvs = mutableListOf<SmallAdv>()
 
