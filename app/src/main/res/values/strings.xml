@@ -17,4 +17,6 @@
     <string name="small_adv_title">title</string>
     <string name="small_adv_date">date</string>
     <string name="small_adv_duration">duration</string>
+    <string name="insert_skill">Insert skill</string>
+
 </resources>

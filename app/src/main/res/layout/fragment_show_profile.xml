@@ -59,6 +59,7 @@
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
+                    android:freezesText="true"
                     app:drawableLeftCompat="@drawable/ic_icons8_nome_64" />
 
             </androidx.cardview.widget.CardView>
@@ -85,6 +86,7 @@
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
+                    android:freezesText="true"
                     app:drawableLeftCompat="@drawable/ic_icons8_posta_elettronica_30" />
 
             </androidx.cardview.widget.CardView>
@@ -111,6 +113,7 @@
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
+                    android:freezesText="true"
                     app:drawableLeftCompat="@drawable/ic_icons8_email_64" />
 
             </androidx.cardview.widget.CardView>
@@ -137,6 +140,7 @@
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
+                    android:freezesText="true"
                     app:drawableLeftCompat="@drawable/ic_icons8_segnaposto_50" />
 
             </androidx.cardview.widget.CardView>
@@ -163,6 +167,7 @@
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
+                    android:freezesText="true"
                     app:drawableLeftCompat="@drawable/ic_icons8_documento_50" />
 
             </androidx.cardview.widget.CardView>
@@ -190,16 +195,8 @@
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
+                    android:freezesText="true"
                     app:drawableLeftCompat="@drawable/ic_icons8_skills_24" />
-
-                <ImageButton
-                    android:id="@+id/addchipbutton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="end"
-                    android:contentDescription="@string/profile_pic"
-                    app:srcCompat="@drawable/ic_icons8_ok" />
 
 
             </androidx.cardview.widget.CardView>
