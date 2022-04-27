@@ -1,51 +1,41 @@
 package com.bancempo
 
-import android.app.Activity
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+
 import android.os.Bundle
-import android.util.Base64
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
 
 class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
 
-    val userVM: UserVM by activityViewModels()
-    lateinit var fullName: TextView
-    lateinit var photo: ImageView
-    lateinit var nickname: TextView
-    lateinit var email: TextView
-    lateinit var location: TextView
-    lateinit var skills: TextView
-    lateinit var description: TextView
-    lateinit var chipGroup: ChipGroup
+    private val userVM: UserVM by activityViewModels()
+    private lateinit var fullName: TextView
+    private lateinit var photo: ImageView
+    private lateinit var nickname: TextView
+    private lateinit var email: TextView
+    private lateinit var location: TextView
+    private lateinit var skills: TextView
+    private lateinit var description: TextView
+    private lateinit var chipGroup: ChipGroup
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
-        fullName = view.findViewById<TextView>(R.id.textViewFullName)
-        photo = view.findViewById<ImageView>(R.id.profile_pic)
-        nickname = view.findViewById<TextView>(R.id.textViewNickname)
-        email = view.findViewById<TextView>(R.id.textViewEmail)
-        location = view.findViewById<TextView>(R.id.textViewLocation)
-        description = view.findViewById<TextView>(R.id.textViewDescription)
+        fullName = view.findViewById(R.id.textViewFullName)
+        photo = view.findViewById(R.id.profile_pic)
+        nickname = view.findViewById(R.id.textViewNickname)
+        email = view.findViewById(R.id.textViewEmail)
+        location = view.findViewById(R.id.textViewLocation)
+        description = view.findViewById(R.id.textViewDescription)
 
-        skills =view.findViewById<TextView>(R.id.textViewSkills)
-        chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
+        skills =view.findViewById(R.id.textViewSkills)
+        chipGroup = view.findViewById(R.id.chipGroup)
 
 
         photo.setImageBitmap(userVM.profilePictureBitmap.value)
@@ -71,7 +61,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
 
 
         //after backpressed from editprofile
-        fragmentManager?.setFragmentResultListener("backPressed", viewLifecycleOwner){ _, bundle ->
+        fragmentManager?.setFragmentResultListener("backPressed", viewLifecycleOwner){ _, _ ->
 
             photo.setImageBitmap(userVM.profilePictureBitmap.value)
             fullName.text = userVM.fullname.value.toString()

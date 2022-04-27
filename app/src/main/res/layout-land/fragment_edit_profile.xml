@@ -260,26 +260,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="0dp" />
 
-    <Button
-        android:id="@+id/buttonProfile"
-        android:layout_width="194dp"
-        android:layout_height="88dp"
-        android:text="go to profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/buttonList"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/buttonList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="go to list"
-        app:layout_constraintEnd_toStartOf="@+id/buttonProfile"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

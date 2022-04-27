@@ -1,74 +1,57 @@
 package com.bancempo
 
-
-
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Base64
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import org.json.JSONObject
-import java.io.*
 
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     val userVM: UserVM by activityViewModels()
 
 
-    lateinit var fullName: TextView
-    lateinit var photo: ImageView
-    lateinit var nickname: TextView
-    lateinit var email: TextView
-    lateinit var location: TextView
-    lateinit var skills: TextView
-    lateinit var description: TextView
-    lateinit var editPicture: ImageButton
+    private lateinit var fullName: TextView
+    private lateinit var photo: ImageView
+    private lateinit var nickname: TextView
+    private lateinit var email: TextView
+    private lateinit var location: TextView
+    private lateinit var description: TextView
+    private lateinit var editPicture: ImageButton
 
-    lateinit var editText: EditText
-    lateinit var addchipbutton: ImageButton
-    lateinit var chipGroup: ChipGroup
+    private lateinit var editText: EditText
+    private lateinit var addchipbutton: ImageButton
+    private lateinit var chipGroup: ChipGroup
 
-    val REQUEST_IMAGE_CAPTURE = 1
-    val SELECT_PICTURE = 200
+    private val REQUEST_IMAGE_CAPTURE = 1
+    private val SELECT_PICTURE = 200
 
-
-    //var uri_or_bitmap:String = ""
-    var bitmap_photo: Bitmap? = null
-    var uri_photo: Uri? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        photo = view.findViewById<ImageView>(R.id.profile_pic)
-        editPicture = view.findViewById<ImageButton>(R.id.changeImageButton)
-        fullName = view.findViewById<TextView>(R.id.editTextFullName)
-        nickname = view.findViewById<TextView>(R.id.editTextNickname)
-        email = view.findViewById<TextView>(R.id.editTextEmail)
-        location = view.findViewById<TextView>(R.id.editTextLocation)
-        description = view.findViewById<TextView>(R.id.editTextDescription)
-        editText = view.findViewById<EditText>(R.id.editTextSkills)
-        addchipbutton = view.findViewById<ImageButton>(R.id.addChipButton)
-        chipGroup = view.findViewById<ChipGroup>(R.id.chipGroup)
+        photo = view.findViewById(R.id.profile_pic)
+        editPicture = view.findViewById(R.id.changeImageButton)
+        fullName = view.findViewById(R.id.editTextFullName)
+        nickname = view.findViewById(R.id.editTextNickname)
+        email = view.findViewById(R.id.editTextEmail)
+        location = view.findViewById(R.id.editTextLocation)
+        description = view.findViewById(R.id.editTextDescription)
+        editText = view.findViewById(R.id.editTextSkills)
+        addchipbutton = view.findViewById(R.id.addChipButton)
+        chipGroup = view.findViewById(R.id.chipGroup)
 
         addchipbutton.setOnClickListener {
             if (editText.text.toString().isNotEmpty()) {
@@ -138,11 +121,11 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                         Intent.createChooser(i, "Select Picture"),
                         SELECT_PICTURE
                     )
-                    true
+
                 }
                 R.id.use_camera -> {
                     dispatchTakePictureIntent()
-                    true
+
                 }
             }
             false
@@ -167,14 +150,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
-            bitmap_photo = data.extras?.get("data") as Bitmap
-            userVM.storeProfilePicture(bitmap_photo!!)
+            val bitmapPhoto = data.extras?.get("data") as Bitmap
+            userVM.storeProfilePicture(bitmapPhoto)
             photo.setImageBitmap(userVM.profilePictureBitmap.value)
         }
 
         else if (requestCode == SELECT_PICTURE && resultCode == AppCompatActivity.RESULT_OK && data != null){
-            uri_photo = data.data
-            userVM.updateProfilePictureFromURI(uri_photo!!)
+            val uriPhoto = data.data
+            userVM.updateProfilePictureFromURI(uriPhoto!!)
             photo.setImageBitmap(userVM.profilePictureBitmap.value)
         }
     }

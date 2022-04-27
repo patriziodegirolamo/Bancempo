@@ -10,21 +10,16 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.provider.MediaStore
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.bancempo.databinding.SmallAdvertismentBinding
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.json.JSONObject
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import kotlin.concurrent.thread
 
 class UserVM(private val app: Application): AndroidViewModel(app) {
 
@@ -56,7 +51,6 @@ class UserVM(private val app: Application): AndroidViewModel(app) {
     }
 
     fun updateFromEditProfile(view: View){
-        println("-----------updating")
         fullname.value = view.findViewById<TextView>(R.id.editTextFullName).text.toString()
         nickname.value = view.findViewById<TextView>(R.id.editTextNickname).text.toString()
         description.value = view.findViewById<TextView>(R.id.editTextDescription).text.toString()
@@ -156,7 +150,7 @@ class UserVM(private val app: Application): AndroidViewModel(app) {
     }
 
 
-    fun rotateImage(source: Bitmap, angle: Float): Bitmap {
+    private fun rotateImage(source: Bitmap, angle: Float): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(angle)
 

@@ -9,16 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
-    var sadvs = mutableListOf<SmallAdv>()
-
-    lateinit var llm: LinearLayoutManager
-    lateinit var adapter: SmallAdvAdapter
+    private var sadvs = mutableListOf<SmallAdv>()
+    private lateinit var llm: LinearLayoutManager
+    private lateinit var adapter: SmallAdvAdapter
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,7 +42,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val stringJSON:String? = sharedPref?.getString("json_advs_list", "")
         if(stringJSON != null && stringJSON != ""){
             val myType = object : TypeToken<MutableList<SmallAdv>>() {}.type
-            sadvs = gson.fromJson<MutableList<SmallAdv>>(stringJSON, myType)
+            sadvs = gson.fromJson(stringJSON, myType)
         }
 
         if (sadvs.isEmpty()) {
@@ -77,11 +75,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             rv.adapter = SmallAdvAdapter(sadvs)
 
 
-            val gson = Gson()
-            val jsonAdvList = gson.toJson(sadvs)
+            val myGson = Gson()
+            val jsonAdvList = myGson.toJson(sadvs)
 
-            val sharedPref = context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
-            with(sharedPref?.edit()){
+            val mySharedPref = context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
+            with(mySharedPref?.edit()){
                 this?.putString("json_advs_list", jsonAdvList)
             }?.apply()
 
