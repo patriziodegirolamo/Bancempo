@@ -5,6 +5,7 @@
     <string name="email">email@address</string>
     <string name="location">Location</string>
     <string name="skills">Skills</string>
+    <string name="insert_skill">Insert skill</string>
     <string name="description">Description</string>
     <string name="edit">Edit</string>
     <string name="profile_pic">Profile Picture</string>
@@ -17,6 +18,5 @@
     <string name="small_adv_title">title</string>
     <string name="small_adv_date">date</string>
     <string name="small_adv_duration">duration</string>
-    <string name="insert_skill">Insert skill</string>
 
 </resources>

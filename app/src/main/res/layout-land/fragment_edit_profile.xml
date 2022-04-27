@@ -1,40 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_pic"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:baselineAlignBottom="true"
         android:contentDescription="@string/profile_pic"
         android:src="@drawable/profile_pic_default"
         app:civ_border_color="#FF000000"
         app:civ_border_width="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline4" />
+        app:layout_constraintEnd_toStartOf="@id/guideline3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/changeImageButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="121dp"
+        android:contentDescription="@string/select_image_gallery"
+        app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
+        app:layout_constraintEnd_toEndOf="@+id/profile_pic"
+        app:layout_constraintStart_toStartOf="@+id/profile_pic"
+        app:layout_constraintTop_toTopOf="@+id/profile_pic"
+        app:srcCompat="@drawable/ic_baseline_camera_alt_24" />
 
     <ScrollView
         android:id="@+id/sv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline3"
+        app:layout_constraintStart_toStartOf="@id/guideline3"
         app:layout_constraintVertical_bias="0.76">
 
         <LinearLayout
             android:id="@+id/v2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
             android:orientation="vertical">
 
@@ -50,14 +66,16 @@
                 app:layout_constraintStart_toStartOf="parent">
 
 
-                <TextView
-                    android:id="@+id/textViewFullName"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editTextFullName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:drawablePadding="5dp"
-                    android:freezesText="true"
-                    android:text="@string/full_name"
+                    android:autofillHints=""
+                    android:drawableStart="@drawable/profile_edit"
+                    android:hint="@string/full_name"
+                    android:inputType="textPersonName"
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
@@ -76,14 +94,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:id="@+id/textViewNickname"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editTextNickname"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:drawablePadding="5dp"
-                    android:freezesText="true"
-                    android:text="@string/nickname"
+                    android:autofillHints=""
+                    android:drawableStart="@drawable/nickname_edit"
+                    android:hint="@string/nickname"
+                    android:inputType="textNoSuggestions"
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
@@ -102,15 +122,18 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:id="@+id/textViewEmail"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editTextEmail"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:autofillHints=""
+                    android:drawableStart="@drawable/email_edit"
                     android:drawablePadding="5dp"
-                    android:freezesText="true"
-                    android:text="@string/email"
+                    android:hint="@string/email"
+                    android:inputType="textWebEmailAddress"
                     android:textColor="#F8554A4A"
+                    android:textColorHint="#78909C"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
                     app:drawableLeftCompat="@drawable/ic_icons8_email_64" />
@@ -128,14 +151,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:id="@+id/textViewLocation"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editTextLocation"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:drawablePadding="5dp"
-                    android:freezesText="true"
-                    android:text="@string/location"
+                    android:autofillHints=""
+                    android:drawableStart="@drawable/location_edit"
+                    android:hint="@string/location"
+                    android:inputType="textPostalAddress"
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
@@ -147,20 +172,22 @@
                 android:id="@+id/cardViewDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="10dp"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:id="@+id/textViewDescription"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editTextDescription"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:drawablePadding="5dp"
-                    android:freezesText="true"
-                    android:text="@string/description"
+                    android:autofillHints=""
+                    android:drawableStart="@drawable/description_edit"
+                    android:hint="@string/description"
+                    android:inputType="textNoSuggestions|textMultiLine"
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
@@ -180,18 +207,34 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <TextView
-                    android:id="@+id/textViewSkills"
+                <EditText
+                    android:id="@+id/editTextSkills"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
+                    android:autofillHints=""
+                    android:drawableStart="@drawable/skills_edit"
                     android:drawablePadding="5dp"
-                    android:freezesText="true"
-                    android:text="@string/skills"
+                    android:hint="@string/insert_skill"
+                    android:inputType="textAutoCorrect"
                     android:textColor="#F8554A4A"
                     android:textSize="16sp"
                     android:textStyle="bold|normal"
-                    app:drawableLeftCompat="@drawable/ic_icons8_skills_24" />
+                    app:drawableLeftCompat="@drawable/ic_icons8_skills_24"
+                    tools:ignore="DuplicateSpeakableTextCheck" />
+
+                <ImageButton
+                    android:id="@+id/addChipButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="#FFFFFF"
+                    android:contentDescription="@string/insert_skill"
+                    android:minWidth="48dp"
+                    android:minHeight="48dp"
+                    app:srcCompat="@drawable/ic_icons8_ok" />
+
             </androidx.cardview.widget.CardView>
 
             <com.google.android.material.chip.ChipGroup
@@ -207,14 +250,14 @@
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintGuide_percent="0.33" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintGuide_begin="0dp" />
 
     <Button
