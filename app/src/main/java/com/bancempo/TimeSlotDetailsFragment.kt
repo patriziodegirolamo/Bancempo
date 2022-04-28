@@ -14,8 +14,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        val tv = view.findViewById<TextView>(R.id.textView)
-        tv.text = arguments?.getString("title")
 
     }
 
