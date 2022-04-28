@@ -20,6 +20,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
         fun bind(adv: SmallAdv){
             title.text = adv.title
             date.text = "Date: ${adv.date}"
+
             //modify.setOnClickListener(action)
         }
 
