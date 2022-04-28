@@ -32,11 +32,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         note = view.findViewById(R.id.note_adv)
 
         title.text = arguments?.getString("title")
-        description.text = arguments?.getString("description")
+       // description.text = arguments?.getString("description")
         date.text = arguments?.getString("date")
-        time.text = arguments?.getString("time")
-        location.text = arguments?.getString("location")
-        note.text = arguments?.getString("note")
+      //  time.text = arguments?.getString("time")
+      //  location.text = arguments?.getString("location")
+      //  note.text = arguments?.getString("note")
 
     }
 
