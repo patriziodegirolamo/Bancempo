@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 
-data class SmallAdv(val title:String, val date:String)
+data class SmallAdv(val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String)
 
 class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
@@ -47,6 +47,12 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
             val bundle = Bundle()
             bundle.putString("title", data[position].title)
             bundle.putString("date", data[position].date)
+            bundle.putString("description", data[position].description)
+            bundle.putString("time", data[position].time)
+            bundle.putString("duration", data[position].duration)
+            bundle.putString("location", data[position].location)
+            bundle.putString("note", data[position].note)
+
 
             findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment, bundle)
         }

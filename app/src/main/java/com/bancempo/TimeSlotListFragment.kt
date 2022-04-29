@@ -64,7 +64,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
 
         fab.setOnClickListener {
-            val adv = SmallAdv("advertisment${sadvs.size}", "${sadvs.size}/11/2022")
+            val adv = SmallAdv("advertisment${sadvs.size}", "${sadvs.size}/11/2022", "PROVA DESCRIPTION ${sadvs.size}",
+                                "${sadvs.size}:${sadvs.size}", "${sadvs.size}h", "TORINO ${sadvs.size}", "PROVA NOTE ${sadvs.size}")
             sadvs.add(adv)
 
 
