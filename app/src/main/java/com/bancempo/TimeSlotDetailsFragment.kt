@@ -50,6 +50,4 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             requireView().findNavController()) || super.onOptionsItemSelected(item)
     }
 
-
-
 }

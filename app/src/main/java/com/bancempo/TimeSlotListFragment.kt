@@ -59,7 +59,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         }
 
         buttonList.setOnClickListener {
-            findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment)
+            findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment)
         }
 
 
