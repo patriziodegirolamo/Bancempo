@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 data class SmallAdv(val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String)
 
@@ -14,6 +15,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
         private val title: TextView = v.findViewById(R.id.tvSmallAdvTitle)
         private val date: TextView = v.findViewById(R.id.tvsmallAdvDate)
+        private val edit: FloatingActionButton = v.findViewById((R.id.edit_adv))
         //val modify: ImageView = v.find...
 
 
@@ -21,12 +23,25 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
             title.text = adv.title
             date.text = "Date: ${adv.date}"
 
-            //modify.setOnClickListener(action)
+
+            edit.setOnClickListener{
+                val bundle = Bundle()
+                bundle.putString("title", adv.title)
+                bundle.putString("date", adv.date)
+                bundle.putString("description", adv.description)
+                bundle.putString("time", adv.time)
+                bundle.putString("duration", adv.duration)
+                bundle.putString("location", adv.location)
+                bundle.putString("note", adv.note)
+
+                findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
+            }
         }
 
         fun unbind(){
             //modify.setOnClickListener(null)
         }
+
 
     }
 
@@ -59,4 +74,6 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
     }
 
     override fun getItemCount(): Int = data.size
+
+
 }
