@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
-    private var sadvs = mutableListOf<SmallAdv>()
+    private val advertisementVM: AdvertismentsVM by activityViewModels()
     private lateinit var llm: LinearLayoutManager
     private lateinit var adapter: SmallAdvAdapter
 
@@ -22,8 +23,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val buttonProfile = view.findViewById<Button>(R.id.buttonProfile)
-        val buttonList = view.findViewById<Button>(R.id.buttonList)
+        val sadvs = advertisementVM.advs.value!!
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
 
@@ -31,6 +31,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         llm = LinearLayoutManager(context)
         adapter = SmallAdvAdapter(sadvs)
 
+        /*
         val gson = Gson()
         val sharedPref = context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
         if( sharedPref == null ){
@@ -45,6 +46,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             sadvs = gson.fromJson(stringJSON, myType)
         }
 
+
+         */
         if (sadvs.isEmpty()) {
             Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
         }
@@ -54,13 +57,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         rv.layoutManager = llm
         rv.adapter = SmallAdvAdapter(sadvs)
 
-        buttonProfile.setOnClickListener {
-            findNavController().navigate(R.id.action_timeSlotListFragment_to_showProfileFragment)
-        }
 
-        buttonList.setOnClickListener {
-            findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment)
-        }
 
 
         fab.setOnClickListener {
