@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +24,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sadvs = advertisementVM.advs.value!!
+        val sadvs = advertisementVM.advs.value ?: mutableListOf()
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
 
@@ -31,23 +32,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         llm = LinearLayoutManager(context)
         adapter = SmallAdvAdapter(sadvs)
 
-        /*
-        val gson = Gson()
-        val sharedPref = context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
-        if( sharedPref == null ){
-            with(sharedPref?.edit()){
-                this?.putString("json_advs_list", "")
-            }?.apply()
-        }
-
-        val stringJSON:String? = sharedPref?.getString("json_advs_list", "")
-        if(stringJSON != null && stringJSON != ""){
-            val myType = object : TypeToken<MutableList<SmallAdv>>() {}.type
-            sadvs = gson.fromJson(stringJSON, myType)
-        }
-
-
-         */
         if (sadvs.isEmpty()) {
             Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
         }
@@ -61,10 +45,29 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
 
         fab.setOnClickListener {
-            val adv = SmallAdv("advertisment${sadvs.size}", "${sadvs.size}/11/2022", "PROVA DESCRIPTION ${sadvs.size}",
-                                "${sadvs.size}:${sadvs.size}", "${sadvs.size}h", "TORINO ${sadvs.size}", "PROVA NOTE ${sadvs.size}")
-            sadvs.add(adv)
+            findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment)
+        }
 
+        setFragmentResultListener("confirmationOk") { _, bundle ->
+
+            val title = bundle.getString("title") ?: ""
+            val date = bundle.getString("date") ?: ""
+            val description = bundle.getString("description") ?: ""
+            val timeslot = bundle.getString("timeslot") ?: ""
+            val duration = bundle.getString("duration") ?: ""
+            val location = bundle.getString("location") ?: ""
+            val note = bundle.getString("note") ?: ""
+
+            val newAdv = SmallAdv(
+                title,
+                date,
+                description,
+                timeslot,
+                duration,
+                location,
+                note
+            )
+            advertisementVM.addNewAdv(newAdv)
 
             adapter.notifyItemInserted(0)
             llm.stackFromEnd = true
@@ -76,15 +79,15 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             val myGson = Gson()
             val jsonAdvList = myGson.toJson(sadvs)
 
-            val mySharedPref = context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
-            with(mySharedPref?.edit()){
+            val mySharedPref =
+                context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
+            with(mySharedPref?.edit()) {
                 this?.putString("json_advs_list", jsonAdvList)
             }?.apply()
-
         }
 
 
-    }
+        }
 
 
 

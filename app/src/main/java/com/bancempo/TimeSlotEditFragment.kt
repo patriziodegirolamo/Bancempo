@@ -14,27 +14,49 @@ import android.widget.Button
 import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.TimePicker
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
     private lateinit var title: TextInputLayout
+    private lateinit var titleEdit: TextInputEditText
+
     private lateinit var description: TextInputLayout
+    private lateinit var descriptionEdit: TextInputEditText
+
     private lateinit var location: TextInputLayout
+    private lateinit var locationEdit: TextInputEditText
+
     private lateinit var note: TextInputLayout
+    private lateinit var noteEdit: TextInputEditText
+
     private lateinit var date: TextView
+    private lateinit var dateEdit: TextInputEditText
+
     private lateinit var timeslot: TextView
+    private lateinit var timeslotEdit: TextInputEditText
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         title = view.findViewById(R.id.edit_title)
+        titleEdit = view.findViewById(R.id.edit_title_text)
+
         description = view.findViewById(R.id.edit_description)
+        descriptionEdit = view.findViewById(R.id.edit_description_text)
+
         location = view.findViewById(R.id.edit_location)
+        locationEdit = view.findViewById(R.id.edit_location_text)
+
         note = view.findViewById(R.id.edit_note)
+        noteEdit = view.findViewById(R.id.edit_note_text)
 
         title.placeholderText = arguments?.getString("title")
         description.placeholderText = arguments?.getString("description")
@@ -51,6 +73,20 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
 
         val buttonTime = view.findViewById<Button>(R.id.buttonTime)
         buttonTime.setOnClickListener { showDialogOfTimeSlotPicker() }
+
+        val confirmButton = view.findViewById<Button>(R.id.confirmationButton)
+        confirmButton.setOnClickListener{
+            val bundle = Bundle()
+            bundle.putString("title", titleEdit.text.toString())
+            bundle.putString("date", date.text.toString())
+            bundle.putString("description", descriptionEdit.text.toString())
+            bundle.putString("timeslot", timeslot.text.toString())
+            bundle.putString("duration", "TODO")
+            bundle.putString("location", locationEdit.text.toString())
+            bundle.putString("note", noteEdit.text.toString())
+            setFragmentResult("confirmationOk", bundle)
+            findNavController().popBackStack()
+        }
     }
 
     //Date

@@ -32,28 +32,14 @@ class AdvertismentsVM(private val app: Application): AndroidViewModel(app) {
         }
         else{
             advs.value?.add(newAdv)
-            println("---------- ${advs.value?.size}")
         }
     }
 
     init {
-        /*
-        val sharedPref = app.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
-        val jsonString = sharedPref.getString("json_advs_list", "{}") ?: "{}"
-        if(jsonString != "{}"){
-            val gson = Gson()
-            val myType = object : TypeToken<MutableList<SmallAdv>>() {}.type
-            advs.value = gson.fromJson(jsonString, myType)
-        }
-        else{
-            advs.value = mutableListOf()
-        }
-
-         */
-
         val gson = Gson()
         val sharedPref = app.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
         if( sharedPref == null ){
+            println("-----------create shared pref")
             with(sharedPref?.edit()){
                 this?.putString("json_advs_list", "")
             }?.apply()
@@ -63,6 +49,9 @@ class AdvertismentsVM(private val app: Application): AndroidViewModel(app) {
         if(stringJSON != null && stringJSON != ""){
             val myType = object : TypeToken<MutableList<SmallAdv>>() {}.type
             advs.value = gson.fromJson(stringJSON, myType)
+        }
+        else{
+            advs.value = mutableListOf()
         }
 
 
