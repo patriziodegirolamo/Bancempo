@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -26,12 +27,18 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener {
             when (it.itemId){
                 R.id.goToTimeSlotList -> {
-                    navController.navigate(R.id.timeSlotListFragment)
+                    if (navController.currentDestination?.id != R.id.timeSlotListFragment) {
+                        navController.navigate(R.id.timeSlotListFragment)
+                    }
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                     return@setNavigationItemSelectedListener true
+
+
                 }
                 R.id.goToShowProfile -> {
-                    navController.navigate(R.id.showProfileFragment)
+                    if (navController.currentDestination?.id != R.id.showProfileFragment) {
+                        navController.navigate(R.id.showProfileFragment)
+                    }
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                     return@setNavigationItemSelectedListener true
                 }
