@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        val navController = navHostFragment.findNavController()
+        val navController = navHostFragment.navController
         val navView = findViewById<NavigationView>(R.id.nav_view)
 
         NavigationUI.setupWithNavController(binding.navView, navController)
@@ -26,12 +26,12 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener {
             when (it.itemId){
                 R.id.goToTimeSlotList -> {
-                    navController.navigate(R.id.action_timeSlotListFragment_self)
+                    navController.navigate(R.id.timeSlotListFragment)
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                     return@setNavigationItemSelectedListener true
                 }
                 R.id.goToShowProfile -> {
-                    navController.navigate(R.id.action_timeSlotListFragment_to_showProfileFragment)
+                    navController.navigate(R.id.showProfileFragment)
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                     return@setNavigationItemSelectedListener true
                 }
