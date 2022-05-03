@@ -21,7 +21,7 @@
         >
         <action
             android:id="@+id/action_showProfileFragment_to_editProfileFragment"
-            app:destination="@id/timeSlotEditFragment" />
+            app:destination="@id/editProfileFragment" />
         <action
             android:id="@+id/action_showProfileFragment_self"
             app:destination="@id/showProfileFragment" />

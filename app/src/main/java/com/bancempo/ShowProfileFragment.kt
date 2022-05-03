@@ -121,6 +121,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             chipText += "${chip.text},"
         }
         bundle.putString("skills", chipText)
+        println("--------------------EDIT PROFILE")
         findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment, bundle)
     }
 
