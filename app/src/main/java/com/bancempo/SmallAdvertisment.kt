@@ -16,16 +16,16 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
         private val title: TextView = v.findViewById(R.id.tvSmallAdvTitle)
         private val date: TextView = v.findViewById(R.id.tvsmallAdvDate)
         private val edit: FloatingActionButton = v.findViewById((R.id.edit_adv))
-        //val modify: ImageView = v.find...
 
-
-        fun bind(adv: SmallAdv){
+        fun bind(adv: SmallAdv, position: Int){
             title.text = adv.title
             date.text = "Date: ${adv.date}"
 
 
             edit.setOnClickListener{
+
                 val bundle = Bundle()
+                bundle.putInt("position", position)
                 bundle.putString("title", adv.title)
                 bundle.putString("date", adv.date)
                 bundle.putString("description", adv.description)
@@ -37,11 +37,6 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
                 findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
             }
         }
-
-        fun unbind(){
-            //modify.setOnClickListener(null)
-        }
-
 
     }
 
@@ -55,11 +50,13 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
 
     //ti dice quale elemento della lista è correntemente visibile e la sua posizione il lista
     override fun onBindViewHolder(holder: SmallAdvHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(data[position], position)
 
         holder.itemView.setOnClickListener{
+
             //TODO passare come argomenti: title, data, ecc
             val bundle = Bundle()
+            bundle.putInt("position", position)
             bundle.putString("title", data[position].title)
             bundle.putString("date", data[position].date)
             bundle.putString("description", data[position].description)
@@ -67,7 +64,6 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
             bundle.putString("duration", data[position].duration)
             bundle.putString("location", data[position].location)
             bundle.putString("note", data[position].note)
-
 
             findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment, bundle)
         }

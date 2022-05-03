@@ -46,8 +46,18 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item,
-            requireView().findNavController()) || super.onOptionsItemSelected(item)
+        val bundle = Bundle()
+        bundle.putString("title", arguments?.getString("title"))
+        bundle.putInt("position", arguments?.getInt("position")!!)
+        bundle.putString("description", arguments?.getString("description"))
+        bundle.putString("date", arguments?.getString("date"))
+        bundle.putString("time", arguments?.getString("time"))
+        bundle.putString("location", arguments?.getString("location"))
+        bundle.putString("note", arguments?.getString("note"))
+        bundle.putBoolean("fromDetails", true);
+        requireView().findNavController().navigate(R.id.action_timeSlotDetailsFragment_to_timeSlotEditFragment, bundle)
+        return super.onOptionsItemSelected(item)
+        //TODO: freccia indietro da rivedere
     }
 
 }

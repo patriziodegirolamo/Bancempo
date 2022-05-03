@@ -58,14 +58,16 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         note = view.findViewById(R.id.edit_note)
         noteEdit = view.findViewById(R.id.edit_note_text)
 
-        title.placeholderText = arguments?.getString("title")
-        description.placeholderText = arguments?.getString("description")
-        location.placeholderText = arguments?.getString("location")
-        note.placeholderText = arguments?.getString("note")
-
-
         date = view.findViewById(R.id.tvDate)
         timeslot = view.findViewById(R.id.tvTime)
+
+        if(arguments != null){
+            //TODO: editText without rewrite everything
+            title.placeholderText = arguments?.getString("title")
+            description.placeholderText = arguments?.getString("description")
+            location.placeholderText = arguments?.getString("location")
+            note.placeholderText = arguments?.getString("note")
+        }
 
 
         val buttonDate = view.findViewById<Button>(R.id.buttonDate)
@@ -76,6 +78,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
 
         val confirmButton = view.findViewById<Button>(R.id.confirmationButton)
         confirmButton.setOnClickListener{
+            val fromDetails = arguments?.getBoolean("fromDetails")
+            println("---------------$fromDetails")
             val bundle = Bundle()
             bundle.putString("title", titleEdit.text.toString())
             bundle.putString("date", date.text.toString())
@@ -84,7 +88,17 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
             bundle.putString("duration", "TODO")
             bundle.putString("location", locationEdit.text.toString())
             bundle.putString("note", noteEdit.text.toString())
-            setFragmentResult("confirmationOk", bundle)
+            //CREATE A NEW ADV
+            if(arguments == null){
+                setFragmentResult("confirmationOkCreate", bundle)
+            }
+            //MODIFY ADV
+            else{
+                val pos = arguments?.getInt("position")
+                bundle.putInt("position", pos!!)
+
+                setFragmentResult("confirmationOkModify", bundle)
+            }
             findNavController().popBackStack()
         }
     }
