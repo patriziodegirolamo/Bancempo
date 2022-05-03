@@ -115,33 +115,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginVertical="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        >
-
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/selected_date"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:endIconMode="clear_text">
-                            >
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <DatePicker
-                            android:id="@+id/edit_date"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:datePickerMode="spinner"
-                            android:calendarViewShown="false"/>
-
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                    android:layout_marginVertical="16dp"/>
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -150,16 +124,59 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:orientation="vertical"/>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/tvDate"
+                        android:text="dd/mm/yyyy"
+                        android:freezesText="true">
 
-                        <TimePicker
-                            android:id="@+id/edit_time"
-                            android:layout_width="wrap_content"
+                    </TextView>
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/buttonDate"
+                        android:text="CHOOSE DATE">
+                    </Button>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/tvTime"
+                            android:text="hh:mm"
+                            android:freezesText="true">
+
+                        </TextView>
+                        <Button
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="20dp"
-                            android:timePickerMode="spinner"/>
-
+                            android:id="@+id/buttonTime"
+                            android:text="CHOOSE TIME-SLOT">
+                        </Button>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
