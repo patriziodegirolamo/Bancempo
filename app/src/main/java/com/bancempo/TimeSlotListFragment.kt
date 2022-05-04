@@ -30,119 +30,74 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
 
 
-        llm = LinearLayoutManager(context)
-        adapter = SmallAdvAdapter(sadvs)
 
         if (sadvs.isEmpty()) {
             Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
         }
 
+        llm = LinearLayoutManager(context)
         llm.stackFromEnd = true
         llm.reverseLayout = true
         rv.layoutManager = llm
         rv.adapter = SmallAdvAdapter(sadvs)
 
-
-
-
         fab.setOnClickListener {
-            findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment)
-        }
-
-        setFragmentResultListener("confirmationOk"){ _, bundle ->
-            println("--------------------- conf")
+            val bundle = Bundle()
+            bundle.putBoolean("createNewAdv", true)
+            findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
         }
 
         setFragmentResultListener("confirmationOkCreate") { _, bundle ->
-
-            val fromDetails = bundle.getBoolean("fromDetails")
-            println("---------------$fromDetails in oncreate")
-
-            val title = bundle.getString("title") ?: ""
-            val date = bundle.getString("date") ?: ""
-            val description = bundle.getString("description") ?: ""
-            val timeslot = bundle.getString("timeslot") ?: ""
-            val duration = bundle.getString("duration") ?: ""
-            val location = bundle.getString("location") ?: ""
-            val note = bundle.getString("note") ?: ""
-
-            val newAdv = SmallAdv(
-                title,
-                date,
-                description,
-                timeslot,
-                duration,
-                location,
-                note
-            )
+            val newAdv = createAdvFromBundle(bundle)
             advertisementVM.addNewAdv(newAdv)
 
+            val adapter = SmallAdvAdapter(sadvs)
             adapter.notifyItemInserted(0)
-            llm.stackFromEnd = true
-            llm.reverseLayout = true
-            rv.layoutManager = llm
-            rv.adapter = SmallAdvAdapter(sadvs)
-
-
-            val myGson = Gson()
-            val jsonAdvList = myGson.toJson(sadvs)
-
-            val mySharedPref =
-                context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
-            with(mySharedPref?.edit()) {
-                this?.putString("json_advs_list", jsonAdvList)
-            }?.apply()
+            rv.adapter = adapter
+            rv.smoothScrollToPosition(0)
         }
 
 
+        setFragmentResultListener("confirmationOkModifyToList") { _, bundle ->
+            val pos = bundle.getInt("position")
+            val modAdv = createAdvFromBundle(bundle)
 
-        setFragmentResultListener("confirmationOkModify") { _, bundle ->
-
-            val fromDetails = bundle.getBoolean("fromDetails")
-            println("---------------$fromDetails in modify")
-            val pos = bundle.getInt("position") ?: -1
-            val title = bundle.getString("title") ?: ""
-            val date = bundle.getString("date") ?: ""
-            val description = bundle.getString("description") ?: ""
-            val timeslot = bundle.getString("timeslot") ?: ""
-            val duration = bundle.getString("duration") ?: ""
-            val location = bundle.getString("location") ?: ""
-            val note = bundle.getString("note") ?: ""
-
-            val newAdv = SmallAdv(
-                title,
-                date,
-                description,
-                timeslot,
-                duration,
-                location,
-                note
-            )
-
-            sadvs[pos] = newAdv
+            advertisementVM.modifyAdv(modAdv, pos)
+            val adapter = SmallAdvAdapter(sadvs)
+            adapter.notifyItemInserted(pos)
+            rv.adapter = adapter
+        }
 
 
+        setFragmentResultListener("confirmationOkModifyToDetails2") { _, bundle ->
+            val pos = bundle.getInt("position")
+            val modAdv = createAdvFromBundle(bundle)
 
-
-            llm.stackFromEnd = true
-            llm.reverseLayout = true
-            rv.layoutManager = llm
-            rv.adapter = SmallAdvAdapter(sadvs)
-
-
-            val myGson = Gson()
-            val jsonAdvList = myGson.toJson(sadvs)
-
-            val mySharedPref =
-                context?.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
-
-            mySharedPref?.edit()?.clear()?.apply()
-            with(mySharedPref?.edit()) {
-                this?.putString("json_advs_list", jsonAdvList)
-            }?.apply()
+            advertisementVM.modifyAdv(modAdv, pos)
+            val adapter = SmallAdvAdapter(sadvs)
+            adapter.notifyItemInserted(pos)
+            rv.adapter = adapter
         }
 
     }
 
+    private fun createAdvFromBundle(bundle: Bundle) : SmallAdv{
+        val title = bundle.getString("title") ?: ""
+        val date = bundle.getString("date") ?: ""
+        val description = bundle.getString("description") ?: ""
+        val timeslot = bundle.getString("timeslot") ?: ""
+        val duration = bundle.getString("duration") ?: ""
+        val location = bundle.getString("location") ?: ""
+        val note = bundle.getString("note") ?: ""
 
+        return SmallAdv(
+            title,
+            date,
+            description,
+            timeslot,
+            duration,
+            location,
+            note
+        )
+    }
 }

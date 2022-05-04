@@ -6,8 +6,11 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 
@@ -37,7 +40,20 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         time.text = arguments?.getString("time")
         location.text = arguments?.getString("location")
         note.text = arguments?.getString("note")
+        //arguments?.getString("duration")
 
+        setFragmentResultListener("confirmationOkModifyToDetails1") { _, bundle ->
+            title.text = bundle.getString("title")
+            description.text = bundle.getString("description")
+            date.text = bundle.getString("date")
+
+            //TODO: il time non lo prende
+            time.text = bundle.getString("time")
+            location.text = bundle.getString("location")
+            note.text = bundle.getString("note")
+            setFragmentResult("confirmationOkModifyToDetails2", bundle)
+
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -47,17 +63,26 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val bundle = Bundle()
-        bundle.putString("title", arguments?.getString("title"))
-        bundle.putInt("position", arguments?.getInt("position")!!)
-        bundle.putString("description", arguments?.getString("description"))
-        bundle.putString("date", arguments?.getString("date"))
-        bundle.putString("time", arguments?.getString("time"))
-        bundle.putString("location", arguments?.getString("location"))
-        bundle.putString("note", arguments?.getString("note"))
-        bundle.putBoolean("fromDetails", true);
-        requireView().findNavController().navigate(R.id.action_timeSlotDetailsFragment_to_timeSlotEditFragment, bundle)
-        return super.onOptionsItemSelected(item)
-        //TODO: freccia indietro da rivedere
+        when(item.itemId){
+            //clicking on edit adv
+            R.id.inDetailsEditAdv -> {
+                bundle.putBoolean("modifyFromDetails", true)
+                bundle.putString("title", arguments?.getString("title"))
+                bundle.putInt("position", arguments?.getInt("position")!!)
+                bundle.putString("description", arguments?.getString("description"))
+                bundle.putString("date", arguments?.getString("date"))
+                bundle.putString("time", arguments?.getString("time"))
+                bundle.putString("location", arguments?.getString("location"))
+                bundle.putString("note", arguments?.getString("note"))
+                requireView().findNavController().navigate(R.id.action_timeSlotDetailsFragment_to_timeSlotEditFragment, bundle)
+                return super.onOptionsItemSelected(item)
+            }
+            //clicking back button
+            else -> {
+                return NavigationUI.onNavDestinationSelected(item,
+                    requireView().findNavController()) || super.onOptionsItemSelected(item)
+            }
+        }
     }
 
 }

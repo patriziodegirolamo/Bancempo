@@ -32,6 +32,33 @@ class AdvertismentsVM(private val app: Application): AndroidViewModel(app) {
         }
         else{
             advs.value?.add(newAdv)
+
+            val myGson = Gson()
+            val jsonAdvList = myGson.toJson(advs.value)
+
+            val mySharedPref = app.applicationContext.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
+            with(mySharedPref?.edit()) {
+                this?.putString("json_advs_list", jsonAdvList)
+            }?.apply()
+        }
+    }
+
+    fun modifyAdv(modAdv: SmallAdv, pos: Int){
+        if(advs.value == null){
+            println("------------error")
+        }
+        else{
+            advs.value!![pos] = modAdv
+
+            val myGson = Gson()
+            val jsonAdvList = myGson.toJson(advs.value)
+
+            val mySharedPref = app.applicationContext.getSharedPreferences("advs_list.bancempo.lab3", Context.MODE_PRIVATE)
+
+            mySharedPref?.edit()?.clear()?.apply()
+            with(mySharedPref?.edit()) {
+                this?.putString("json_advs_list", jsonAdvList)
+            }?.apply()
         }
     }
 

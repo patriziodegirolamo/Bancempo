@@ -20,11 +20,12 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
         fun bind(adv: SmallAdv, position: Int){
             title.text = adv.title
             date.text = "Date: ${adv.date}"
+            //TODO: duration = ...
 
 
             edit.setOnClickListener{
-
                 val bundle = Bundle()
+                bundle.putBoolean("modifyFromList", true)
                 bundle.putInt("position", position)
                 bundle.putString("title", adv.title)
                 bundle.putString("date", adv.date)
@@ -33,9 +34,12 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
                 bundle.putString("duration", adv.duration)
                 bundle.putString("location", adv.location)
                 bundle.putString("note", adv.note)
-
                 findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
             }
+        }
+
+        fun unbind(){
+            edit.setOnClickListener(null)
         }
 
     }
@@ -71,5 +75,11 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
 
     override fun getItemCount(): Int = data.size
 
+    //serve per non avere i listener attivi sui ghost elements
+    //TODO: da controllare come lo fa il prof a lezione
+    override fun onViewDetachedFromWindow(holder: SmallAdvHolder) {
+        super.onViewDetachedFromWindow(holder)
+        holder.unbind()
+    }
 
 }
