@@ -15,12 +15,18 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
         private val title: TextView = v.findViewById(R.id.tvSmallAdvTitle)
         private val date: TextView = v.findViewById(R.id.tvsmallAdvDate)
+        private val time: TextView = v.findViewById(R.id.tvSmallAdvTime)
+        private val location: TextView = v.findViewById(R.id.tvSmallAdvLocation)
+        private val duration: TextView = v.findViewById(R.id.tvsmallAdvDuration)
         private val edit: FloatingActionButton = v.findViewById((R.id.edit_adv))
 
         fun bind(adv: SmallAdv, position: Int){
             title.text = adv.title
             date.text = "Date: ${adv.date}"
-            //TODO: duration = ...
+            time.text = "Time: ${adv.time}"
+            location.text = "Location: ${adv.location}"
+            duration.text = "Duration: ${adv.duration}"
+
 
 
             edit.setOnClickListener{
