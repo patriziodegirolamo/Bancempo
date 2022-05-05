@@ -82,15 +82,17 @@
         android:id="@+id/edit_adv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/divider_color_light"
+        android:backgroundTintMode="@color/divider_color_light"
         android:clickable="true"
+        android:contentDescription="add new adv"
         android:contextClickable="true"
         android:tag="fab"
         app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_baseline_edit_24"
-        tools:ignore="SpeakableTextPresentCheck"
-        android:contentDescription="add new adv" />
+        tools:ignore="SpeakableTextPresentCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
