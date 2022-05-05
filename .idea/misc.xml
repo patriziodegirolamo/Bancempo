@@ -9,8 +9,10 @@
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_icons8_skills_64.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_icons8_skills_64__1_.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout-land/fragment_edit_profile.xml" value="0.264" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout-land/fragment_show_profile.xml" value="0.264" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/activity_show_profile.xml" value="0.25" />
+        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_edit_profile.xml" value="0.264" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_show_profile.xml" value="0.2" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_time_slot_list.xml" value="0.1" />
@@ -31,5 +33,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.136" />
+      </ProjectState>
+    </option>
   </component>
 </project>

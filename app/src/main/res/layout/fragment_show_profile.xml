@@ -34,14 +34,12 @@
                         android:layout_height="match_parent"
                         android:layout_marginTop="30dp"
                         android:orientation="vertical"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="17dp">
+                        android:paddingTop="10dp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/profile_pic"
-                            android:layout_width="wrap_content"
-                            android:layout_height="200dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_width="0dp"
+                            android:layout_height="180dp"
                             android:baselineAlignBottom="true"
                             android:contentDescription="@string/profile_pic"
                             android:src="@drawable/profile_pic_default"
@@ -69,6 +67,7 @@
                                 android:id="@+id/textViewNickname"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:hint="Nickname"
                                 app:endIconMode="clear_text">
 
                                 >
