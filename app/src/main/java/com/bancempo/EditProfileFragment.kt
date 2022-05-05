@@ -17,21 +17,29 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     val userVM: UserVM by activityViewModels()
-
-
-    private lateinit var fullName: TextView
     private lateinit var photo: ImageView
-    private lateinit var nickname: TextView
-    private lateinit var email: TextView
-    private lateinit var location: TextView
-    private lateinit var description: TextView
     private lateinit var editPicture: ImageButton
 
-    private lateinit var editText: EditText
+    private lateinit var fullName: TextInputLayout
+    private lateinit var fullName_ed: TextInputEditText
+    private lateinit var description_ed: TextInputEditText
+    private lateinit var nickname_ed: TextInputEditText
+    private lateinit var email_ed: TextInputEditText
+    private lateinit var location_ed: TextInputEditText
+    private lateinit var skills_ed: TextInputEditText
+
+    private lateinit var nickname: TextInputLayout
+    private lateinit var email: TextInputLayout
+    private lateinit var location: TextInputLayout
+    private lateinit var skills: TextInputLayout
+    private lateinit var description: TextInputLayout
+
     private lateinit var addchipbutton: ImageButton
     private lateinit var chipGroup: ChipGroup
 
@@ -44,33 +52,39 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         photo = view.findViewById(R.id.profile_pic)
         editPicture = view.findViewById(R.id.changeImageButton)
-        fullName = view.findViewById(R.id.editTextFullName)
-        nickname = view.findViewById(R.id.editTextNickname)
-        email = view.findViewById(R.id.editTextEmail)
-        location = view.findViewById(R.id.editTextLocation)
-        description = view.findViewById(R.id.editTextDescription)
-        editText = view.findViewById(R.id.editTextSkills)
+        fullName = view.findViewById(R.id.full_name)
+        fullName_ed = view.findViewById(R.id.editTextFullName)
+        nickname = view.findViewById(R.id.nick_name)
+        nickname_ed = view.findViewById(R.id.editTextNickname)
+        email = view.findViewById(R.id.email)
+        email_ed = view.findViewById(R.id.editTextEmail)
+        location = view.findViewById(R.id.location)
+        location_ed = view.findViewById(R.id.editTextLocation)
+        description = view.findViewById(R.id.description)
+        description_ed = view.findViewById(R.id.editTextDescription)
+        skills =view.findViewById(R.id.skills)
+        skills_ed =view.findViewById(R.id.editTextSkills)
         addchipbutton = view.findViewById(R.id.addChipButton)
         chipGroup = view.findViewById(R.id.chipGroup)
 
         addchipbutton.setOnClickListener {
-            if (editText.text.toString().isNotEmpty()) {
-                addChip(editText.text.toString())
-                editText.setText("")
+            if (skills_ed.text.toString().isNotEmpty()) {
+                addChip(skills_ed.text.toString())
+                skills_ed.setText("")
             }
         }
 
         //get value from showprofile
         photo.setImageBitmap(userVM.profilePictureBitmap.value)
-        fullName.text = arguments?.getString("fullname")
-        nickname.text = arguments?.getString("nickname")
-        email.text = arguments?.getString("email")
-        location.text = arguments?.getString("location")
-        description.text = arguments?.getString("description")
-        val skillsString = arguments?.getString("skills")
-        if (skillsString != null) {
+        fullName_ed.setText(arguments?.getString("fullname"))
+        nickname_ed.setText(arguments?.getString("nickname"))
+        email_ed.setText(arguments?.getString("email"))
+        location_ed.setText(arguments?.getString("location"))
+        description_ed.setText(arguments?.getString("description"))
+        skills_ed.setText(arguments?.getString("skills"))
+        if (skills_ed != null) {
             chipGroup.removeAllViews()
-            skillsString.split(",").forEach {
+            skills_ed.text?.split(",")?.forEach {
                 val chip = Chip(activity)
                 if (it.isNotEmpty()) {
                     chip.text = it

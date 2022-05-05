@@ -3,265 +3,293 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profile_pic"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:baselineAlignBottom="true"
-        android:contentDescription="@string/profile_pic"
-        android:src="@drawable/profile_pic_default"
-        app:civ_border_color="#FF000000"
-        app:civ_border_width="2dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline4" />
-
-    <ImageButton
-        android:id="@+id/changeImageButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="230dp"
-        android:layout_marginTop="121dp"
-        android:layout_marginEnd="133dp"
-        android:contentDescription="@string/select_image_gallery"
-        app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
-        app:layout_constraintEnd_toEndOf="@+id/profile_pic"
-        app:layout_constraintStart_toStartOf="@+id/profile_pic"
-        app:layout_constraintTop_toTopOf="@+id/profile_pic"
-        app:srcCompat="@drawable/ic_baseline_camera_alt_24" />
+    android:layout_height="match_parent" >
 
     <ScrollView
-        android:id="@+id/sv2"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline3"
-        app:layout_constraintVertical_bias="0.76">
+        tools:layout_editor_absoluteY="-148dp">
 
         <LinearLayout
-            android:id="@+id/v3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/full_name"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="10dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/editTextFullName"
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="-30dp"
+                    android:backgroundTint="@color/light_primary_color"
+                    app:cardCornerRadius="30dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="30dp"
+                        android:orientation="vertical"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="17dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/profile_pic"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="16dp"
+                            android:baselineAlignBottom="true"
+                            android:contentDescription="@string/profile_pic"
+                            android:src="@drawable/profile_pic_default"
+                            app:civ_border_color="#FF000000"
+                            app:civ_border_width="2dp" />
+
+                        <ImageButton
+                            android:id="@+id/changeImageButton"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginStart="230dp"
+                            android:layout_marginTop="121dp"
+                            android:layout_marginEnd="133dp"
+                            android:contentDescription="@string/select_image_gallery"
+                            app:layout_constraintBottom_toBottomOf="@+id/profile_pic"
+                            app:layout_constraintEnd_toEndOf="@+id/profile_pic"
+                            app:layout_constraintStart_toStartOf="@+id/profile_pic"
+                            app:layout_constraintTop_toTopOf="@+id/profile_pic"
+                            app:srcCompat="@drawable/ic_baseline_camera_alt_24" />
+
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="100dp"
+                            android:layout_marginEnd="100dp"
+                            android:textAlignment="center"
+                            app:cardCornerRadius="14dp"
+                            app:cardElevation="0dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/nick_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Nickname"
+                                    app:endIconMode="clear_text">
+
+                                    >
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/editTextNickname"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:backgroundTint="@color/light_primary_color"
+                                        android:drawableLeft="@drawable/ic_icons8_posta_elettronica_30"
+                                        android:text="Nickname"
+                                        android:textColor="@color/black" />
+
+                                </com.google.android.material.textfield.TextInputLayout>
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/full_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColorHint="@color/black"
+                            android:hint="Full name"
+                            app:startIconDrawable="@drawable/ic_icons8_nome_64">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextFullName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:textColor="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Email"
+                            android:textColorHint="@color/black"
+                            app:startIconDrawable="@drawable/ic_icons8_email_64">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:textColor="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/location"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Location"
+                            app:startIconDrawable="@drawable/ic_icons8_segnaposto_50">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextLocation"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/black"
+                                android:backgroundTint="@color/white"
+                                android:textColor="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Description"
+                            app:startIconDrawable="@drawable/ic_icons8_documento_50">
+
+                            >
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextDescription"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:textColor="@color/black" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/skills"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Skills"
+                            app:endIconMode="clear_text"
+                            app:placeholderText="Insert note"
+                            app:startIconDrawable="@drawable/ic_icons8_skills_24">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editTextSkills"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:textColor="@color/black" />
+
+                            <ImageButton
+                                android:id="@+id/addChipButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:layout_marginTop="10dp"
+                                android:backgroundTint="#FFFFFF"
+                                android:contentDescription="@string/insert_skill"
+                                android:minWidth="48dp"
+                                android:minHeight="48dp"
+                                app:srcCompat="@drawable/ic_icons8_ok"
+                                tools:ignore="DuplicateSpeakableTextCheck,DuplicateSpeakableTextCheck" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:autofillHints=""
-                    android:drawablePadding="5dp"
-                    android:drawableStart="@drawable/profile_edit"
-                    android:hint="@string/full_name"
-                    android:inputType="textPersonName"
-                    android:textColor="#F8554A4A"
-                    android:textSize="16sp"
-                    android:textStyle="bold|normal"
-                    app:drawableLeftCompat="@drawable/ic_icons8_nome_64" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewNickname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="10dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/editTextNickname"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:drawablePadding="5dp"
-                    android:autofillHints=""
-                    android:drawableStart="@drawable/nickname_edit"
-                    android:hint="@string/nickname"
-                    android:inputType="textNoSuggestions"
-                    android:textColor="#F8554A4A"
-                    android:textSize="16sp"
-                    android:textStyle="bold|normal"
-                    app:drawableLeftCompat="@drawable/ic_icons8_posta_elettronica_30" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="10dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/editTextEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:autofillHints=""
-                    android:drawableStart="@drawable/email_edit"
-                    android:drawablePadding="5dp"
-                    android:hint="@string/email"
-                    android:inputType="textWebEmailAddress"
-                    android:textColor="#F8554A4A"
-                    android:textColorHint="#78909C"
-                    android:textSize="16sp"
-                    android:textStyle="bold|normal"
-                    app:drawableLeftCompat="@drawable/ic_icons8_email_64" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="10dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/editTextLocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:drawablePadding="5dp"
-                    android:autofillHints=""
-                    android:drawableStart="@drawable/location_edit"
-                    android:hint="@string/location"
-                    android:inputType="textPostalAddress"
-                    android:textColor="#F8554A4A"
-                    android:textSize="16sp"
-                    android:textStyle="bold|normal"
-                    app:drawableLeftCompat="@drawable/ic_icons8_segnaposto_50" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="10dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/editTextDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:drawablePadding="5dp"
-                    android:autofillHints=""
-                    android:drawableStart="@drawable/description_edit"
-                    android:hint="@string/description"
-                    android:inputType="textNoSuggestions|textMultiLine"
-                    android:textColor="#F8554A4A"
-                    android:textSize="16sp"
-                    android:textStyle="bold|normal"
-                    app:drawableLeftCompat="@drawable/ic_icons8_documento_50" />
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardViewSkills"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="15dp"
-                app:cardElevation="10dp"
-                app:cardUseCompatPadding="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <EditText
-                    android:id="@+id/editTextSkills"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:drawablePadding="5dp"
-                    android:autofillHints=""
-                    android:drawableStart="@drawable/skills_edit"
-                    android:hint="@string/insert_skill"
-                    android:inputType="textAutoCorrect"
-                    android:textColor="#F8554A4A"
-                    android:textSize="16sp"
-                    android:textStyle="bold|normal"
-                    app:drawableLeftCompat="@drawable/ic_icons8_skills_24" />
-
-                <ImageButton
-                    android:id="@+id/addChipButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="10dp"
-                    android:backgroundTint="#FFFFFF"
-                    android:contentDescription="@string/insert_skill"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
-                    app:srcCompat="@drawable/ic_icons8_ok"
-                    tools:ignore="DuplicateSpeakableTextCheck,DuplicateSpeakableTextCheck" />
-
-            </androidx.cardview.widget.CardView>
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/chipGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp" />
+                    android:layout_marginBottom="40dp" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.33" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="0dp" />
-
-
-
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,14 +13,30 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
-    private lateinit var title: TextView
-    private lateinit var description: TextView
-    private lateinit var date: TextView
-    private lateinit var location: TextView
-    private lateinit var time: TextView
-    private lateinit var note: TextView
+    private lateinit var title: TextInputLayout
+    private lateinit var title_ed: TextInputEditText
+
+    private lateinit var description: TextInputLayout
+    private lateinit var description_ed: TextInputEditText
+
+
+    private lateinit var date: TextInputLayout
+    private lateinit var date_ed: TextInputEditText
+
+
+    private lateinit var location: TextInputLayout
+    private lateinit var location_ed: TextInputEditText
+
+    private lateinit var time: TextInputLayout
+    private lateinit var time_ed: TextInputEditText
+
+    private lateinit var note: TextInputLayout
+    private lateinit var note_ed: TextInputEditText
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -28,29 +44,41 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         setHasOptionsMenu(true)
 
         title = view.findViewById(R.id.title_adv)
-        description = view.findViewById(R.id.description_adv)
-        date = view.findViewById(R.id.date_adv)
-        time = view.findViewById(R.id.time_adv)
-        location = view.findViewById(R.id.location_adv)
-        note = view.findViewById(R.id.note_adv)
+        title_ed = view.findViewById(R.id.edit_title_text)
 
-        title.text = arguments?.getString("title")
-        description.text = arguments?.getString("description")
-        date.text = arguments?.getString("date")
-        time.text = arguments?.getString("time")
-        location.text = arguments?.getString("location")
-        note.text = arguments?.getString("note")
+        description = view.findViewById(R.id.description_adv)
+        description_ed = view.findViewById(R.id.edit_description_text)
+
+        date = view.findViewById(R.id.date_adv)
+        date_ed = view.findViewById(R.id.edit_date_text)
+
+        time = view.findViewById(R.id.time_adv)
+        time_ed = view.findViewById(R.id.edit_time_text)
+
+        location = view.findViewById(R.id.location_adv)
+        location_ed = view.findViewById(R.id.edit_location_text)
+
+        note = view.findViewById(R.id.note_adv)
+        note_ed = view.findViewById(R.id.edit_note_text)
+
+
+        title_ed.setText(arguments?.getString("title"))
+        description_ed.setText(arguments?.getString("description"))
+        date_ed.setText(arguments?.getString("date"))
+        time_ed.setText(arguments?.getString("time"))
+        location_ed.setText(arguments?.getString("location"))
+        note_ed.setText(arguments?.getString("note"))
         //arguments?.getString("duration")
 
         setFragmentResultListener("confirmationOkModifyToDetails1") { _, bundle ->
-            title.text = bundle.getString("title")
-            description.text = bundle.getString("description")
-            date.text = bundle.getString("date")
+            title_ed.setText(bundle.getString("title"))
+            description_ed.setText(bundle.getString("description"))
+            date_ed.setText(bundle.getString("date"))
 
             //TODO: il time non lo prende
-            time.text = bundle.getString("time")
-            location.text = bundle.getString("location")
-            note.text = bundle.getString("note")
+            time_ed.setText(bundle.getString("time"))
+            location_ed.setText(bundle.getString("location"))
+            note_ed.setText(bundle.getString("note"))
             setFragmentResult("confirmationOkModifyToDetails2", bundle)
 
         }

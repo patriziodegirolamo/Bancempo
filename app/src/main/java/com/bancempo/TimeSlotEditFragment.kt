@@ -29,10 +29,10 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
     private lateinit var note: TextInputLayout
     private lateinit var noteEdit: TextInputEditText
 
-    private lateinit var date: TextView
+    private lateinit var date: TextInputLayout
     private lateinit var dateEdit: TextInputEditText
 
-    private lateinit var timeslot: TextView
+    private lateinit var timeslot: TextInputLayout
     private lateinit var timeslotEdit: TextInputEditText
 
 
@@ -48,15 +48,18 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         note = view.findViewById(R.id.edit_note)
         noteEdit = view.findViewById(R.id.edit_note_text)
         date = view.findViewById(R.id.tvDate)
+        dateEdit = view.findViewById(R.id.tvDate_text)
         timeslot = view.findViewById(R.id.tvTime)
+        timeslotEdit = view.findViewById(R.id.tvTime_text)
 
 
-        title.placeholderText = arguments?.getString("title")
-        description.placeholderText = arguments?.getString("description")
-        location.placeholderText = arguments?.getString("location")
-        note.placeholderText = arguments?.getString("note")
-        date.text = arguments?.getString("date")
-        timeslot.text = arguments?.getString("time")
+        titleEdit.setText(arguments?.getString("title"))
+        descriptionEdit.setText(arguments?.getString("description"))
+        locationEdit.setText(arguments?.getString("location"))
+        noteEdit.setText(arguments?.getString("note"))
+        dateEdit.setText( arguments?.getString("date"))
+        timeslotEdit.setText( arguments?.getString("time"))
+
         //TODO: da aggiungere date and time
 
         val createNewAdv = arguments?.getBoolean("createNewAdv")
@@ -72,9 +75,9 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         confirmButton.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("title", titleEdit.text.toString())
-            bundle.putString("date", date.text.toString())
+            bundle.putString("date", dateEdit.text.toString())
             bundle.putString("description", descriptionEdit.text.toString())
-            bundle.putString("timeslot", timeslot.text.toString())
+            bundle.putString("timeslot", timeslotEdit.text.toString())
             bundle.putString("duration", "TODO")
             bundle.putString("location", locationEdit.text.toString())
             bundle.putString("note", noteEdit.text.toString())
@@ -103,12 +106,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
 
     //Date
     private fun showDialogOfDatePicker(modifyFromList: Boolean) {
-        val datePickerFragment = DatePickerFragment(date, modifyFromList)
+        val datePickerFragment = DatePickerFragment(dateEdit, modifyFromList)
         datePickerFragment.show(requireActivity().supportFragmentManager, "datePicker")
     }
 
 
-    class DatePickerFragment(private val date: TextView, private val modify: Boolean) : DialogFragment(),DatePickerDialog.OnDateSetListener {
+    class DatePickerFragment(private val date: TextInputEditText, private val modify: Boolean) : DialogFragment(),DatePickerDialog.OnDateSetListener {
 
         private var c = Calendar.getInstance()
         private var year = c.get(Calendar.YEAR)
@@ -141,9 +144,16 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
                 day = savedInstanceState.getInt("day")
             }
             else{
-                year = c.get(Calendar.YEAR)
-                month = c.get(Calendar.MONTH)
-                day = c.get(Calendar.DAY_OF_MONTH)
+                if (date.text != null) {
+                    println("-------------- + ${date.text}")
+                    year = date.text!!.split("/").elementAt(2).toInt()
+                    month = date.text!!.split("/").elementAt(1).toInt() - 1
+                    day = date.text!!.split("/").elementAt(0).toInt()
+                } else {
+                    year = c.get(Calendar.YEAR)
+                    month = c.get(Calendar.MONTH)
+                    day = c.get(Calendar.DAY_OF_MONTH)
+                }
             }
             return DatePickerDialog(requireContext(), this, year, month, day)
         }
@@ -153,18 +163,18 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
             this.year = year
             this.month = month
             this.day = day
-            date.text = "${day}/${(month + 1)}/${year}"
+            date.setText("${day}/${(month + 1)}/${year}")
         }
 
     }
 
     //Time
     private fun showDialogOfTimeSlotPicker(modify: Boolean) {
-        val timeslotPickerFragment = TimePickerFragment(timeslot, modify)
+        val timeslotPickerFragment = TimePickerFragment(timeslotEdit, modify)
         timeslotPickerFragment.show(requireActivity().supportFragmentManager, "timePicker")
     }
 
-    class TimePickerFragment(private val timeslot: TextView, private val modify: Boolean) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+    class TimePickerFragment(private val timeslot: TextInputEditText, private val modify: Boolean) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
         private var c = Calendar.getInstance()
         private var hour = c.get(Calendar.HOUR_OF_DAY)
@@ -196,8 +206,13 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
                 minute = savedInstanceState.getInt("minute")
             }
             else{
-                hour = c.get(Calendar.HOUR_OF_DAY)
-                minute = c.get(Calendar.MINUTE)
+                if (timeslot != null) {
+                    hour = timeslot.text!!.split(":").elementAt(0).toInt()
+                    minute = timeslot.text!!.split(":").elementAt(1).toInt()
+                } else {
+                    hour = c.get(Calendar.HOUR)
+                    minute = c.get(Calendar.MINUTE)
+                }
             }
 
             return TimePickerDialog(
@@ -212,9 +227,9 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         @SuppressLint("SetTextI18n")
         override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
             if (minute in 0..9) {
-                timeslot.text = "$hourOfDay:0$minute"
+                timeslot.setText("$hourOfDay:0$minute")
             } else {
-                timeslot.text = "$hourOfDay:$minute"
+                timeslot.setText("$hourOfDay:$minute")
             }
         }
     }

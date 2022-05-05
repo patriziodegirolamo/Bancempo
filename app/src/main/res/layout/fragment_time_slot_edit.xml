@@ -21,25 +21,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="-30dp"
-                android:background="#7CDD59"
-                android:backgroundTint="#B6AAEC"
+                android:backgroundTint="@color/light_primary_color"
                 app:cardCornerRadius="30dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="30dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="17dp">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginVertical="18dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
                         android:background="#E4B1B1"
                         android:backgroundTint="#E4B1B1"
-                        app:cardCornerRadius="6dp"
+                        app:cardCornerRadius="14dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
@@ -52,15 +53,15 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Title"
-                                app:startIconDrawable="@drawable/ic_icons8_etichetta_50"
-                                app:endIconMode="clear_text">
-
-                                >
+                                app:endIconMode="clear_text"
+                                app:placeholderText="Insert title"
+                                app:startIconDrawable="@drawable/ic_icons8_etichetta_50">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/edit_title_text"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:backgroundTint="@color/light_primary_color" />
 
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,10 +73,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginVertical="18dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginEnd="16dp"
-                        app:cardCornerRadius="6dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginEnd="24dp"
+                        app:cardCornerRadius="14dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
@@ -88,15 +88,17 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Description"
-                                app:startIconDrawable="@drawable/ic_icons8_documentobianco_50"
-                                app:endIconMode="clear_text">
+                                app:endIconMode="clear_text"
+                                app:placeholderText="Insert description"
+                                app:startIconDrawable="@drawable/ic_icons8_documentobianco_50">
 
                                 >
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/edit_description_text"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:backgroundTint="@color/light_primary_color" />
 
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
@@ -110,48 +112,50 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="50dp"
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginVertical="16dp"/>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"/>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+
+                        <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/tvDate"
-                            android:text="dd/mm/yyyy"
-                            android:freezesText="true">
-
-                        </TextView>
-                        <Button
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:hint="Date"
+                            android:inputType="none"
+                            android:textColorHint="@color/black"
+                            app:startIconDrawable="@drawable/ic_icons8_calendario_50">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tvDate_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white"
+                                android:clickable="false"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:inputType="none"
+                                android:textColor="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Button
                             android:id="@+id/buttonDate"
-                            android:text="CHOOSE DATE">
-                        </Button>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CHOOSE DATE"></Button>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -159,33 +163,53 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/tvTime"
-                            android:text="hh:mm"
-                            android:freezesText="true">
 
-                        </TextView>
-                        <Button
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tvTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:hint="Time"
+                            android:inputType="none"
+                            app:startIconDrawable="@drawable/ic_icons8_orologio_50">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/tvTime_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/black"
+                                android:backgroundTint="@color/white"
+                                android:clickable="false"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:inputType="none"
+                                android:textColor="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Button
                             android:id="@+id/buttonTime"
-                            android:text="CHOOSE TIME-SLOT">
-                        </Button>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="CHOOSE TIME-SLOT"></Button>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginVertical="20dp"
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -197,14 +221,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Location"
-                            app:endIconMode="clear_text">
+                            app:endIconMode="clear_text"
+                            app:placeholderText="Insert location"
+                            app:startIconDrawable="@drawable/ic_icons8_segnaposto_50">
 
                             >
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_location_text"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -214,7 +241,9 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="50dp"
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -226,14 +255,17 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Note"
-                            app:endIconMode="clear_text">
+                            app:endIconMode="clear_text"
+                            app:placeholderText="Insert note"
+                            app:startIconDrawable="@drawable/ic_icons8_nota_64">
 
                             >
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_note_text"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:backgroundTint="@color/white" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -251,7 +283,6 @@
             </Button>
 
         </LinearLayout>
-
     </ScrollView>
 
 
