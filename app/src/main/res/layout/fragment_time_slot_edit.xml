@@ -155,6 +155,7 @@
                             android:id="@+id/buttonDate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:backgroundTint="@color/divider_color"
                             android:text="CHOOSE DATE"></Button>
                     </LinearLayout>
 
@@ -200,6 +201,7 @@
                             android:id="@+id/buttonTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:backgroundTint="@color/divider_color"
                             android:text="CHOOSE TIME-SLOT"></Button>
                     </LinearLayout>
 
@@ -276,11 +278,14 @@
             </LinearLayout>
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
                 android:id="@+id/confirmationButton"
-                android:text="confirm">
-            </Button>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="40dp"
+                android:backgroundTint="@color/dark_primary_color"
+                android:text="Save changes"></Button>
 
         </LinearLayout>
     </ScrollView>
