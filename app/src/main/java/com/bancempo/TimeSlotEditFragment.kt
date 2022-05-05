@@ -8,6 +8,8 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -102,6 +104,43 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
             findNavController().popBackStack()
         }
 
+
+        //handling on back pressed
+        requireActivity()
+            .onBackPressedDispatcher
+            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val bundle = Bundle()
+                    bundle.putString("title", titleEdit.text.toString())
+                    bundle.putString("date", dateEdit.text.toString())
+                    bundle.putString("description", descriptionEdit.text.toString())
+                    bundle.putString("timeslot", timeslotEdit.text.toString())
+                    bundle.putString("duration", "TODO")
+                    bundle.putString("location", locationEdit.text.toString())
+                    bundle.putString("note", noteEdit.text.toString())
+
+                    //MODIFY ADV
+                    if(modify){
+                        val modifyFromList = arguments?.getBoolean("modifyFromList")
+                        val pos = arguments?.getInt("position")
+                        bundle.putInt("position", pos!!)
+
+                        if(modifyFromList == true){
+                            setFragmentResult("confirmationOkModifyToList", bundle)
+                        }
+                        else{
+                            setFragmentResult("confirmationOkModifyToDetails1", bundle)
+                        }
+                    }
+                    //CREATE A NEW ADV
+                    else{
+                        setFragmentResult("confirmationOkCreate", bundle)
+                    }
+                    findNavController().popBackStack()
+                }
+            })
+
+
     }
 
     //Date
@@ -138,13 +177,17 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            println("---------SAVEDINSTANCE $savedInstanceState")
+            println("---------DATE ${date.text.toString()}")
+            println("---------DATE $date")
+
             if(savedInstanceState!= null){
                 year = savedInstanceState.getInt("year")
                 month = savedInstanceState.getInt("month")
                 day = savedInstanceState.getInt("day")
             }
             else{
-                if (date.text != null) {
+                if (date != null && date.text.toString() != "") {
                     println("-------------- + ${date.text}")
                     year = date.text!!.split("/").elementAt(2).toInt()
                     month = date.text!!.split("/").elementAt(1).toInt() - 1
@@ -206,11 +249,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
                 minute = savedInstanceState.getInt("minute")
             }
             else{
-                if (timeslot != null) {
+                if (timeslot != null && timeslot.text.toString() != "") {
                     hour = timeslot.text!!.split(":").elementAt(0).toInt()
                     minute = timeslot.text!!.split(":").elementAt(1).toInt()
                 } else {
-                    hour = c.get(Calendar.HOUR)
+                    hour = c.get(Calendar.HOUR_OF_DAY)
                     minute = c.get(Calendar.MINUTE)
                 }
             }
