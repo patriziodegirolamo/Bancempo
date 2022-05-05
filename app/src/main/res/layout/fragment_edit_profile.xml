@@ -85,8 +85,6 @@
                                     android:hint="Nickname"
                                     app:endIconMode="clear_text">
 
-                                    >
-
                                     <com.google.android.material.textfield.TextInputEditText
                                         android:id="@+id/editTextNickname"
                                         android:layout_width="match_parent"
@@ -131,6 +129,7 @@
                             android:layout_height="wrap_content"
                             android:textColorHint="@color/black"
                             android:hint="Full name"
+                            app:endIconMode="clear_text"
                             app:startIconDrawable="@drawable/ic_icons8_nome_64">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -161,6 +160,7 @@
                             android:layout_height="wrap_content"
                             android:hint="Email"
                             android:textColorHint="@color/black"
+                            app:endIconMode="clear_text"
                             app:startIconDrawable="@drawable/ic_icons8_email_64">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -189,6 +189,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Location"
+                            app:endIconMode="clear_text"
                             app:startIconDrawable="@drawable/ic_icons8_segnaposto_50">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -219,9 +220,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Description"
+                            app:endIconMode="clear_text"
                             app:startIconDrawable="@drawable/ic_icons8_documento_50">
 
-                            >
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/editTextDescription"
@@ -252,8 +253,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Skills"
-                            app:endIconMode="clear_text"
                             app:placeholderText="Insert note"
+                            app:endIconMode="custom"
+                            app:endIconDrawable="@drawable/ic_icons8_ok"
+                            app:endIconContentDescription="Insert a skill"
                             app:startIconDrawable="@drawable/ic_icons8_skills_24">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -262,19 +265,6 @@
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="@color/white"
                                 android:textColor="@color/black" />
-
-                            <ImageButton
-                                android:id="@+id/addChipButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="end"
-                                android:layout_marginTop="10dp"
-                                android:backgroundTint="#FFFFFF"
-                                android:contentDescription="@string/insert_skill"
-                                android:minWidth="48dp"
-                                android:minHeight="48dp"
-                                app:srcCompat="@drawable/ic_icons8_ok"
-                                tools:ignore="DuplicateSpeakableTextCheck,DuplicateSpeakableTextCheck" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 

@@ -21,9 +21,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginStart="-20dp"
                 android:backgroundTint="@color/light_primary_color"
-                app:cardCornerRadius="30dp"><![CDATA[>
-
-                ]]>
+                app:cardCornerRadius="30dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -31,7 +29,7 @@
                     android:layout_marginStart="20dp"
                     android:orientation="vertical"
                     android:paddingTop="10dp"
-                    android:paddingBottom="17dp">>
+                    android:paddingBottom="17dp">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_pic"

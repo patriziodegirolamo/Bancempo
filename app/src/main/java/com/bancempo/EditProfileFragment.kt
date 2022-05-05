@@ -64,10 +64,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         description_ed = view.findViewById(R.id.editTextDescription)
         skills =view.findViewById(R.id.skills)
         skills_ed =view.findViewById(R.id.editTextSkills)
-        addchipbutton = view.findViewById(R.id.addChipButton)
         chipGroup = view.findViewById(R.id.chipGroup)
 
-        addchipbutton.setOnClickListener {
+        skills.setEndIconOnClickListener {
             if (skills_ed.text.toString().isNotEmpty()) {
                 addChip(skills_ed.text.toString())
                 skills_ed.setText("")
@@ -81,10 +80,12 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         email_ed.setText(arguments?.getString("email"))
         location_ed.setText(arguments?.getString("location"))
         description_ed.setText(arguments?.getString("description"))
-        skills_ed.setText(arguments?.getString("skills"))
-        if (skills_ed != null) {
+        val skills_string : String? = arguments?.getString("skills")
+
+        if (skills_string != null) {
+            println("-------------SKILLS $skills_string")
             chipGroup.removeAllViews()
-            skills_ed.text?.split(",")?.forEach {
+            skills_string.split(",")?.forEach {
                 val chip = Chip(activity)
                 if (it.isNotEmpty()) {
                     chip.text = it
