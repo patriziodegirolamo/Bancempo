@@ -20,6 +20,7 @@
     <string name="label_timeSlotDetailsFragment">Advertisement Details</string>
     <string name="label_timeSlotListFragment">Advertisements</string>
     <string name="label_editProfileFragment">Edit Profile</string>
+    <string name="no_data_available">No advertisements yet available. Create one now!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="small_adv_title">Title: </string>

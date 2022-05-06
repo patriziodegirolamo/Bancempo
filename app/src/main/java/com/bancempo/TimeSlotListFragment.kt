@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -28,11 +29,15 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val sadvs = advertisementVM.advs.value ?: mutableListOf()
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
-
-
+        val emptyListTV = view.findViewById<TextView>(R.id.empty_list_tv)
 
         if (sadvs.isEmpty()) {
-            Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
+            rv.setVisibility(View.GONE)
+            emptyListTV.setVisibility(View.VISIBLE)
+            //Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
+        } else {
+            rv.setVisibility(View.VISIBLE)
+            emptyListTV.setVisibility(View.GONE)
         }
 
         llm = LinearLayoutManager(context)
@@ -50,6 +55,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         setFragmentResultListener("confirmationOkCreate") { _, bundle ->
             val newAdv = createAdvFromBundle(bundle)
             advertisementVM.addNewAdv(newAdv)
+            rv.setVisibility(View.VISIBLE)
+            emptyListTV.setVisibility(View.GONE)
+
 
             val adapter = SmallAdvAdapter(sadvs)
             adapter.notifyItemInserted(0)
