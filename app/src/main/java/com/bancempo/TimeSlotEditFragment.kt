@@ -120,6 +120,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
                         }
                         else{
                             setFragmentResult("confirmationOkModifyToDetails1", bundle)
+                            Toast.makeText(context, R.string.adv_edit_succ , Toast.LENGTH_SHORT).show()
                         }
                     }
                     else{
