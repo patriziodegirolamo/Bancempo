@@ -126,14 +126,17 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
 
                         if(modifyFromList == true){
                             setFragmentResult("confirmationOkModifyToList", bundle)
+                            Toast.makeText(context, R.string.adv_edit_succ , Toast.LENGTH_SHORT).show()
                         }
                         else{
                             setFragmentResult("confirmationOkModifyToDetails1", bundle)
+                            Toast.makeText(context, R.string.adv_edit_succ , Toast.LENGTH_SHORT).show()
                         }
                     }
                     //CREATE A NEW ADV
                     else{
                         setFragmentResult("confirmationOkCreate", bundle)
+                        Toast.makeText(context, R.string.adv_create_succ , Toast.LENGTH_SHORT).show()
                     }
                     findNavController().popBackStack()
                 }

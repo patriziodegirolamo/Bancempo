@@ -63,7 +63,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             adapter.notifyItemInserted(0)
             rv.adapter = adapter
             rv.smoothScrollToPosition(0)
-            Toast.makeText(context, R.string.adv_create_succ , Toast.LENGTH_SHORT).show()
         }
 
 
@@ -75,7 +74,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             val adapter = SmallAdvAdapter(sadvs)
             adapter.notifyItemInserted(pos)
             rv.adapter = adapter
-            Toast.makeText(context, R.string.adv_edit_succ , Toast.LENGTH_SHORT).show()
         }
 
 
@@ -87,7 +85,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             val adapter = SmallAdvAdapter(sadvs)
             adapter.notifyItemInserted(pos)
             rv.adapter = adapter
-            Toast.makeText(context, R.string.adv_edit_succ , Toast.LENGTH_SHORT).show()
         }
 
     }

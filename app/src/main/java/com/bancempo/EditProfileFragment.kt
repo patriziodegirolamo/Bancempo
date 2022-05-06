@@ -113,6 +113,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     userVM.updateFromEditProfile(view)
 
                     setFragmentResult("backPressed", bundleOf())
+                    Toast.makeText(context, R.string.prof_edit_succ , Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 }
             })

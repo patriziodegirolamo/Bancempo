@@ -80,8 +80,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             location_ed.setText(bundle.getString("location"))
             note_ed.setText(bundle.getString("note"))
             setFragmentResult("confirmationOkModifyToDetails2", bundle)
-            Toast.makeText(context, R.string.adv_edit_succ , Toast.LENGTH_SHORT).show()
-
         }
     }
 
