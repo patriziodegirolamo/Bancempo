@@ -72,14 +72,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         duration_ed.setText(arguments?.getString("duration"))
         location_ed.setText(arguments?.getString("location"))
         note_ed.setText(arguments?.getString("note"))
-        //arguments?.getString("duration")
 
         setFragmentResultListener("confirmationOkModifyToDetails1") { _, bundle ->
             title_ed.setText(bundle.getString("title"))
             description_ed.setText(bundle.getString("description"))
             date_ed.setText(bundle.getString("date"))
-
-            //TODO: il time non lo prende
             time_ed.setText(bundle.getString("time"))
             location_ed.setText(bundle.getString("location"))
             note_ed.setText(bundle.getString("note"))

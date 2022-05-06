@@ -21,7 +21,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
-class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
+class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     private lateinit var title: TextInputLayout
     private lateinit var titleEdit: TextInputEditText
 
@@ -69,9 +69,16 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         descriptionEdit.setText(arguments?.getString("description"))
         locationEdit.setText(arguments?.getString("location"))
         noteEdit.setText(arguments?.getString("note"))
-        dateEdit.setText( arguments?.getString("date"))
-        timeslotEdit.setText( arguments?.getString("time"))
-        durationEdit.setText( arguments?.getString("duration"))
+        dateEdit.setText(arguments?.getString("date"))
+        timeslotEdit.setText(arguments?.getString("time"))
+        durationEdit.setText(arguments?.getString("duration"))
+
+        title.error = null
+        description.error = null
+        location.error = null
+        note.error = null
+        date.error = null
+        timeslot.error = null
 
         val createNewAdv = arguments?.getBoolean("createNewAdv")
         val modify = createNewAdv == null || createNewAdv == false
@@ -84,29 +91,31 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
 
         val confirmButton = view.findViewById<Button>(R.id.confirmationButton)
 
-        if(modify){
+        if (modify) {
             confirmButton.visibility = View.GONE;
         }
 
         //CREATE A NEW ADV
-        confirmButton.setOnClickListener{
-            val bundle = Bundle()
-            bundle.putString("title", titleEdit.text.toString())
-            bundle.putString("date", dateEdit.text.toString())
-            bundle.putString("description", descriptionEdit.text.toString())
-            bundle.putString("timeslot", timeslotEdit.text.toString())
-            bundle.putString("duration", durationEdit.text.toString())
-            bundle.putString("location", locationEdit.text.toString())
-            bundle.putString("note", noteEdit.text.toString())
+        confirmButton.setOnClickListener {
+            if (validation()) {
+                val bundle = Bundle()
+                bundle.putString("title", titleEdit.text.toString())
+                bundle.putString("date", dateEdit.text.toString())
+                bundle.putString("description", descriptionEdit.text.toString())
+                bundle.putString("timeslot", timeslotEdit.text.toString())
+                bundle.putString("duration", durationEdit.text.toString())
+                bundle.putString("location", locationEdit.text.toString())
+                bundle.putString("note", noteEdit.text.toString())
 
-            setFragmentResult("confirmationOkCreate", bundle)
-            findNavController().popBackStack()
+                setFragmentResult("confirmationOkCreate", bundle)
+                Toast.makeText(context, R.string.adv_create_succ, Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+            }
         }
 
         //handler slider
         slider.addOnChangeListener { slider, value, fromUser ->
             // Responds to when slider's value is changed
-            val arr = value.toString().split(".")
             durationEdit.setText(value.toString())
         }
 
@@ -116,38 +125,124 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if(modify){
-                        println("STO MODIFICANDO QUINDI SALVA A PRESCINDERE")
-                        val bundle = Bundle()
-                        bundle.putString("title", titleEdit.text.toString())
-                        bundle.putString("date", dateEdit.text.toString())
-                        bundle.putString("description", descriptionEdit.text.toString())
-                        bundle.putString("timeslot", timeslotEdit.text.toString())
-                        bundle.putString("duration", durationEdit.text.toString())
-                        bundle.putString("location", locationEdit.text.toString())
-                        bundle.putString("note", noteEdit.text.toString())
+                    if (modify) {
+                        println(validation())
+                        if (validation()) {
+                            val bundle = Bundle()
+                            bundle.putString("title", titleEdit.text.toString())
+                            bundle.putString("date", dateEdit.text.toString())
+                            bundle.putString("description", descriptionEdit.text.toString())
+                            bundle.putString("timeslot", timeslotEdit.text.toString())
+                            bundle.putString("duration", durationEdit.text.toString())
+                            bundle.putString("location", locationEdit.text.toString())
+                            bundle.putString("note", noteEdit.text.toString())
 
-                        val modifyFromList = arguments?.getBoolean("modifyFromList")
-                        val pos = arguments?.getInt("position")
-                        bundle.putInt("position", pos!!)
+                            val modifyFromList = arguments?.getBoolean("modifyFromList")
+                            val pos = arguments?.getInt("position")
+                            bundle.putInt("position", pos!!)
 
-                        if(modifyFromList == true){
-                            setFragmentResult("confirmationOkModifyToList", bundle)
-                        }
-                        else{
-                            setFragmentResult("confirmationOkModifyToDetails1", bundle)
-                            Toast.makeText(context, R.string.adv_edit_succ , Toast.LENGTH_SHORT).show()
+                            if (modifyFromList == true) {
+                                setFragmentResult("confirmationOkModifyToList", bundle)
+                                Toast.makeText(context, R.string.adv_edit_succ, Toast.LENGTH_SHORT)
+                                    .show()
+
+                            } else {
+                                setFragmentResult("confirmationOkModifyToDetails1", bundle)
+                                Toast.makeText(context, R.string.adv_edit_succ, Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                            findNavController().popBackStack()
                         }
                     }
                     else{
-                        println("UNDO")
+                        findNavController().popBackStack()
                     }
-
-                    findNavController().popBackStack()
                 }
             })
 
 
+    }
+
+    private fun validateTextInput(text: TextInputLayout, textEdit: TextInputEditText): Boolean {
+        println("---------${textEdit.text}")
+        if (textEdit.text.isNullOrEmpty()) {
+            text.error = "EMPTY"
+            return false
+        } else {
+            if (text.hint == "Description" || text.hint == "Note") {
+                if (textEdit.text?.length!! > 80) {
+                    text.error = "TOO LONG"
+                    return false
+                } else {
+                    text.error = null
+                    return true
+                }
+            } else if (text.hint == "Title" || text.hint == "Location") {
+                return if (textEdit.text?.length!! > 20) {
+                    text.error = "TOO LONG"
+                    false
+                } else {
+                    text.error = null
+                    return true
+                }
+            } else if (text.hint == "Date") {
+                if (textEdit.text.toString() == "dd/mm/yyyy") {
+                    text.error = "EMPTY"
+                    return false
+                } else {
+                    text.error = null
+                    return true
+                }
+            } else if (text.hint == "Time") {
+                if (textEdit.text.toString() == "hh:mm") {
+                    text.error = "EMPTY"
+                    return false
+                } else {
+                    text.error = null
+                    return true
+                }
+            } else if(text.hint == "Duration (h)"){
+                println(text.hint)
+                text.error = null
+                return true
+            }
+            else return false
+        }
+
+    }
+
+    private fun validation(): Boolean {
+        var valid = true;
+
+        if (!validateTextInput(title, titleEdit)) {
+            println("0")
+            valid = false;
+        }
+        if (!validateTextInput(description, descriptionEdit)) {
+            println("1")
+            valid = false;
+        }
+        if (!validateTextInput(date, dateEdit)) {
+            println("2")
+            valid = false;
+        }
+        if (!validateTextInput(timeslot, timeslotEdit)) {
+            println("3")
+            valid = false;
+        }
+        if (!validateTextInput(location, locationEdit)) {
+            println("4")
+            valid = false;
+        }
+        if (!validateTextInput(note, noteEdit)) {
+            println("5")
+            valid = false;
+        }
+        if (!validateTextInput(duration, durationEdit)) {
+            println("6")
+            valid = false;
+        }
+        return valid
     }
 
     //Date
@@ -157,7 +252,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
     }
 
 
-    class DatePickerFragment(private val date: TextInputEditText, private val modify: Boolean) : DialogFragment(),DatePickerDialog.OnDateSetListener {
+    class DatePickerFragment(private val date: TextInputEditText, private val modify: Boolean) :
+        DialogFragment(), DatePickerDialog.OnDateSetListener {
 
         private var c = Calendar.getInstance()
         private var year = c.get(Calendar.YEAR)
@@ -166,7 +262,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            if(modify){
+            if (modify) {
                 val arr = date.text.toString().split("/")
                 val dd = arr[0].toInt()
                 val mm = arr[1].toInt()
@@ -188,12 +284,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
             println("---------DATE ${date.text.toString()}")
             println("---------DATE $date")
 
-            if(savedInstanceState!= null){
+            if (savedInstanceState != null) {
                 year = savedInstanceState.getInt("year")
                 month = savedInstanceState.getInt("month")
                 day = savedInstanceState.getInt("day")
-            }
-            else{
+            } else {
                 if (date != null && date.text.toString() != "") {
                     println("-------------- + ${date.text}")
                     year = date.text!!.split("/").elementAt(2).toInt()
@@ -224,7 +319,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         timeslotPickerFragment.show(requireActivity().supportFragmentManager, "timePicker")
     }
 
-    class TimePickerFragment(private val timeslot: TextInputEditText, private val modify: Boolean) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+    class TimePickerFragment(private val timeslot: TextInputEditText, private val modify: Boolean) :
+        DialogFragment(), TimePickerDialog.OnTimeSetListener {
 
         private var c = Calendar.getInstance()
         private var hour = c.get(Calendar.HOUR_OF_DAY)
@@ -232,7 +328,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            if(modify){
+            if (modify) {
                 val arrTime = timeslot.text.toString().split(":")
                 println("------------$arrTime")
                 val hh = arrTime[0].toInt()
@@ -251,11 +347,10 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-            if(savedInstanceState!= null){
+            if (savedInstanceState != null) {
                 hour = savedInstanceState.getInt("hour")
                 minute = savedInstanceState.getInt("minute")
-            }
-            else{
+            } else {
                 if (timeslot != null && timeslot.text.toString() != "") {
                     hour = timeslot.text!!.split(":").elementAt(0).toInt()
                     minute = timeslot.text!!.split(":").elementAt(1).toInt()
