@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
@@ -30,6 +29,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private lateinit var location: TextInputLayout
     private lateinit var location_ed: TextInputEditText
 
+    private lateinit var duration: TextInputLayout
+    private lateinit var duration_ed: TextInputEditText
+
     private lateinit var time: TextInputLayout
     private lateinit var time_ed: TextInputEditText
 
@@ -53,7 +55,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         time = view.findViewById(R.id.time_adv)
         time_ed = view.findViewById(R.id.edit_time_text)
 
-        location = view.findViewById(R.id.duration_adv)
+        duration = view.findViewById(R.id.duration_adv)
+        duration_ed = view.findViewById(R.id.edit_duration_text)
+
+        location = view.findViewById(R.id.edit_duration)
         location_ed = view.findViewById(R.id.edit_location_text)
 
         note = view.findViewById(R.id.note_adv)
@@ -64,6 +69,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         description_ed.setText(arguments?.getString("description"))
         date_ed.setText(arguments?.getString("date"))
         time_ed.setText(arguments?.getString("time"))
+        duration_ed.setText(arguments?.getString("duration"))
         location_ed.setText(arguments?.getString("location"))
         note_ed.setText(arguments?.getString("note"))
         //arguments?.getString("duration")
@@ -77,6 +83,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             time_ed.setText(bundle.getString("time"))
             location_ed.setText(bundle.getString("location"))
             note_ed.setText(bundle.getString("note"))
+            duration_ed.setText(bundle.getString("duration"))
             setFragmentResult("confirmationOkModifyToDetails2", bundle)
         }
     }
@@ -95,6 +102,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 bundle.putString("title", arguments?.getString("title"))
                 bundle.putInt("position", arguments?.getInt("position")!!)
                 bundle.putString("description", arguments?.getString("description"))
+                bundle.putString("duration", arguments?.getString("duration"))
                 bundle.putString("date", arguments?.getString("date"))
                 bundle.putString("time", arguments?.getString("time"))
                 bundle.putString("location", arguments?.getString("location"))

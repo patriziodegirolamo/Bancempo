@@ -16,6 +16,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
@@ -39,6 +40,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
     private lateinit var timeslot: TextInputLayout
     private lateinit var timeslotEdit: TextInputEditText
 
+    private lateinit var duration: TextInputLayout
+    private lateinit var durationEdit: TextInputEditText
+
+    private lateinit var slider: Slider
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,14 +61,17 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         dateEdit = view.findViewById(R.id.tvDate_text)
         timeslot = view.findViewById(R.id.tvTime)
         timeslotEdit = view.findViewById(R.id.tvTime_text)
+        duration = view.findViewById(R.id.edit_duration)
+        durationEdit = view.findViewById(R.id.edit_duration_text)
 
-
+        slider = view.findViewById(R.id.slider)
         titleEdit.setText(arguments?.getString("title"))
         descriptionEdit.setText(arguments?.getString("description"))
         locationEdit.setText(arguments?.getString("location"))
         noteEdit.setText(arguments?.getString("note"))
         dateEdit.setText( arguments?.getString("date"))
         timeslotEdit.setText( arguments?.getString("time"))
+        durationEdit.setText( arguments?.getString("duration"))
 
         val createNewAdv = arguments?.getBoolean("createNewAdv")
         val modify = createNewAdv == null || createNewAdv == false
@@ -86,12 +95,19 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
             bundle.putString("date", dateEdit.text.toString())
             bundle.putString("description", descriptionEdit.text.toString())
             bundle.putString("timeslot", timeslotEdit.text.toString())
-            bundle.putString("duration", "TODO")
+            bundle.putString("duration", durationEdit.text.toString())
             bundle.putString("location", locationEdit.text.toString())
             bundle.putString("note", noteEdit.text.toString())
 
             setFragmentResult("confirmationOkCreate", bundle)
             findNavController().popBackStack()
+        }
+
+        //handler slider
+        slider.addOnChangeListener { slider, value, fromUser ->
+            // Responds to when slider's value is changed
+            val arr = value.toString().split(".")
+            durationEdit.setText(value.toString())
         }
 
 
@@ -107,7 +123,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
                         bundle.putString("date", dateEdit.text.toString())
                         bundle.putString("description", descriptionEdit.text.toString())
                         bundle.putString("timeslot", timeslotEdit.text.toString())
-                        bundle.putString("duration", "TODO")
+                        bundle.putString("duration", durationEdit.text.toString())
                         bundle.putString("location", locationEdit.text.toString())
                         bundle.putString("note", noteEdit.text.toString())
 

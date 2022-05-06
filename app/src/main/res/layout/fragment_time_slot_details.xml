@@ -210,6 +210,7 @@
 
                 </androidx.cardview.widget.CardView>
 
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -223,6 +224,44 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/duration_adv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            android:focusable="false"
+                            android:hint="Duration (h)"
+                            android:inputType="none"
+                            app:startIconDrawable="@drawable/ic_icons8_hourglass_50">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edit_duration_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/black"
+                                android:backgroundTint="@color/white"
+                                android:clickable="false"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:inputType="none"
+                                android:textColor="@color/black" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/edit_duration"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Location"
