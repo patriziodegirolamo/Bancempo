@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/goToTimeSlotList"
-        android:title="Time Slot List" />
+        android:title="@string/navdrawer_time_slot_list" />
     <item
         android:id="@+id/goToShowProfile"
-        android:title="Show Profile" />
+        android:title="@string/navdrawer_show_profile" />
 </menu>
