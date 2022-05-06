@@ -251,7 +251,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:stepSize="0.5"
-                    android:valueFrom="0.0"
+                    android:valueFrom="0.5"
                     android:valueTo="6.0"
                     app:labelBehavior="gone"
                     app:trackColor="@color/divider_color"
