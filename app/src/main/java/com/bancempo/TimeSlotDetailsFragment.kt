@@ -5,10 +5,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
@@ -55,7 +53,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         time = view.findViewById(R.id.time_adv)
         time_ed = view.findViewById(R.id.edit_time_text)
 
-        location = view.findViewById(R.id.location_adv)
+        location = view.findViewById(R.id.duration_adv)
         location_ed = view.findViewById(R.id.edit_location_text)
 
         note = view.findViewById(R.id.note_adv)

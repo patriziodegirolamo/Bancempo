@@ -52,8 +52,8 @@
                     android:layout_height="30dp"
                     android:text="@string/small_adv_time"
                     app:layout_constraintBottom_toTopOf="@+id/tvsmallAdvDuration"
-                    app:layout_constraintTop_toBottomOf="@+id/tvsmallAdvDate"
-                    tools:layout_editor_absoluteX="0dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvsmallAdvDate" />
 
                 <TextView
                     android:id="@+id/tvSmallAdvTitle"
@@ -66,10 +66,10 @@
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/tvsmallAdvDate"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layout_conversion_absoluteHeight="40dp"
-                    tools:layout_conversion_absoluteWidth="56dp"
-                    tools:layout_editor_absoluteX="0dp" />
+                    tools:layout_conversion_absoluteWidth="56dp" />
 
                 <TextView
                     android:id="@+id/tvsmallAdvDate"
@@ -80,10 +80,10 @@
                     android:text="@string/small_adv_date"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toTopOf="@+id/tvSmallAdvTime"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvSmallAdvTitle"
                     tools:layout_conversion_absoluteHeight="30dp"
-                    tools:layout_conversion_absoluteWidth="37dp"
-                    tools:layout_editor_absoluteX="0dp" />
+                    tools:layout_conversion_absoluteWidth="37dp" />
 
                 <TextView
                     android:id="@+id/tvsmallAdvDuration"
@@ -92,6 +92,7 @@
                     android:maxLines="1"
                     android:text="@string/small_adv_duration"
                     app:layout_constraintBottom_toTopOf="@+id/tvSmallAdvLocation"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tvSmallAdvTime"
                     tools:layout_conversion_absoluteHeight="30dp"
                     tools:layout_conversion_absoluteWidth="64dp" />
@@ -102,8 +103,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/small_adv_location"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tvsmallAdvDuration"
-                    tools:layout_editor_absoluteX="0dp" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvsmallAdvDuration" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -117,7 +118,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/divider_color_light"
-        android:backgroundTintMode="@color/divider_color_light"
         android:clickable="true"
         android:contentDescription="add new adv"
         android:contextClickable="true"

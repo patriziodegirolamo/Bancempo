@@ -6,13 +6,16 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.util.*
@@ -61,8 +64,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         dateEdit.setText( arguments?.getString("date"))
         timeslotEdit.setText( arguments?.getString("time"))
 
-        //TODO: da aggiungere date and time
-
         val createNewAdv = arguments?.getBoolean("createNewAdv")
         val modify = createNewAdv == null || createNewAdv == false
 
@@ -73,6 +74,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
         buttonTime.setOnClickListener { showDialogOfTimeSlotPicker(modify) }
 
         val confirmButton = view.findViewById<Button>(R.id.confirmationButton)
+
+        if(modify){
+            confirmButton.visibility = View.GONE;
+        }
+
+        //CREATE A NEW ADV
         confirmButton.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("title", titleEdit.text.toString())
@@ -83,23 +90,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
             bundle.putString("location", locationEdit.text.toString())
             bundle.putString("note", noteEdit.text.toString())
 
-            //MODIFY ADV
-            if(modify){
-                val modifyFromList = arguments?.getBoolean("modifyFromList")
-                val pos = arguments?.getInt("position")
-                bundle.putInt("position", pos!!)
-
-                if(modifyFromList == true){
-                    setFragmentResult("confirmationOkModifyToList", bundle)
-                }
-                else{
-                    setFragmentResult("confirmationOkModifyToDetails1", bundle)
-                }
-            }
-            //CREATE A NEW ADV
-            else{
-                setFragmentResult("confirmationOkCreate", bundle)
-            }
+            setFragmentResult("confirmationOkCreate", bundle)
             findNavController().popBackStack()
         }
 
@@ -109,17 +100,17 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val bundle = Bundle()
-                    bundle.putString("title", titleEdit.text.toString())
-                    bundle.putString("date", dateEdit.text.toString())
-                    bundle.putString("description", descriptionEdit.text.toString())
-                    bundle.putString("timeslot", timeslotEdit.text.toString())
-                    bundle.putString("duration", "TODO")
-                    bundle.putString("location", locationEdit.text.toString())
-                    bundle.putString("note", noteEdit.text.toString())
-
-                    //MODIFY ADV
                     if(modify){
+                        println("STO MODIFICANDO QUINDI SALVA A PRESCINDERE")
+                        val bundle = Bundle()
+                        bundle.putString("title", titleEdit.text.toString())
+                        bundle.putString("date", dateEdit.text.toString())
+                        bundle.putString("description", descriptionEdit.text.toString())
+                        bundle.putString("timeslot", timeslotEdit.text.toString())
+                        bundle.putString("duration", "TODO")
+                        bundle.putString("location", locationEdit.text.toString())
+                        bundle.putString("note", noteEdit.text.toString())
+
                         val modifyFromList = arguments?.getBoolean("modifyFromList")
                         val pos = arguments?.getInt("position")
                         bundle.putInt("position", pos!!)
@@ -131,10 +122,10 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit){
                             setFragmentResult("confirmationOkModifyToDetails1", bundle)
                         }
                     }
-                    //CREATE A NEW ADV
                     else{
-                        setFragmentResult("confirmationOkCreate", bundle)
+                        println("UNDO")
                     }
+
                     findNavController().popBackStack()
                 }
             })
