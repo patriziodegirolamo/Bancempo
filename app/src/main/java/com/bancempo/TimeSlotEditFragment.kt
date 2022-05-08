@@ -6,16 +6,13 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -92,7 +89,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         val confirmButton = view.findViewById<Button>(R.id.confirmationButton)
 
         if (modify) {
-            confirmButton.visibility = View.GONE;
+            confirmButton.visibility = View.GONE
+            slider.value = durationEdit.text.toString().toFloat()
         }
 
         //CREATE A NEW ADV
@@ -102,7 +100,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 bundle.putString("title", titleEdit.text.toString())
                 bundle.putString("date", dateEdit.text.toString())
                 bundle.putString("description", descriptionEdit.text.toString())
-                bundle.putString("timeslot", timeslotEdit.text.toString())
+                bundle.putString("time", timeslotEdit.text.toString())
                 bundle.putString("duration", durationEdit.text.toString())
                 bundle.putString("location", locationEdit.text.toString())
                 bundle.putString("note", noteEdit.text.toString())
@@ -114,7 +112,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         //handler slider
-        slider.addOnChangeListener { slider, value, fromUser ->
+        slider.addOnChangeListener { _, value, _ ->
             // Responds to when slider's value is changed
             durationEdit.setText(value.toString())
         }
@@ -128,11 +126,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     if (modify) {
                         println(validation())
                         if (validation()) {
+                            println("----------------${timeslotEdit.text.toString()}")
                             val bundle = Bundle()
                             bundle.putString("title", titleEdit.text.toString())
                             bundle.putString("date", dateEdit.text.toString())
                             bundle.putString("description", descriptionEdit.text.toString())
-                            bundle.putString("timeslot", timeslotEdit.text.toString())
+                            bundle.putString("time", timeslotEdit.text.toString())
                             bundle.putString("duration", durationEdit.text.toString())
                             bundle.putString("location", locationEdit.text.toString())
                             bundle.putString("note", noteEdit.text.toString())
@@ -170,12 +169,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             return false
         } else {
             if (text.hint == "Description" || text.hint == "Note") {
-                if (textEdit.text?.length!! > 80) {
+                return if (textEdit.text?.length!! > 200) {
                     text.error = "TOO LONG"
-                    return false
+                    false
                 } else {
                     text.error = null
-                    return true
+                    true
                 }
             } else if (text.hint == "Title" || text.hint == "Location") {
                 return if (textEdit.text?.length!! > 20) {
@@ -186,20 +185,20 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     return true
                 }
             } else if (text.hint == "Date") {
-                if (textEdit.text.toString() == "dd/mm/yyyy") {
+                return if (textEdit.text.toString() == "dd/mm/yyyy") {
                     text.error = "EMPTY"
-                    return false
+                    false
                 } else {
                     text.error = null
-                    return true
+                    true
                 }
             } else if (text.hint == "Time") {
-                if (textEdit.text.toString() == "hh:mm") {
+                return if (textEdit.text.toString() == "hh:mm") {
                     text.error = "EMPTY"
-                    return false
+                    false
                 } else {
                     text.error = null
-                    return true
+                    true
                 }
             } else if(text.hint == "Duration (h)"){
                 println(text.hint)
@@ -212,35 +211,28 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     }
 
     private fun validation(): Boolean {
-        var valid = true;
+        var valid = true
 
         if (!validateTextInput(title, titleEdit)) {
-            println("0")
-            valid = false;
+            valid = false
         }
         if (!validateTextInput(description, descriptionEdit)) {
-            println("1")
-            valid = false;
+            valid = false
         }
         if (!validateTextInput(date, dateEdit)) {
-            println("2")
-            valid = false;
+            valid = false
         }
         if (!validateTextInput(timeslot, timeslotEdit)) {
-            println("3")
-            valid = false;
+            valid = false
         }
         if (!validateTextInput(location, locationEdit)) {
-            println("4")
-            valid = false;
+            valid = false
         }
         if (!validateTextInput(note, noteEdit)) {
-            println("5")
-            valid = false;
+            valid = false
         }
         if (!validateTextInput(duration, durationEdit)) {
-            println("6")
-            valid = false;
+            valid = false
         }
         return valid
     }
@@ -289,7 +281,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 month = savedInstanceState.getInt("month")
                 day = savedInstanceState.getInt("day")
             } else {
-                if (date != null && date.text.toString() != "") {
+                if (date.text.toString() != "") {
                     println("-------------- + ${date.text}")
                     year = date.text!!.split("/").elementAt(2).toInt()
                     month = date.text!!.split("/").elementAt(1).toInt() - 1
@@ -351,7 +343,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 hour = savedInstanceState.getInt("hour")
                 minute = savedInstanceState.getInt("minute")
             } else {
-                if (timeslot != null && timeslot.text.toString() != "") {
+                if (timeslot.text.toString() != "") {
                     hour = timeslot.text!!.split(":").elementAt(0).toInt()
                     minute = timeslot.text!!.split(":").elementAt(1).toInt()
                 } else {

@@ -1,13 +1,17 @@
 package com.bancempo
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.File
 
 data class SmallAdv(val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String)
 
@@ -18,7 +22,9 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
         private val time: TextView = v.findViewById(R.id.tvSmallAdvTime)
         private val location: TextView = v.findViewById(R.id.tvSmallAdvLocation)
         private val duration: TextView = v.findViewById(R.id.tvsmallAdvDuration)
-        private val edit: FloatingActionButton = v.findViewById((R.id.edit_adv))
+        private val edit: FloatingActionButton = v.findViewById(R.id.edit_adv)
+        private val image: ImageView = v.findViewById(R.id.smallAdv_image)
+        private val res = v.context.resources
 
         fun bind(adv: SmallAdv, position: Int){
             title.text = adv.title
@@ -26,8 +32,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
             time.text = "Time: ${adv.time}"
             location.text = "Location: ${adv.location}"
             duration.text = "Duration: ${adv.duration}"
-
-
+            loadProfileImage()
 
             edit.setOnClickListener{
                 val bundle = Bundle()
@@ -48,6 +53,24 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
             edit.setOnClickListener(null)
         }
 
+        private fun loadProfileImage(): Bitmap {
+            val fileDir = "/data/user/0/com.bancempo/app_imageDir"
+            val profilePictureFileName = "profile.jpeg"
+
+
+
+            return File(fileDir, profilePictureFileName)
+                .run {
+                    when (exists()) {
+                        true -> BitmapFactory.decodeFile(File(fileDir, profilePictureFileName).absolutePath)
+                        false -> BitmapFactory.decodeResource(
+                            res, R.drawable.profile_pic_default)
+                    }
+                }.also {
+                    image.setImageBitmap(it)
+                }
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmallAdvHolder {
@@ -64,7 +87,6 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
 
         holder.itemView.setOnClickListener{
 
-            //TODO passare come argomenti: title, data, ecc
             val bundle = Bundle()
             bundle.putInt("position", position)
             bundle.putString("title", data[position].title)

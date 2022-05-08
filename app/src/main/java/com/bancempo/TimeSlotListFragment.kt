@@ -32,12 +32,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val emptyListTV = view.findViewById<TextView>(R.id.empty_list_tv)
 
         if (sadvs.isEmpty()) {
-            rv.setVisibility(View.GONE)
-            emptyListTV.setVisibility(View.VISIBLE)
-            //Toast.makeText(context, "NESSUN ADV", Toast.LENGTH_SHORT).show()
+            rv.visibility = View.GONE
+            emptyListTV.visibility = View.VISIBLE
         } else {
-            rv.setVisibility(View.VISIBLE)
-            emptyListTV.setVisibility(View.GONE)
+            rv.visibility = View.VISIBLE
+            emptyListTV.visibility = View.GONE
         }
 
         llm = LinearLayoutManager(context)
@@ -55,8 +54,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         setFragmentResultListener("confirmationOkCreate") { _, bundle ->
             val newAdv = createAdvFromBundle(bundle)
             advertisementVM.addNewAdv(newAdv)
-            rv.setVisibility(View.VISIBLE)
-            emptyListTV.setVisibility(View.GONE)
+            rv.visibility = View.VISIBLE
+            emptyListTV.visibility = View.GONE
 
 
             val adapter = SmallAdvAdapter(sadvs)
@@ -93,7 +92,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val title = bundle.getString("title") ?: ""
         val date = bundle.getString("date") ?: ""
         val description = bundle.getString("description") ?: ""
-        val timeslot = bundle.getString("timeslot") ?: ""
+        val timeslot = bundle.getString("time") ?: ""
         val duration = bundle.getString("duration") ?: ""
         val location = bundle.getString("location") ?: ""
         val note = bundle.getString("note") ?: ""
