@@ -31,6 +31,7 @@ class UserVM(private val app: Application): AndroidViewModel(app) {
 
     val profilePictureBitmap = MutableLiveData<Bitmap>()
     private val profilePictureFileName = "profile.jpeg"
+    
 
     val skills = MutableLiveData<String>()
 
