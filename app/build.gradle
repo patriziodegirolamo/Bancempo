@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt' apply true
     id 'androidx.navigation.safeargs' apply true
-
+    id 'com.google.gms.google-services' apply true
 }
 
 android {
@@ -42,12 +42,18 @@ android {
 
 dependencies {
 
-    implementation 'androidx.exifinterface:exifinterface:1.3.2'
-    implementation 'androidx.exifinterface:exifinterface:1.3.2'
+    //firebase
+    platform 'com.google.firebase:firebase-bom:30.0.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.1.2'
+    implementation 'com.google.firebase:firebase-common-ktx:20.1.1'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
+
+
+    implementation 'androidx.exifinterface:exifinterface:1.3.3'
     def ext = "2.4.2"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
@@ -69,7 +75,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //nav drawer
-    implementation "com.google.android.material:material:1.5.0"
+    implementation "com.google.android.material:material:1.6.0"
 
     //LiveData
     implementation 'androidx.room:room-ktx:2.4.2'
