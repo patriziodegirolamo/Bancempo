@@ -42,14 +42,9 @@ android {
 
 dependencies {
 
-    //firebase
-    platform 'com.google.firebase:firebase-bom:30.0.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:24.1.2'
-    implementation 'com.google.firebase:firebase-common-ktx:20.1.1'
-    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
-
-
     implementation 'androidx.exifinterface:exifinterface:1.3.3'
+    implementation 'com.google.firebase:firebase-firestore:21.4.0'
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.1.2'
     def ext = "2.4.2"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'

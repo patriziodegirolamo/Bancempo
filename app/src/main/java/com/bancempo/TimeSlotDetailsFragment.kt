@@ -73,7 +73,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         location_ed.setText(arguments?.getString("location"))
         note_ed.setText(arguments?.getString("note"))
 
-        setFragmentResultListener("confirmationOkModifyToDetails1") { _, bundle ->
+        setFragmentResultListener("confirmationOkModifyToDetails") { _, bundle ->
             title_ed.setText(bundle.getString("title"))
             description_ed.setText(bundle.getString("description"))
             date_ed.setText(bundle.getString("date"))
@@ -81,7 +81,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             location_ed.setText(bundle.getString("location"))
             note_ed.setText(bundle.getString("note"))
             duration_ed.setText(bundle.getString("duration"))
-            setFragmentResult("confirmationOkModifyToDetails2", bundle)
         }
     }
 
@@ -96,6 +95,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             //clicking on edit adv
             R.id.inDetailsEditAdv -> {
                 bundle.putBoolean("modifyFromDetails", true)
+                bundle.putString("id", arguments?.getString("id"))
                 bundle.putString("title", arguments?.getString("title"))
                 bundle.putInt("position", arguments?.getInt("position")!!)
                 bundle.putString("description", arguments?.getString("description"))

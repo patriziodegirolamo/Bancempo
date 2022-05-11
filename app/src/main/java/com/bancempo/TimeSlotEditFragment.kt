@@ -9,16 +9,22 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
+    private val sharedVM: SharedViewModel by activityViewModels()
+
     private lateinit var title: TextInputLayout
     private lateinit var titleEdit: TextInputEditText
 
@@ -105,8 +111,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 bundle.putString("location", locationEdit.text.toString())
                 bundle.putString("note", noteEdit.text.toString())
 
-                setFragmentResult("confirmationOkCreate", bundle)
-                Toast.makeText(context, R.string.adv_create_succ, Toast.LENGTH_SHORT).show()
+                sharedVM.addNewAdv(bundle)
+                setFragmentResult("confirmationOkCreate", bundleOf())
                 findNavController().popBackStack()
             }
         }
@@ -124,10 +130,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (modify) {
-                        println(validation())
                         if (validation()) {
-                            println("----------------${timeslotEdit.text.toString()}")
                             val bundle = Bundle()
+
+                            //MODIFY THE ADV ON FIRESTORE
+                            val id =  arguments?.getString("id")
                             bundle.putString("title", titleEdit.text.toString())
                             bundle.putString("date", dateEdit.text.toString())
                             bundle.putString("description", descriptionEdit.text.toString())
@@ -135,20 +142,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                             bundle.putString("duration", durationEdit.text.toString())
                             bundle.putString("location", locationEdit.text.toString())
                             bundle.putString("note", noteEdit.text.toString())
+                            sharedVM.modifyAdv(id!!, bundle)
 
                             val modifyFromList = arguments?.getBoolean("modifyFromList")
-                            val pos = arguments?.getInt("position")
-                            bundle.putInt("position", pos!!)
-
-                            if (modifyFromList == true) {
-                                setFragmentResult("confirmationOkModifyToList", bundle)
-                                Toast.makeText(context, R.string.adv_edit_succ, Toast.LENGTH_SHORT)
-                                    .show()
-
-                            } else {
-                                setFragmentResult("confirmationOkModifyToDetails1", bundle)
-                                Toast.makeText(context, R.string.adv_edit_succ, Toast.LENGTH_SHORT)
-                                    .show()
+                            if (modifyFromList == false) {
+                                setFragmentResult("confirmationOkModifyToDetails", bundle)
                             }
                             findNavController().popBackStack()
                         }
@@ -163,7 +161,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     }
 
     private fun validateTextInput(text: TextInputLayout, textEdit: TextInputEditText): Boolean {
-        println("---------${textEdit.text}")
         if (textEdit.text.isNullOrEmpty()) {
             text.error = "EMPTY"
             return false
@@ -370,4 +367,5 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             }
         }
     }
+
 }

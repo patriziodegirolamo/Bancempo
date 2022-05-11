@@ -12,8 +12,11 @@ import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-data class SmallAdv(val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String)
+
+data class SmallAdv(val id: String, val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String, val creationTime: String)
 
 class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
@@ -36,6 +39,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
 
             edit.setOnClickListener{
                 val bundle = Bundle()
+                bundle.putString("id", adv.id)
                 bundle.putBoolean("modifyFromList", true)
                 bundle.putInt("position", position)
                 bundle.putString("title", adv.title)
@@ -88,6 +92,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
         holder.itemView.setOnClickListener{
 
             val bundle = Bundle()
+            bundle.putString("id", data[position].id)
             bundle.putInt("position", position)
             bundle.putString("title", data[position].title)
             bundle.putString("date", data[position].date)
