@@ -13,7 +13,7 @@
     <string name="use_camera">Use Camera</string>
     <string name="camera_not_available">Camera not available</string>
     <string name="sharedPrefsName">com.example.myapp.PREFERENCE_FILE_KEY</string>
-    <string name="navdrawer_time_slot_list">Advertisements</string>
+    <string name="navdrawer_time_slot_list">Your advertisements</string>
     <string name="navdrawer_show_profile">Profile</string>
     <string name="label_timeSlotEditFragment">Edit Advertisement</string>
     <string name="label_showProfileFragment">Profile</string>
@@ -24,6 +24,8 @@
     <string name="adv_create_succ">Creation successful</string>
     <string name="adv_edit_succ">Edit successful</string>
     <string name="prof_edit_succ">Edit successful</string>
+    <string name="adv_delete_succ">Removal successful</string>
+    <string name="unsuccedes">Something went wrong. Please, try again!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="small_adv_title">Title: </string>
@@ -31,5 +33,9 @@
     <string name="small_adv_duration">Duration (h): </string>
     <string name="small_adv_time">Time: </string>
     <string name="small_adv_location">Location: </string>
+    <string name="skill_item_title">Title: </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

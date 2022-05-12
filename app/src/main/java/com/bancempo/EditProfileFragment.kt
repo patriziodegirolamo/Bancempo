@@ -1,5 +1,6 @@
 package com.bancempo
 
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
@@ -11,6 +12,7 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
@@ -40,7 +42,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private lateinit var skills: TextInputLayout
     private lateinit var description: TextInputLayout
 
-    private lateinit var addchipbutton: ImageButton
     private lateinit var chipGroup: ChipGroup
 
     private val REQUEST_IMAGE_CAPTURE = 1
@@ -66,11 +67,13 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         skills_ed =view.findViewById(R.id.editTextSkills)
         chipGroup = view.findViewById(R.id.chipGroup)
 
+
         skills.setEndIconOnClickListener {
             if (skills_ed.text.toString().isNotEmpty()) {
                 addChip(skills_ed.text.toString())
                 skills_ed.setText("")
             }
+
         }
 
         //get value from showprofile
@@ -80,12 +83,12 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         email_ed.setText(arguments?.getString("email"))
         location_ed.setText(arguments?.getString("location"))
         description_ed.setText(arguments?.getString("description"))
-        val skills_string : String? = arguments?.getString("skills")
+        var skills_string : String? = arguments?.getString("skills")
+
 
         if (skills_string != null) {
-            println("-------------SKILLS $skills_string")
             chipGroup.removeAllViews()
-            skills_string.split(",")?.forEach {
+            skills_string.split(",").forEach {
                 val chip = Chip(activity)
                 if (it.isNotEmpty()) {
                     chip.text = it
@@ -95,6 +98,25 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                         chipGroup.removeView(chip)
                     }
                     chipGroup.addView(chip)
+                }
+            }
+        }
+
+        if (savedInstanceState != null) {
+            val skillsString = savedInstanceState.getString("skills")
+            if (skillsString != null) {
+                chipGroup.removeAllViews()
+                skillsString.split(",").forEach {
+                    var chip = Chip(activity);
+                    if(!it.isEmpty()) {
+                        chip.setText(it);
+                        chip.isCloseIconVisible = true;
+
+                        chip.setOnCloseIconClickListener {
+                            chipGroup.removeView(chip)
+                        }
+                        chipGroup.addView(chip);
+                    }
                 }
             }
         }
@@ -110,16 +132,97 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    userVM.updateFromEditProfile(view)
-
-                    setFragmentResult("backPressed", bundleOf())
-                    Toast.makeText(context, R.string.prof_edit_succ , Toast.LENGTH_SHORT).show()
-                    findNavController().popBackStack()
+                    if(validation()) {
+                        userVM.updateFromEditProfile(view)
+                        setFragmentResult("backPressed", bundleOf())
+                        Toast.makeText(context, R.string.prof_edit_succ, Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    }
                 }
             })
 
     }
 
+    @SuppressLint("SdCardPath")
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        var chipText = ""
+        for (i in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(i) as Chip
+            chipText += "${chip.text},"
+        }
+        outState.putString("skills", chipText)
+    }
+
+
+    private fun validateTextInput(text: TextInputLayout, textEdit: TextInputEditText): Boolean {
+        if (textEdit.text.isNullOrEmpty()) {
+            text.error = "Please, fill in this field!"
+            return false
+        } else {
+            if (text.hint == "Description") {
+                return if (textEdit.text?.length!! > 200) {
+                    text.error = "Your ${text.hint} is too long."
+                    false
+                } else {
+                    text.error = null
+                    true
+                }
+            } else if (text.hint == "Full name" || text.hint == "Location") {
+                return if (textEdit.text?.length!! > 20) {
+                    text.error = "Your ${text.hint} is too long."
+                    false
+                } else {
+                    text.error = null
+                    return true
+                }
+            } else if (text.hint == "Nickname") {
+                return if (textEdit.text?.length!! > 10) {
+                    text.error = "Your ${text.hint} is too long."
+                    false
+                } else {
+                    text.error = null
+                    true
+                }
+            }
+            else if(text.hint == "Email" ){
+                return if (textEdit.text?.length!! > 40) {
+                    text.error = "Your ${text.hint} is too long."
+                    false
+                } else {
+                    text.error = null
+                    return true
+                }
+            }
+            else return false
+
+        }
+
+    }
+
+    private fun validation(): Boolean {
+        var valid = true
+
+        if (!validateTextInput(fullName, fullName_ed)) {
+            valid = false
+        }
+        if (!validateTextInput(description, description_ed)) {
+            valid = false
+        }
+        /*
+        if (!validateTextInput(nickname, nickname_ed)) {
+            valid = false
+        }
+        */
+        if (!validateTextInput(email, email_ed)) {
+            valid = false
+        }
+        if (!validateTextInput(location, location_ed)) {
+            valid = false
+        }
+        return valid
+    }
 
 
     private fun showPopup(v: View) {

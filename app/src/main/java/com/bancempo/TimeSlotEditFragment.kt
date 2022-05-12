@@ -162,12 +162,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
     private fun validateTextInput(text: TextInputLayout, textEdit: TextInputEditText): Boolean {
         if (textEdit.text.isNullOrEmpty()) {
-            text.error = "EMPTY"
+            text.error = "Please, fill in this field!"
             return false
         } else {
             if (text.hint == "Description" || text.hint == "Note") {
                 return if (textEdit.text?.length!! > 200) {
-                    text.error = "TOO LONG"
+                    text.error = "Your ${text.hint} is too long."
                     false
                 } else {
                     text.error = null
@@ -175,7 +175,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 }
             } else if (text.hint == "Title" || text.hint == "Location") {
                 return if (textEdit.text?.length!! > 20) {
-                    text.error = "TOO LONG"
+                    text.error = "Your ${text.hint} is too long."
                     false
                 } else {
                     text.error = null
@@ -183,7 +183,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 }
             } else if (text.hint == "Date") {
                 return if (textEdit.text.toString() == "dd/mm/yyyy") {
-                    text.error = "EMPTY"
+                    text.error = "Please, choose a date for your adv!"
                     false
                 } else {
                     text.error = null
@@ -191,14 +191,13 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 }
             } else if (text.hint == "Time") {
                 return if (textEdit.text.toString() == "hh:mm") {
-                    text.error = "EMPTY"
+                    text.error = "Please, choose a start time for your adv!"
                     false
                 } else {
                     text.error = null
                     true
                 }
             } else if(text.hint == "Duration (h)"){
-                println(text.hint)
                 text.error = null
                 return true
             }

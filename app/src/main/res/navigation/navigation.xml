@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    app:startDestination="@id/timeSlotListFragment">
+    app:startDestination="@id/listSkills">
 
     <fragment
         android:id="@+id/timeSlotEditFragment"
@@ -81,6 +81,18 @@
             app:destination="@id/editProfileFragment" />
         <action
             android:id="@+id/action_editProfileFragment_to_timeSlotListFragment"
+            app:destination="@id/timeSlotListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listSkills"
+        android:name="com.bancempo.ListSkills"
+        android:label="Home"
+        tools:layout="@layout/fragment_list_skills" >
+        <action
+            android:id="@+id/action_listSkills_to_showProfileFragment"
+            app:destination="@id/showProfileFragment" />
+        <action
+            android:id="@+id/action_listSkills_to_timeSlotListFragment"
             app:destination="@id/timeSlotListFragment" />
     </fragment>
 </navigation>

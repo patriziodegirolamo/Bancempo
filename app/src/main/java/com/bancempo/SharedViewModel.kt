@@ -14,8 +14,8 @@ import java.time.format.DateTimeFormatter
 class SharedViewModel(private val app: Application): AndroidViewModel(app) {
     val db = FirebaseFirestore.getInstance()
 
-    val services: MutableLiveData<HashMap<String, Service>> by lazy{
-        MutableLiveData<HashMap<String, Service>>().also{
+    val services: MutableLiveData<HashMap<String, Skill>> by lazy{
+        MutableLiveData<HashMap<String, Skill>>().also{
             loadServices()
         }
     }
@@ -32,11 +32,11 @@ class SharedViewModel(private val app: Application): AndroidViewModel(app) {
                 if( e!= null)
                     services.value = hashMapOf()
                 else {
-                    val serviceMap : HashMap<String, Service> = hashMapOf()
+                    val serviceMap : HashMap<String, Skill> = hashMapOf()
                     for (doc in r!!){
                         val title = doc.getString("title")
                         val creationTime = doc.getString("creationTime")
-                        val service = Service(doc.id, title!!, creationTime!!)
+                        val service = Skill(doc.id, title!!, creationTime!!)
                         serviceMap[doc.id] = service
                     }
                     services.value = serviceMap
@@ -56,8 +56,8 @@ class SharedViewModel(private val app: Application): AndroidViewModel(app) {
             }
     }
 
-    private fun createService(title: String, id: String) : Service{
-        return Service(
+    private fun createService(title: String, id: String) : Skill{
+        return Skill(
             id,
             title,
             getCreationTime()

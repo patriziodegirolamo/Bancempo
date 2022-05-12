@@ -8,25 +8,21 @@ import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bancempo.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.HashMap
+
 
 class MainActivity : AppCompatActivity() {
+
     private val sharedVM: SharedViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val services: HashMap<String, Service> = sharedVM.services.value?: hashMapOf()
+        val services: HashMap<String, Skill> = sharedVM.services.value?: hashMapOf()
         sharedVM.services.observe(this) { servs ->
             println("----------------${servs.values.sortedByDescending { x -> x.creationTime }.toList()}")
         }
@@ -43,6 +39,7 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId){
                 R.id.goToTimeSlotList -> {
                     if (navController.currentDestination?.id != R.id.timeSlotListFragment) {
+
                         navController.navigate(R.id.timeSlotListFragment)
                     }
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
