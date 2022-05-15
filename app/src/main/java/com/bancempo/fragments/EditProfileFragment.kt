@@ -1,9 +1,13 @@
-package com.bancempo
+package com.bancempo.fragments
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Matrix
+import android.media.ExifInterface
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MenuItem
@@ -12,19 +16,21 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
+import com.bancempo.R
+import com.bancempo.models.SharedViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.io.InputStream
 
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
-    val userVM: UserVM by activityViewModels()
+    private val sharedVM: SharedViewModel by activityViewModels()
     private lateinit var photo: ImageView
     private lateinit var editPicture: ImageButton
 
@@ -67,28 +73,27 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         skills_ed =view.findViewById(R.id.editTextSkills)
         chipGroup = view.findViewById(R.id.chipGroup)
 
-
         skills.setEndIconOnClickListener {
             if (skills_ed.text.toString().isNotEmpty()) {
                 addChip(skills_ed.text.toString())
                 skills_ed.setText("")
             }
-
         }
 
         //get value from showprofile
-        photo.setImageBitmap(userVM.profilePictureBitmap.value)
+        sharedVM.loadImageUser(photo)
+
         fullName_ed.setText(arguments?.getString("fullname"))
         nickname_ed.setText(arguments?.getString("nickname"))
         email_ed.setText(arguments?.getString("email"))
         location_ed.setText(arguments?.getString("location"))
         description_ed.setText(arguments?.getString("description"))
-        var skills_string : String? = arguments?.getString("skills")
+        var skillsString : String? = arguments?.getString("skills")
 
 
-        if (skills_string != null) {
+        if (skillsString != null) {
             chipGroup.removeAllViews()
-            skills_string.split(",").forEach {
+            skillsString.split(",").forEach {
                 val chip = Chip(activity)
                 if (it.isNotEmpty()) {
                     chip.text = it
@@ -103,19 +108,19 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
 
         if (savedInstanceState != null) {
-            val skillsString = savedInstanceState.getString("skills")
+            skillsString = savedInstanceState.getString("skills")
             if (skillsString != null) {
                 chipGroup.removeAllViews()
                 skillsString.split(",").forEach {
-                    var chip = Chip(activity);
-                    if(!it.isEmpty()) {
-                        chip.setText(it);
-                        chip.isCloseIconVisible = true;
+                    val chip = Chip(activity)
+                    if(it.isNotEmpty()) {
+                        chip.text = it
+                        chip.isCloseIconVisible = true
 
                         chip.setOnCloseIconClickListener {
                             chipGroup.removeView(chip)
                         }
-                        chipGroup.addView(chip);
+                        chipGroup.addView(chip)
                     }
                 }
             }
@@ -133,9 +138,20 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if(validation()) {
-                        userVM.updateFromEditProfile(view)
-                        setFragmentResult("backPressed", bundleOf())
-                        Toast.makeText(context, R.string.prof_edit_succ, Toast.LENGTH_SHORT).show()
+                        var chipText = ""
+                        for (i in 0 until chipGroup.childCount) {
+                            val chip = chipGroup.getChildAt(i) as Chip
+                            if(i == chipGroup.childCount - 1){
+                                chipText += "${chip.text}"
+
+                            }else{
+                                chipText += "${chip.text},"
+                            }
+                        }
+
+                        //println("---------------chiptext: $chipText")
+                        sharedVM.updateUser(view, chipText)
+                        setFragmentResult("backFromEdit", bundleOf(Pair("chipText", chipText)))
                         findNavController().popBackStack()
                     }
                 }
@@ -270,17 +286,44 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             val bitmapPhoto = data.extras?.get("data") as Bitmap
-            userVM.storeProfilePicture(bitmapPhoto)
-            photo.setImageBitmap(userVM.profilePictureBitmap.value)
+            //sharedVM.uploadBitmap(bitmapPhoto)
+            photo.setImageBitmap(bitmapPhoto)
         }
 
         else if (requestCode == SELECT_PICTURE && resultCode == AppCompatActivity.RESULT_OK && data != null){
             val uriPhoto = data.data
-            userVM.updateProfilePictureFromURI(uriPhoto!!)
-            photo.setImageBitmap(userVM.profilePictureBitmap.value)
+            val bitmapPhoto = updateProfilePictureFromURI(uriPhoto!!)
+            //sharedVM.uploadBitmap(bitmapPhoto)
+            photo.setImageBitmap(bitmapPhoto)
         }
     }
 
+    fun updateProfilePictureFromURI(uri : Uri) :Bitmap{
+        val bmp:Bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
+        val ins: InputStream? = context?.contentResolver?.openInputStream(uri)
+
+        val ei = ExifInterface(ins!!)
+        val rotatedBitmap: Bitmap = when (ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bmp, 90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bmp, 180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bmp, 270f)
+            ExifInterface.ORIENTATION_NORMAL -> bmp
+            else -> bmp
+        }
+
+        ins.close()
+        return rotatedBitmap
+    }
+
+    private fun rotateImage(source: Bitmap, angle: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(angle)
+
+        return Bitmap.createBitmap(
+            source, 0, 0, source.width, source.height,
+            matrix, true
+        )
+    }
 
     private fun addChip(text: String) {
         val chip = Chip(context)

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-data class Skill (val id:String, val title:String, val creationTime: String)
+data class Skill (val title:String, val creationTime: String, val createdBy: String)
 
 class ItemAdapter(private val data:List<Skill>): RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 

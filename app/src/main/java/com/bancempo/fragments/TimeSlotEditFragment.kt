@@ -1,4 +1,4 @@
-package com.bancempo
+package com.bancempo.fragments
 
 import android.text.format.DateFormat
 import android.annotation.SuppressLint
@@ -15,11 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
+import com.bancempo.R
+import com.bancempo.models.SharedViewModel
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {

@@ -1,4 +1,4 @@
-package com.bancempo
+package com.bancempo.models
 
 import android.app.Application
 import android.content.Context
@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import com.bancempo.R
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import org.json.JSONObject
@@ -21,6 +22,35 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
+/*
+
+sharedVM.currentUser.observe(viewLifecycleOwner){ user ->
+            fullName_ed.setText(user.fullname)
+            nickname_ed.setText(user.nickname)
+            email_ed.setText(user.email)
+            location_ed.setText(user.location)
+            description_ed.setText(user.description)
+            skills_ed.setText("")
+            sharedVM.loadImageUser(photo)
+
+            val prova = mutableSetOf<String>()
+
+            println("----------------here: $user")
+            for(s in user.skills){
+
+                s.get().addOnSuccessListener {
+                    prova.add(it.id)
+                    val chip = Chip(activity)
+                    if (it.id.isNotEmpty()) {
+                        chip.text = it.id
+                        chipGroup.addView(chip)
+                    }
+                }.addOnSuccessListener {
+
+                }
+            }
+        }
+ */
 class UserVM(private val app: Application): AndroidViewModel(app) {
 
     val fullname = MutableLiveData<String>()
@@ -31,7 +61,6 @@ class UserVM(private val app: Application): AndroidViewModel(app) {
 
     val profilePictureBitmap = MutableLiveData<Bitmap>()
     private val profilePictureFileName = "profile.jpeg"
-
 
     val skills = MutableLiveData<String>()
 
@@ -103,7 +132,9 @@ class UserVM(private val app: Application): AndroidViewModel(app) {
             .run {
                 when (exists()) {
                     true -> BitmapFactory.decodeFile(File(fileDir, profilePictureFileName).absolutePath)
-                    false -> BitmapFactory.decodeResource(app.resources, R.drawable.profile_pic_default)
+                    false -> BitmapFactory.decodeResource(app.resources,
+                        R.drawable.profile_pic_default
+                    )
                 }
             }.also {
                 profilePictureBitmap.value = it

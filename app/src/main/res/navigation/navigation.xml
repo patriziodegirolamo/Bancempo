@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/timeSlotEditFragment"
-        android:name="com.bancempo.TimeSlotEditFragment"
+        android:name="com.bancempo.fragments.TimeSlotEditFragment"
         android:label="@string/label_timeSlotEditFragment">
         <action
             android:id="@+id/action_timeSlotEditFragment_to_timeSlotListFragment"
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/showProfileFragment"
-        android:name="com.bancempo.ShowProfileFragment"
+        android:name="com.bancempo.fragments.ShowProfileFragment"
         android:label="@string/label_showProfileFragment"
         >
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/timeSlotDetailsFragment"
-        android:name="com.bancempo.TimeSlotDetailsFragment"
+        android:name="com.bancempo.fragments.TimeSlotDetailsFragment"
         android:label="@string/label_timeSlotDetailsFragment"
         >
         <action
@@ -49,7 +49,7 @@
 
     <fragment
         android:id="@+id/timeSlotListFragment"
-        android:name="com.bancempo.TimeSlotListFragment"
+        android:name="com.bancempo.fragments.TimeSlotListFragment"
         android:label="@string/label_timeSlotListFragment"
         >
         <action
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
-        android:name="com.bancempo.EditProfileFragment"
+        android:name="com.bancempo.fragments.EditProfileFragment"
         android:label="@string/label_editProfileFragment"
         >
         <action
@@ -85,7 +85,7 @@
     </fragment>
     <fragment
         android:id="@+id/listSkills"
-        android:name="com.bancempo.ListSkills"
+        android:name="com.bancempo.fragments.ListSkillsFragment"
         android:label="Home"
         tools:layout="@layout/fragment_list_skills" >
         <action

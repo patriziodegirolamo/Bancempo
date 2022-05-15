@@ -1,16 +1,19 @@
-package com.bancempo
+package com.bancempo.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.bancempo.R
+import com.bancempo.models.SharedViewModel
+import com.bancempo.Skill
+import com.bancempo.data.User
 import com.bancempo.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 
@@ -22,12 +25,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val services: HashMap<String, Skill> = sharedVM.services.value?: hashMapOf()
-        sharedVM.services.observe(this) { servs ->
-            println("----------------${servs.values.sortedByDescending { x -> x.creationTime }.toList()}")
-        }
-
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this,
+            R.layout.activity_main
+        )
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
         val navView = findViewById<NavigationView>(R.id.nav_view)
