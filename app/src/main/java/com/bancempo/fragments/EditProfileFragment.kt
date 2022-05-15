@@ -286,14 +286,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             val bitmapPhoto = data.extras?.get("data") as Bitmap
-            //sharedVM.uploadBitmap(bitmapPhoto)
+            sharedVM.uploadBitmap(bitmapPhoto)
             photo.setImageBitmap(bitmapPhoto)
         }
 
         else if (requestCode == SELECT_PICTURE && resultCode == AppCompatActivity.RESULT_OK && data != null){
             val uriPhoto = data.data
             val bitmapPhoto = updateProfilePictureFromURI(uriPhoto!!)
-            //sharedVM.uploadBitmap(bitmapPhoto)
+            sharedVM.uploadBitmap(bitmapPhoto)
             photo.setImageBitmap(bitmapPhoto)
         }
     }
