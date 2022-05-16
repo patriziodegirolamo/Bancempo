@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +71,6 @@
                                 android:hint="Nickname"
                                 app:endIconMode="clear_text">
 
-                                >
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/textViewNickname_ed"
@@ -294,10 +294,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="40dp" />
+
+                <TextView
+                    android:id="@+id/prova"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp">
+
+                </TextView>
+
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"

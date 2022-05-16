@@ -4,6 +4,7 @@ package com.bancempo.fragments
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,8 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
     private lateinit var skills: TextInputLayout
     private lateinit var description: TextInputLayout
     private lateinit var chipGroup: ChipGroup
+    var textSkills = ""
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,6 +51,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         skills_ed =view.findViewById(R.id.textViewSkills_ed)
         chipGroup = view.findViewById(R.id.chipGroup)
 
+        val prova = view.findViewById<TextView>(R.id.prova)
 
         sharedVM.currentUser.observe(viewLifecycleOwner){ user ->
             fullName_ed.setText(user.fullname)
@@ -58,30 +62,14 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             skills_ed.setText("")
             sharedVM.loadImageUser(photo)
 
-            for(s in user.skills){
-                s.get().addOnSuccessListener {
-                    val chip = Chip(activity)
-                    if (it.id.isNotEmpty()) {
-                        chip.text = it.id
-                        chipGroup.addView(chip)
-                    }
-                }
-            }
-            /*
-            chipGroup.removeAllViews()
-            for(s in user.skills){
-                s.get().addOnSuccessListener {
-                    val chip = Chip(activity)
-                    if (it.id.isNotEmpty()) {
-                        chip.text = it.id
-                        chipGroup.addView(chip)
-                    }
-                }
-            }
 
-             */
+            textSkills = user.skills.map{ x -> x.id }.fold(""){ first, second ->
+                first.plus(",").plus(second)
+            }
+            if(textSkills.isNotEmpty())
+                textSkills = textSkills.removeRange(0,1)
+            prova.text=textSkills
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -107,12 +95,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         bundle.putString("location", location_ed.text.toString())
         bundle.putString("email", email_ed.text.toString())
 
-        var chipText = ""
-        for (j in 0 until chipGroup.childCount) {
-            val chip = chipGroup.getChildAt(j) as Chip
-            chipText += "${chip.text},"
-        }
-        bundle.putString("skills", chipText)
+        bundle.putString("skills", textSkills)
 
         findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment, bundle)
     }
