@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,9 +17,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-data class SmallAdv(val id: String, val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String, val creationTime: String)
+data class SmallAdv(val id: String, val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String, val creationTime: String, val skill:String, val userId:String)
 
-class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
+class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : Boolean) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
         private val title: TextView = v.findViewById(R.id.tvSmallAdvTitle)
         private val date: TextView = v.findViewById(R.id.tvsmallAdvDate)
@@ -29,7 +30,9 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
         private val image: ImageView = v.findViewById(R.id.smallAdv_image)
         private val res = v.context.resources
 
-        fun bind(adv: SmallAdv, position: Int){
+
+
+        fun bind(adv: SmallAdv, position: Int, isMyAdvs: Boolean){
             title.text = adv.title
             date.text = "Date: ${adv.date}"
             time.text = "Time: ${adv.time}"
@@ -37,20 +40,29 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
             duration.text = "Duration: ${adv.duration}"
             loadProfileImage()
 
-            edit.setOnClickListener{
-                val bundle = Bundle()
-                bundle.putString("id", adv.id)
-                bundle.putBoolean("modifyFromList", true)
-                bundle.putInt("position", position)
-                bundle.putString("title", adv.title)
-                bundle.putString("date", adv.date)
-                bundle.putString("description", adv.description)
-                bundle.putString("time", adv.time)
-                bundle.putString("duration", adv.duration)
-                bundle.putString("location", adv.location)
-                bundle.putString("note", adv.note)
-                findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
+            if(isMyAdvs){
+                edit.isVisible = true
+                edit.setOnClickListener{
+                    val bundle = Bundle()
+                    bundle.putString("id", adv.id)
+                    bundle.putBoolean("modifyFromList", true)
+                    bundle.putInt("position", position)
+                    bundle.putString("title", adv.title)
+                    bundle.putString("date", adv.date)
+                    bundle.putString("description", adv.description)
+                    bundle.putString("time", adv.time)
+                    bundle.putString("duration", adv.duration)
+                    bundle.putString("location", adv.location)
+                    bundle.putString("note", adv.note)
+                    bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
+                    findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
+                }
             }
+            else{
+                edit.isVisible = false
+            }
+
+
         }
 
         fun unbind(){
@@ -87,7 +99,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
 
     //ti dice quale elemento della lista è correntemente visibile e la sua posizione il lista
     override fun onBindViewHolder(holder: SmallAdvHolder, position: Int) {
-        holder.bind(data[position], position)
+        holder.bind(data[position], position, isMyAdvs)
 
         holder.itemView.setOnClickListener{
 
@@ -101,6 +113,8 @@ class SmallAdvAdapter(private val data: List<SmallAdv>) : RecyclerView.Adapter<S
             bundle.putString("duration", data[position].duration)
             bundle.putString("location", data[position].location)
             bundle.putString("note", data[position].note)
+            bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
+            bundle.putBoolean("isMyAdv", isMyAdvs)
 
             findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment, bundle)
         }

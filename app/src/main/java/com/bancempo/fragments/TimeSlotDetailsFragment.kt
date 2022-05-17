@@ -38,6 +38,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private lateinit var note: TextInputLayout
     private lateinit var note_ed: TextInputEditText
 
+    private var isMyAdv = false
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,6 +75,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         location_ed.setText(arguments?.getString("location"))
         note_ed.setText(arguments?.getString("note"))
 
+        val skill = arguments?.getString("skill")
+
+        isMyAdv = arguments?.getBoolean("isMyAdv")!!
+
+        println("--------- ISMYADV $isMyAdv")
+
         setFragmentResultListener("confirmationOkModifyToDetails") { _, bundle ->
             title_ed.setText(bundle.getString("title"))
             description_ed.setText(bundle.getString("description"))
@@ -86,12 +94,14 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.options_menu, menu)
+        if (isMyAdv) {
+            inflater.inflate(R.menu.options_menu, menu)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val bundle = Bundle()
-        when(item.itemId){
+        when (item.itemId) {
             //clicking on edit adv
             R.id.inDetailsEditAdv -> {
                 bundle.putBoolean("modifyFromDetails", true)
@@ -104,13 +114,18 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 bundle.putString("time", arguments?.getString("time"))
                 bundle.putString("location", arguments?.getString("location"))
                 bundle.putString("note", arguments?.getString("note"))
-                requireView().findNavController().navigate(R.id.action_timeSlotDetailsFragment_to_timeSlotEditFragment, bundle)
+                bundle.putString("skill",  arguments?.getString("skill"))
+                bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
+                requireView().findNavController()
+                    .navigate(R.id.action_timeSlotDetailsFragment_to_timeSlotEditFragment, bundle)
                 return super.onOptionsItemSelected(item)
             }
             //clicking back button
             else -> {
-                return NavigationUI.onNavDestinationSelected(item,
-                    requireView().findNavController()) || super.onOptionsItemSelected(item)
+                return NavigationUI.onNavDestinationSelected(
+                    item,
+                    requireView().findNavController()
+                ) || super.onOptionsItemSelected(item)
             }
         }
     }

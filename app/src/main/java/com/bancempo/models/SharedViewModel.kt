@@ -39,9 +39,15 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    val myAdvs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
+        MutableLiveData<HashMap<String, SmallAdv>>().also {
+            loadMyAdvs("de96wgyM8s4GvwM6HFPr")
+        }
+    }
+
     val advs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
-            loadAdvs()
+            loadAdvs("de96wgyM8s4GvwM6HFPr")
         }
     }
 
@@ -194,12 +200,14 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
 
-    private fun loadAdvs() {
+    private fun loadMyAdvs(userId : String) {
         db.collection("advertisements")
-            .orderBy("creationTime", Query.Direction.DESCENDING)
+            .whereEqualTo("userId", userId)
             .addSnapshotListener { r, e ->
-                if (e != null)
-                    advs.value = hashMapOf()
+                if (e != null) {
+                    println("--- ERR ${e.message.toString()}")
+                    myAdvs.value = hashMapOf()
+                }
                 else {
                     val advMap: HashMap<String, SmallAdv> = hashMapOf()
                     for (doc in r!!) {
@@ -211,6 +219,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val time = doc.getString("time")
                         val title = doc.getString("title")
                         val creationTime = doc.getString("creationTime")
+                        val skill = doc.getString("skill")
+                        val userId = doc.getString("userId")
+                        println("-------- ${doc.getString("title")} ${doc.getString("userId")}")
                         val adv = SmallAdv(
                             doc.id,
                             title!!,
@@ -220,14 +231,61 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                             duration!!,
                             location!!,
                             note!!,
-                            creationTime!!
+                            creationTime!!,
+                            skill!!,
+                            userId!!
+                        )
+                        advMap[doc.id] = adv
+                    }
+                    println("---------------- MYADVS $myAdvs")
+                    myAdvs.value = advMap
+                }
+            }
+    }
+
+    private fun loadAdvs(userId : String) {
+        println("LOAD")
+       // advs.value = hashMapOf()
+        db.collection("advertisements")
+            .orderBy("creationTime", Query.Direction.DESCENDING)
+            .addSnapshotListener { r, e ->
+                if (e != null)
+                    println("--- ERR $e")
+                   // advs.value = hashMapOf()
+                else {
+                    val advMap: HashMap<String, SmallAdv> = hashMapOf()
+                    for (doc in r!!) {
+                        val date = doc.getString("date")
+                        val description = doc.getString("description")
+                        val duration = doc.getString("duration")
+                        val location = doc.getString("location")
+                        val note = doc.getString("note")
+                        val time = doc.getString("time")
+                        val title = doc.getString("title")
+                        val creationTime = doc.getString("creationTime")
+                        val skill = doc.getString("skill")
+                        val userId = doc.getString("userId")
+                        val adv = SmallAdv(
+                            doc.id,
+                            title!!,
+                            date!!,
+                            description!!,
+                            time!!,
+                            duration!!,
+                            location!!,
+                            note!!,
+                            creationTime!!,
+                            skill!!,
+                            userId!!
                         )
                         advMap[doc.id] = adv
                     }
                     advs.value = advMap
                 }
+                println("---- ADVS ${advs.value}")
             }
     }
+
 
     private fun createAdvFromBundle(bundle: Bundle, id: String): SmallAdv {
         val title = bundle.getString("title") ?: ""
@@ -237,6 +295,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         val duration = bundle.getString("duration") ?: ""
         val location = bundle.getString("location") ?: ""
         val note = bundle.getString("note") ?: ""
+        val skill = bundle.getString("skill") ?: ""
+        val userId = bundle.getString("userId") ?: ""
 
         return SmallAdv(
             id,
@@ -247,7 +307,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             duration,
             location,
             note,
-            getCreationTime()
+            getCreationTime(),
+            skill,
+            userId
 
         )
     }

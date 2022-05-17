@@ -68,7 +68,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             }
             if(textSkills.isNotEmpty())
                 textSkills = textSkills.removeRange(0,1)
-            prova.text=textSkills
+           // prova.text=textSkills
         }
     }
 
