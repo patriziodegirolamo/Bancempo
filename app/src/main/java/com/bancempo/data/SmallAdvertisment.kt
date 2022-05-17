@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-data class SmallAdv(val id: String, val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String, val creationTime: String, val skill:String)
+data class SmallAdv(val id: String, val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String, val creationTime: String, val skill:String, val userId:String)
 
 class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : Boolean) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
@@ -54,6 +54,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
                     bundle.putString("duration", adv.duration)
                     bundle.putString("location", adv.location)
                     bundle.putString("note", adv.note)
+                    bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
                     findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
                 }
             }
@@ -112,6 +113,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
             bundle.putString("duration", data[position].duration)
             bundle.putString("location", data[position].location)
             bundle.putString("note", data[position].note)
+            bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
             bundle.putBoolean("isMyAdv", isMyAdvs)
 
             findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment, bundle)

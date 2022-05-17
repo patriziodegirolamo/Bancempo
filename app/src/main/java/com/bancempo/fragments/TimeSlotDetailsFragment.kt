@@ -75,6 +75,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         location_ed.setText(arguments?.getString("location"))
         note_ed.setText(arguments?.getString("note"))
 
+        val skill = arguments?.getString("skill")
+
         isMyAdv = arguments?.getBoolean("isMyAdv")!!
 
         println("--------- ISMYADV $isMyAdv")
@@ -112,6 +114,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 bundle.putString("time", arguments?.getString("time"))
                 bundle.putString("location", arguments?.getString("location"))
                 bundle.putString("note", arguments?.getString("note"))
+                bundle.putString("skill",  arguments?.getString("skill"))
+                bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
                 requireView().findNavController()
                     .navigate(R.id.action_timeSlotDetailsFragment_to_timeSlotEditFragment, bundle)
                 return super.onOptionsItemSelected(item)

@@ -27,6 +27,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
         val skill = arguments?.getString("skill")
 
+        println("$skill")
+
         if (skill == null) {
             fab.isVisible = true
 
@@ -40,10 +42,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             }
 
             sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
-                println("$sadvs")
+                println("-------------- SADVS GIUSTO $sadvs")
                 if (sadvs.isEmpty()) {
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
+                    emptyListTV.text = "No advertisements yet available. Create one now!"
                 } else {
                     rv.visibility = View.VISIBLE
                     emptyListTV.visibility = View.GONE
@@ -67,19 +70,22 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         else{
             fab.isVisible = false
             sharedVM.advs.observe(viewLifecycleOwner) { sadvs ->
-                if (sadvs.isEmpty()) {
+                if (sadvs.values.filter { adv -> adv.skill == skill}
+                        .toList().isEmpty()) {
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
+                    emptyListTV.text = "Sorry, there are no available advertisements for that category!"
                 } else {
                     rv.visibility = View.VISIBLE
                     emptyListTV.visibility = View.GONE
                 }
 
-
                 rv.layoutManager = LinearLayoutManager(context)
                 rv.adapter =
-                    SmallAdvAdapter(sadvs.values.filter { adv -> adv.skill == skill }
+                    SmallAdvAdapter(sadvs.values.filter { adv -> adv.skill == skill}
                         .toList(), false)
+                println("---- SADVS ${sadvs.values.filter { adv -> adv.skill == skill}
+                    .toList()}")
 
 
             }

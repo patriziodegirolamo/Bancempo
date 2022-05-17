@@ -46,6 +46,10 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     private lateinit var duration: TextInputLayout
     private lateinit var durationEdit: TextInputEditText
 
+    private lateinit var skill: TextInputLayout
+    private lateinit var skillEdit: TextInputEditText
+
+
     private lateinit var slider: Slider
 
 
@@ -66,6 +70,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         timeslotEdit = view.findViewById(R.id.tvTime_text)
         duration = view.findViewById(R.id.edit_duration)
         durationEdit = view.findViewById(R.id.edit_duration_text)
+        skill = view.findViewById(R.id.edit_skill)
+        skillEdit = view.findViewById(R.id.edit_skill_text)
 
         slider = view.findViewById(R.id.slider)
         titleEdit.setText(arguments?.getString("title"))
@@ -75,6 +81,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         dateEdit.setText(arguments?.getString("date"))
         timeslotEdit.setText(arguments?.getString("time"))
         durationEdit.setText(arguments?.getString("duration"))
+        skillEdit.setText(arguments?.getString("skill"))
 
         title.error = null
         description.error = null
@@ -82,6 +89,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         note.error = null
         date.error = null
         timeslot.error = null
+        skill.error = null
 
         val createNewAdv = arguments?.getBoolean("createNewAdv")
         val modify = createNewAdv == null || createNewAdv == false
@@ -110,6 +118,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 bundle.putString("duration", durationEdit.text.toString())
                 bundle.putString("location", locationEdit.text.toString())
                 bundle.putString("note", noteEdit.text.toString())
+                bundle.putString("skill", skillEdit.text.toString())
+                bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
 
                 sharedVM.addNewAdv(bundle)
                 setFragmentResult("confirmationOkCreate", bundleOf())
@@ -142,6 +152,9 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                             bundle.putString("duration", durationEdit.text.toString())
                             bundle.putString("location", locationEdit.text.toString())
                             bundle.putString("note", noteEdit.text.toString())
+                            bundle.putString("skill", skillEdit.text.toString())
+                            bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
+
                             sharedVM.modifyAdv(id!!, bundle)
 
                             val modifyFromList = arguments?.getBoolean("modifyFromList")
