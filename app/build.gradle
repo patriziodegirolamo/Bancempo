@@ -42,6 +42,8 @@ android {
 
 dependencies {
 
+    implementation 'com.google.android.gms:play-services-base:18.0.1'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.3'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     kapt 'com.github.bumptech.glide:compiler:4.12.0'
 
@@ -91,5 +93,13 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.4.2'
     implementation 'androidx.navigation:navigation-ui:2.4.2'
     implementation "androidx.navigation:navigation-fragment-ktx:$ext"
+
+    //auth
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
+    implementation 'com.google.firebase:firebase-auth:21.0.4'
+    // https://mvnrepository.com/artifact/com.firebaseui/firebase-ui-auth
+    implementation 'com.firebaseui:firebase-ui-auth:8.0.1'
+
+
 
 }

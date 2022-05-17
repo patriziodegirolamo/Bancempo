@@ -1,7 +1,11 @@
 package com.bancempo.activities
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.GravityCompat
 import androidx.databinding.DataBindingUtil
@@ -11,14 +15,25 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bancempo.R
+import com.firebase.ui.auth.IdpResponse
+import com.firebase.ui.auth.AuthUI
 import com.bancempo.models.SharedViewModel
 import com.bancempo.Skill
 import com.bancempo.data.User
 import com.bancempo.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var auth: FirebaseAuth
+    private lateinit var currentUser: User
+    private var userState: FirebaseUser? = null
+    private val RC_SIGN_IN: Int = 1
 
     private val sharedVM: SharedViewModel by viewModels()
 
@@ -54,10 +69,94 @@ class MainActivity : AppCompatActivity() {
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                     return@setNavigationItemSelectedListener true
                 }
+                R.id.logoutItem -> {
+                    logout()
+                }
+
+
+
+
             }
             false
         }
+
+        auth = Firebase.auth
+        auth.addAuthStateListener { authState ->
+            userState = authState.currentUser
+            if (userState == null) {
+                Log.d("AuthListener", "----------------null user")
+            } else {
+
+                Log.d("AuthListener", "--------------------OK user")
+                /*model.getTrips().observe(this, Observer {
+                    model.getTrips().removeObservers(this)
+                }
+                )
+                initDrawerHeader(navView)*/
+            }
+        }
     }
+
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            login()
+        }
+    }
+
+    private fun login() {
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.GoogleBuilder().build()
+        )
+
+        // Create and launch sign-in intent
+        startActivityForResult(
+            AuthUI.getInstance()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .build(),
+            RC_SIGN_IN
+        )
+    }
+
+    private fun logout() {
+        AuthUI.getInstance()
+            .signOut(this)
+            .addOnSuccessListener {
+                startActivity(Intent(this, MainActivity::class.java))
+                overridePendingTransition(0,0)
+                finish()
+                overridePendingTransition(0,0)
+                Toast.makeText(this, "Logout successful!", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                Log.d("Login result", "Successfully signed in")
+
+            }
+
+            Log.d("Login result", "Sign in success")
+            // ...
+        } else {
+            // Sign in failed. If response is null the user canceled the
+            // sign-in flow using the back button. Otherwise check
+            // response.getError().getErrorCode() and handle the error.
+            // ...
+            Log.e("Login result", "Sign in failed")
+        }
+
+    }
+
 
     override fun onSupportNavigateUp(): Boolean {
         //TODO FUNZIONE PER TORNARE INDIETRO DAL MENU, CAPIRE SE FUNZIONA DA UNDO OPPURE SE BISOGNA SALVARE
@@ -67,5 +166,7 @@ class MainActivity : AppCompatActivity() {
 
         return NavigationUI.navigateUp(navController, drawer)
     }
+
+
 
 }

@@ -11,9 +11,19 @@
         android:title="@string/navdrawer_show_profile" />
 
         <item
+            android:id="@+id/sign_in_button"
+            android:icon="@drawable/ic_icons8_logout_50"
+            android:title="Login" />
+
+
+        <item
             android:id="@+id/logoutItem"
             android:icon="@drawable/ic_icons8_logout_50"
             android:title="@string/logout" />
+
+
+
     </group>
 
 </menu>
+
