@@ -39,6 +39,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    val myAdvs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
+        MutableLiveData<HashMap<String, SmallAdv>>().also {
+            loadMyAdvs("de96wgyM8s4GvwM6HFPr")
+        }
+    }
+
     val advs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
             loadAdvs()
@@ -194,6 +200,47 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
 
+    private fun loadMyAdvs(userId : String) {
+        println("----------- LOAD MY ADVs")
+        db.collection("advertisements")
+            .whereEqualTo("userId", userId)
+            .orderBy("creationTime", Query.Direction.DESCENDING)
+            .addSnapshotListener { r, e ->
+                println("--- ERR $e")
+                if (e != null)
+                    //myAdvs.value = hashMapOf()
+                else {
+                    val advMap: HashMap<String, SmallAdv> = hashMapOf()
+                    for (doc in r!!) {
+                        val date = doc.getString("date")
+                        val description = doc.getString("description")
+                        val duration = doc.getString("duration")
+                        val location = doc.getString("location")
+                        val note = doc.getString("note")
+                        val time = doc.getString("time")
+                        val title = doc.getString("title")
+                        val creationTime = doc.getString("creationTime")
+                        val skill = doc.getString("skill")
+                        println("-------- ${doc.getString("title")} ${doc.getString("userId")}")
+                        val adv = SmallAdv(
+                            doc.id,
+                            title!!,
+                            date!!,
+                            description!!,
+                            time!!,
+                            duration!!,
+                            location!!,
+                            note!!,
+                            creationTime!!,
+                            skill!!
+                        )
+                        advMap[doc.id] = adv
+                    }
+                    myAdvs.value = advMap
+                }
+            }
+    }
+
     private fun loadAdvs() {
         db.collection("advertisements")
             .orderBy("creationTime", Query.Direction.DESCENDING)
@@ -211,6 +258,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val time = doc.getString("time")
                         val title = doc.getString("title")
                         val creationTime = doc.getString("creationTime")
+                        val skill = doc.getString("skill")
                         val adv = SmallAdv(
                             doc.id,
                             title!!,
@@ -220,7 +268,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                             duration!!,
                             location!!,
                             note!!,
-                            creationTime!!
+                            creationTime!!,
+                            skill!!
                         )
                         advMap[doc.id] = adv
                     }
@@ -228,6 +277,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                 }
             }
     }
+
 
     private fun createAdvFromBundle(bundle: Bundle, id: String): SmallAdv {
         val title = bundle.getString("title") ?: ""
@@ -237,6 +287,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         val duration = bundle.getString("duration") ?: ""
         val location = bundle.getString("location") ?: ""
         val note = bundle.getString("note") ?: ""
+        val skill = bundle.getString("skill") ?: ""
+
 
         return SmallAdv(
             id,
@@ -247,7 +299,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             duration,
             location,
             note,
-            getCreationTime()
+            getCreationTime(),
+            skill
 
         )
     }

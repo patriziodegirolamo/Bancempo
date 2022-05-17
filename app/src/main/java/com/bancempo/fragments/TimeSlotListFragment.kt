@@ -3,6 +3,7 @@ package com.bancempo.fragments
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -24,32 +25,65 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
         val emptyListTV = view.findViewById<TextView>(R.id.empty_list_tv)
 
-        fab.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putBoolean("createNewAdv", true)
-            findNavController().navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
-        }
+        val skill = arguments?.getString("skill")
 
-        sharedVM.advs.observe(viewLifecycleOwner) { sadvs ->
-            if (sadvs.isEmpty()) {
-                rv.visibility = View.GONE
-                emptyListTV.visibility = View.VISIBLE
-            } else {
-                rv.visibility = View.VISIBLE
-                emptyListTV.visibility = View.GONE
+        if (skill == null) {
+            fab.isVisible = true
+
+            fab.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putBoolean("createNewAdv", true)
+                findNavController().navigate(
+                    R.id.action_timeSlotListFragment_to_timeSlotEditFragment,
+                    bundle
+                )
             }
 
-            rv.layoutManager = LinearLayoutManager(context)
-            rv.adapter = SmallAdvAdapter(sadvs.values.sortedByDescending { x -> x.creationTime }.toList())
+            sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
+                println("$sadvs")
+                if (sadvs.isEmpty()) {
+                    rv.visibility = View.GONE
+                    emptyListTV.visibility = View.VISIBLE
+                } else {
+                    rv.visibility = View.VISIBLE
+                    emptyListTV.visibility = View.GONE
+                }
 
-            setFragmentResultListener("confirmationOkCreate") { _, _ ->
-                val adapter = SmallAdvAdapter(sadvs.values.sortedByDescending { x -> x.creationTime }.toList())
-                adapter.notifyItemInserted(0)
-                rv.adapter = adapter
+                rv.layoutManager = LinearLayoutManager(context)
+                rv.adapter =
+                    SmallAdvAdapter(sadvs.values.sortedByDescending { x -> x.creationTime }
+                        .toList(), true)
+
+                setFragmentResultListener("confirmationOkCreate") { _, _ ->
+                    val adapter =
+                        SmallAdvAdapter(sadvs.values.sortedByDescending { x -> x.creationTime }
+                            .toList(), true)
+                    adapter.notifyItemInserted(0)
+                    rv.adapter = adapter
+                }
+
             }
-
         }
+        else{
+            fab.isVisible = false
+            sharedVM.advs.observe(viewLifecycleOwner) { sadvs ->
+                if (sadvs.isEmpty()) {
+                    rv.visibility = View.GONE
+                    emptyListTV.visibility = View.VISIBLE
+                } else {
+                    rv.visibility = View.VISIBLE
+                    emptyListTV.visibility = View.GONE
+                }
 
+
+                rv.layoutManager = LinearLayoutManager(context)
+                rv.adapter =
+                    SmallAdvAdapter(sadvs.values.filter { adv -> adv.skill == skill }
+                        .toList(), false)
+
+
+            }
+        }
     }
 
 }

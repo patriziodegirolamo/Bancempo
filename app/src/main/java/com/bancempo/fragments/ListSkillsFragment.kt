@@ -30,6 +30,8 @@ class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
             rv.adapter = adapter
         }
 
+
+
     }
 
 
