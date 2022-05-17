@@ -12,8 +12,8 @@
 
         <item
             android:id="@+id/sign_in_button"
-            android:icon="@drawable/ic_icons8_logout_50"
-            android:title="Login" />
+            android:icon="@drawable/ic_baseline_login_50"
+            android:title="@string/login" />
 
 
         <item
