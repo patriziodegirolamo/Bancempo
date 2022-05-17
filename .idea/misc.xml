@@ -38,6 +38,7 @@
         <entry key="app/src/main/res/layout/activity_show_profile.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2126019945602901" />
         <entry key="app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.12612227447627192" />
+        <entry key="app/src/main/res/layout/sign_in.xml" value="0.24326635314236852" />
         <entry key="app/src/main/res/menu/navdrawer_menu.xml" value="0.13210773834972211" />
       </map>
     </option>
