@@ -22,11 +22,27 @@
           }
         },
         {
+          "client_id": "351349020588-k87oeehmikr7ii2bmfeba7ar4mcq7bev.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bancempo",
+            "certificate_hash": "878d4325953cce7361c2f81cda503b6be0b2336d"
+          }
+        },
+        {
           "client_id": "351349020588-kne5drrdi8jsepr7rm510p8drcusd4h9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.bancempo",
             "certificate_hash": "4314f28f53a305f5ff8abf4fb5ff723d2a67781e"
+          }
+        },
+        {
+          "client_id": "351349020588-sl3a8i59t231qnklo4qqdjaoheav9e6a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bancempo",
+            "certificate_hash": "82e93d2a5d62ef2500ab824cd4b65879b6e058c0"
           }
         },
         {
