@@ -119,7 +119,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 bundle.putString("location", locationEdit.text.toString())
                 bundle.putString("note", noteEdit.text.toString())
                 bundle.putString("skill", skillEdit.text.toString())
-                bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
 
                 sharedVM.addNewAdv(bundle)
                 setFragmentResult("confirmationOkCreate", bundleOf())
@@ -141,6 +140,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 override fun handleOnBackPressed() {
                     if (modify) {
                         if (validation()) {
+
                             val bundle = Bundle()
 
                             //MODIFY THE ADV ON FIRESTORE
@@ -281,9 +281,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            println("---------SAVEDINSTANCE $savedInstanceState")
-            println("---------DATE ${date.text.toString()}")
-            println("---------DATE $date")
 
             if (savedInstanceState != null) {
                 year = savedInstanceState.getInt("year")
@@ -291,7 +288,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 day = savedInstanceState.getInt("day")
             } else {
                 if (date.text.toString() != "") {
-                    println("-------------- + ${date.text}")
                     year = date.text!!.split("/").elementAt(2).toInt()
                     month = date.text!!.split("/").elementAt(1).toInt() - 1
                     day = date.text!!.split("/").elementAt(0).toInt()
@@ -331,7 +327,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             super.onCreate(savedInstanceState)
             if (modify) {
                 val arrTime = timeslot.text.toString().split(":")
-                println("------------$arrTime")
                 val hh = arrTime[0].toInt()
                 val mm = arrTime[1].toInt()
                 c.set(Calendar.HOUR_OF_DAY, hh)

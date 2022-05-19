@@ -62,12 +62,12 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             skills_ed.setText("")
             sharedVM.loadImageUser(photo)
 
-
-            textSkills = user.skills.map{ x -> x.id }.fold(""){ first, second ->
+            textSkills = user.skills.fold(""){ first, second ->
                 first.plus(",").plus(second)
             }
             if(textSkills.isNotEmpty())
                 textSkills = textSkills.removeRange(0,1)
+
            // prova.text=textSkills
         }
     }

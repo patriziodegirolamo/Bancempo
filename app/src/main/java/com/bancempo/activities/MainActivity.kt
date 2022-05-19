@@ -25,14 +25,13 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-    private lateinit var currentUser: User
-    private var userState: FirebaseUser? = null
     private val RC_SIGN_IN: Int = 1
 
     private val sharedVM: SharedViewModel by viewModels()
@@ -40,10 +39,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(this,
+        val binding = DataBindingUtil.setContentView<ActivityMainBinding>(
+            this,
             R.layout.activity_main
         )
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
         val navView = findViewById<NavigationView>(R.id.nav_view)
 
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
 
         navView.setNavigationItemSelectedListener {
-            when (it.itemId){
+            when (it.itemId) {
                 R.id.goToTimeSlotList -> {
                     if (navController.currentDestination?.id != R.id.timeSlotListFragment) {
 
@@ -74,34 +75,30 @@ class MainActivity : AppCompatActivity() {
                 }
 
 
-
-
             }
             false
         }
 
-        auth = Firebase.auth
-        auth.addAuthStateListener { authState ->
-            userState = authState.currentUser
-            if (userState == null) {
+        sharedVM.authUser.observe(this) { firebaseUser ->
+            if (firebaseUser == null) {
                 Log.d("AuthListener", "----------------null user")
             } else {
                 Log.d("AuthListener", "--------------------OK user")
-                /*model.getTrips().observe(this, Observer {
-                    model.getTrips().removeObservers(this)
-                }
-                )
-                initDrawerHeader(navView)*/
+                sharedVM.createUserIfDoesNotExists()
             }
         }
+
     }
 
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
+        val currentUser = sharedVM.authUser.value
         if (currentUser == null) {
             login()
+        } else {
+            findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button)
+                .setVisible(false)
         }
     }
 
@@ -126,6 +123,8 @@ class MainActivity : AppCompatActivity() {
                 .build(),
             RC_SIGN_IN
         )
+
+        println("--------------inlogin: ${sharedVM.authUser.value}")
     }
 
     private fun logout() {
@@ -133,13 +132,14 @@ class MainActivity : AppCompatActivity() {
             .signOut(this)
             .addOnSuccessListener {
                 startActivity(Intent(this, MainActivity::class.java))
-                overridePendingTransition(0,0)
+                overridePendingTransition(0, 0)
                 finish()
-                overridePendingTransition(0,0)
+                overridePendingTransition(0, 0)
                 Toast.makeText(this, "Logout successful!", Toast.LENGTH_SHORT).show()
             }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -149,7 +149,8 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 Log.d("Login result", "Successfully signed in")
-                findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button).setVisible(false)
+                findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button)
+                    .setVisible(false)
             }
 
             Log.d("Login result", "Sign in success")
@@ -168,12 +169,12 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         //TODO FUNZIONE PER TORNARE INDIETRO DAL MENU, CAPIRE SE FUNZIONA DA UNDO OPPURE SE BISOGNA SALVARE
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.findNavController()
 
         return NavigationUI.navigateUp(navController, drawer)
     }
-
 
 
 }

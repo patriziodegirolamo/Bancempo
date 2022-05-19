@@ -137,6 +137,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             .onBackPressedDispatcher
             .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
+                    println("-----------------${validation()}")
                     if(validation()) {
                         var chipText = ""
                         for (i in 0 until chipGroup.childCount) {
@@ -148,8 +149,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                                 chipText += "${chip.text},"
                             }
                         }
-
-                        //println("---------------chiptext: $chipText")
                         sharedVM.updateUser(view, chipText)
                         setFragmentResult("backFromEdit", bundleOf(Pair("chipText", chipText)))
                         findNavController().popBackStack()
@@ -186,7 +185,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     true
                 }
             } else if (text.hint == "Full name" || text.hint == "Location") {
-                return if (textEdit.text?.length!! > 20) {
+                return if (textEdit.text?.length!! > 40) {
                     text.error = "Your ${text.hint} is too long."
                     false
                 } else {
@@ -194,7 +193,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     return true
                 }
             } else if (text.hint == "Nickname") {
-                return if (textEdit.text?.length!! > 10) {
+                return if (textEdit.text?.length!! > 25) {
                     text.error = "Your ${text.hint} is too long."
                     false
                 } else {

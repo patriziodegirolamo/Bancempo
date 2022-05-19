@@ -3,6 +3,7 @@ package com.bancempo.models
 import android.app.Application
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -14,22 +15,42 @@ import com.bancempo.SmallAdv
 import com.bancempo.data.User
 import com.bumptech.glide.Glide
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
+    //TODO: se da qualche nullpointer exception, sostituire i currentUser.value!!.email CON authUser.value!!.email
+    private lateinit var auth: FirebaseAuth
+    private var userState: FirebaseUser? = null
     val rootStorageDirectory = "gs://bancempo.appspot.com/"
     private val db = FirebaseFirestore.getInstance()
     private val storageReference = FirebaseStorage.getInstance()
 
+    val authUser: MutableLiveData<FirebaseUser?> by lazy{
+        MutableLiveData<FirebaseUser?>().also {
+            auth = Firebase.auth
+            auth.addAuthStateListener { authState ->
+                userState = authState.currentUser
+                authUser.value = userState
+            }
+        }
+    }
+
     val currentUser: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {
-            loadUser("de96wgyM8s4GvwM6HFPr")
+            if(authUser.value != null) {
+                println("--------------------${authUser.value!!.email}")
+                loadUser(authUser.value!!.email!!)
+            }
         }
     }
 
@@ -41,56 +62,70 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val myAdvs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
-            loadMyAdvs("de96wgyM8s4GvwM6HFPr")
+            if(authUser.value != null) {
+                loadMyAdvs(authUser.value!!.email!!)
+            }
         }
     }
 
     val advs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
-            loadAdvs("de96wgyM8s4GvwM6HFPr")
+            loadAdvs()
         }
     }
 
     fun uploadBitmap(btm: Bitmap) {
         val creationTimeNewImage = System.currentTimeMillis()
+        val emailTruncated = currentUser.value!!.email.split("@")[0]
         val imageName = "profile_".plus(creationTimeNewImage.toString()).plus(".jpg")
-        val url = "$rootStorageDirectory/${currentUser.value?.id!!}/$imageName"
-        val myOldRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
+        val url = "$rootStorageDirectory/$emailTruncated/$imageName"
+        val toDelete = currentUser.value!!.imageUser.isNotEmpty()
         val myNewRef = storageReference.getReferenceFromUrl(url)
 
         val baos = ByteArrayOutputStream()
         btm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
         myNewRef.putBytes(data).addOnSuccessListener {
-            myOldRef.delete().addOnSuccessListener {
-                currentUser.value = User(
-                    currentUser.value!!.id,
-                    currentUser.value!!.fullname,
-                    currentUser.value!!.nickname,
-                    currentUser.value!!.description,
-                    currentUser.value!!.location,
-                    currentUser.value!!.email,
-                    currentUser.value!!.skills,
-                    myNewRef.toString()
-                )
-            }.addOnFailureListener {
-                println("---------------------not ok: $it")
+            if(toDelete){
+                val myOldRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
+                myOldRef.delete().addOnSuccessListener {
+                    db.collection("users").document(authUser.value!!.email!!)
+                        .update("imageUser", myNewRef.toString())
+                        .addOnSuccessListener { println("-----------------update user") }
+                        .addOnFailureListener { println("--------------failing updating user")}
+                }.addOnFailureListener {
+                    println("---------------------not ok: $it")
+                }
             }
+            else{
+                db.collection("users").document(authUser.value!!.email!!)
+                    .update("imageUser", myNewRef.toString())
+                    .addOnSuccessListener { println("----------------update user") }
+                    .addOnFailureListener { println("---------------failing updating user")}
+            }
+
         }.addOnFailureListener {
-            Toast.makeText(app.applicationContext, "Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(app.applicationContext, "----------------Error", Toast.LENGTH_SHORT).show()
         }
 
     }
 
     fun loadImageUser(view: ImageView) {
-        val myRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
+        if(currentUser.value?.imageUser != ""){
+            val myRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
 
-        Glide.with(app.applicationContext).load(myRef)
-            .circleCrop()
-            .placeholder(R.drawable.ic_icons8_image_501).into(view)
+            Glide.with(app.applicationContext).load(myRef)
+                .circleCrop()
+                .placeholder(R.drawable.ic_icons8_image_501).into(view)
+        }
+        else{
+            val idDrawable = app.resources.getDrawable(R.drawable.ic_icons8_image_501)
+            view.setImageDrawable(idDrawable)
+        }
     }
 
     fun updateUser(view: View, skillsString: String) {
+        val servicesDocRef = db.collection("services")
         val fullname = view.findViewById<TextInputEditText>(R.id.editTextFullName).text.toString()
         val nickname = view.findViewById<TextInputEditText>(R.id.editTextNickname).text.toString()
         val email = view.findViewById<TextInputEditText>(R.id.editTextEmail).text.toString()
@@ -102,52 +137,82 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             if (skill != "")
                 finalList.add(skill)
         }
-        val servicesDocRef = db.collection("services")
-        val currentUserRef = db.collection("users").document(currentUser.value!!.id)
+        val currentUserRef = db.collection("users").document(currentUser.value!!.email)
 
-        var initialList = listOf<String>()
-        servicesDocRef.get().addOnSuccessListener { snap ->
-            initialList = snap.mapNotNull { x -> x.getString("title") }
-        }.addOnSuccessListener {
-            val toAdd = finalList.minus(initialList)
-            val toDelete = initialList.minus(finalList)
-            val finalListDocRefs = finalList.map { x -> servicesDocRef.document(x) }.toList()
+        servicesDocRef
+            .whereEqualTo("createdBy", currentUser.value!!.email)
+            .get()
+            .addOnSuccessListener { r ->
+                val initialList = mutableListOf<String>()
+                for(doc in r!!){
+                    initialList.add(doc.id)
+                }
+                val toAdd = finalList.minus(initialList)
+                val toDelete = initialList.minus(finalList)
 
-            val user = User(
-                currentUser.value!!.id,
-                fullname,
-                nickname,
-                description,
-                location,
-                email,
-                finalListDocRefs,
-                currentUser.value!!.imageUser
-            )
+                val user = User(
+                    fullname,
+                    nickname,
+                    description,
+                    location,
+                    email,
+                    finalList,
+                    currentUser.value!!.imageUser
+                )
 
-            val batch = db.batch()
+                db.runBatch{ batch ->
+                    //1st: create new service for each element of addingList
+                    for (adding in toAdd) {
+                        batch.set(servicesDocRef.document(adding), createService(adding, currentUser.value!!.email))
+                    }
 
-            //1st: create new service for each element of addingList
-            for (adding in toAdd) {
-                batch.set(servicesDocRef.document(adding), createService(adding, currentUser.value!!.id))
+                    //2nd: delete old services
+                    for (deleting in toDelete) {
+                        batch.delete(servicesDocRef.document(deleting))
+                    }
+
+                    //3rd: replace list of skills in user
+                    batch.set(currentUserRef, user)
+                }
+
             }
 
-            //2nd: delete old services
-            for (deleting in toDelete) {
-                batch.delete(servicesDocRef.document(deleting))
-            }
-
-            //3rd: replace list of skills in user
-            batch.set(currentUserRef, user)
-
-            batch.commit()
-
-        }
     }
 
-    private fun loadUser(id: String) {
-        println("-------------------------LOADING")
+    fun createUserIfDoesNotExists(){
         db.collection("users")
-            .whereEqualTo("id", id)
+            .whereEqualTo("email", authUser.value!!.email)
+            .get()
+            .addOnSuccessListener { r ->
+                if (r.isEmpty) {
+                    val newUser = User(
+                        authUser.value!!.displayName!!,
+                        authUser.value!!.displayName!!,
+                        "",
+                        "",
+                        authUser.value!!.email!!,
+                        listOf(),
+                        ""
+                    )
+                    db.collection("users").document(authUser.value!!.email!!)
+                        .set(newUser)
+                        .addOnSuccessListener {
+                            currentUser.value = newUser
+                            println("user creato nel db")
+                        }
+                        .addOnFailureListener {
+                            println("impossibile creare user nel db")
+                        }
+                }
+            }
+            .addOnFailureListener {
+                println("problema nel trovare lo user con questa email");
+            }
+    }
+
+    fun loadUser(mail: String) {
+        db.collection("users")
+            .whereEqualTo("email", mail)
             .addSnapshotListener { r, e ->
                 if (e != null)
                     currentUser.value = User()
@@ -158,11 +223,11 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val email = doc.getString("email")
                         val location = doc.getString("location")
                         val description = doc.getString("description")
-                        val listOfReferences = doc.data["skills"] as List<DocumentReference>
+                        val listOfSkills = doc.data["skills"] as List<String>
                         val imageUser = doc.getString("imageUser")
                         val user = User(
-                            id, fullname!!, nickname!!, description!!, location!!,
-                            email!!, listOfReferences, imageUser!!
+                            fullname!!, nickname!!, description!!, location!!,
+                            email!!, listOfSkills, imageUser!!
                         )
 
                         currentUser.value = user
@@ -220,8 +285,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val title = doc.getString("title")
                         val creationTime = doc.getString("creationTime")
                         val skill = doc.getString("skill")
-                        val userId = doc.getString("userId")
-                        println("-------- ${doc.getString("title")} ${doc.getString("userId")}")
+                        val uid = doc.getString("userId")
                         val adv = SmallAdv(
                             doc.id,
                             title!!,
@@ -233,25 +297,21 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                             note!!,
                             creationTime!!,
                             skill!!,
-                            userId!!
+                            uid!!
                         )
                         advMap[doc.id] = adv
                     }
-                    println("---------------- MYADVS $myAdvs")
                     myAdvs.value = advMap
                 }
             }
     }
 
-    private fun loadAdvs(userId : String) {
-        println("LOAD")
-       // advs.value = hashMapOf()
+    private fun loadAdvs() {
         db.collection("advertisements")
             .orderBy("creationTime", Query.Direction.DESCENDING)
             .addSnapshotListener { r, e ->
                 if (e != null)
                     println("--- ERR $e")
-                   // advs.value = hashMapOf()
                 else {
                     val advMap: HashMap<String, SmallAdv> = hashMapOf()
                     for (doc in r!!) {
@@ -282,7 +342,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     }
                     advs.value = advMap
                 }
-                println("---- ADVS ${advs.value}")
             }
     }
 
@@ -298,6 +357,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         val skill = bundle.getString("skill") ?: ""
         val userId = bundle.getString("userId") ?: ""
 
+        println("---------userid: $userId")
         return SmallAdv(
             id,
             title,
@@ -310,7 +370,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             getCreationTime(),
             skill,
             userId
-
         )
     }
 
@@ -321,6 +380,10 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun addNewAdv(newAdvBundle: Bundle) {
+
+        val userId = authUser.value!!.email
+        newAdvBundle.putString("userId", userId)
+
         val newId = db.collection("advertisements").document().id
         db.collection("advertisements").document(newId)
             .set(createAdvFromBundle(newAdvBundle, newId))

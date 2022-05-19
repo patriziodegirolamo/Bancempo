@@ -79,8 +79,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         isMyAdv = arguments?.getBoolean("isMyAdv")!!
 
-        println("--------- ISMYADV $isMyAdv")
-
         setFragmentResultListener("confirmationOkModifyToDetails") { _, bundle ->
             title_ed.setText(bundle.getString("title"))
             description_ed.setText(bundle.getString("description"))

@@ -27,8 +27,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
         val skill = arguments?.getString("skill")
 
-        println("$skill")
-
         if (skill == null) {
             fab.isVisible = true
 
@@ -42,7 +40,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             }
 
             sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
-                println("-------------- SADVS GIUSTO $sadvs")
                 if (sadvs.isEmpty()) {
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
@@ -70,7 +67,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         else{
             fab.isVisible = false
             sharedVM.advs.observe(viewLifecycleOwner) { sadvs ->
-                if (sadvs.values.filter { adv -> adv.skill == skill}
+                if (sadvs.values.filter { adv -> adv.userId != sharedVM.authUser.value!!.email && adv.skill == skill}
                         .toList().isEmpty()) {
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
@@ -84,9 +81,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 rv.adapter =
                     SmallAdvAdapter(sadvs.values.filter { adv -> adv.skill == skill}
                         .toList(), false)
-                println("---- SADVS ${sadvs.values.filter { adv -> adv.skill == skill}
-                    .toList()}")
-
 
             }
         }
