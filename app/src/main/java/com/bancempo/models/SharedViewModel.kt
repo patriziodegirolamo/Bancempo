@@ -87,7 +87,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
         Glide.with(app.applicationContext).load(myRef)
             .circleCrop()
-            .placeholder(R.drawable.profile_edit).into(view)
+            .placeholder(R.drawable.ic_icons8_image_501).into(view)
     }
 
     fun updateUser(view: View, skillsString: String) {
