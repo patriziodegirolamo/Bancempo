@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity() {
             if (userState == null) {
                 Log.d("AuthListener", "----------------null user")
             } else {
-
                 Log.d("AuthListener", "--------------------OK user")
                 /*model.getTrips().observe(this, Observer {
                     model.getTrips().removeObservers(this)
