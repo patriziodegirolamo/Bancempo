@@ -1,9 +1,11 @@
 package com.bancempo.activities
 
+import android.content.ClipData
 import com.bancempo.R
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -148,7 +150,7 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 Log.d("Login result", "Successfully signed in")
-
+                findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button).setVisible(false)
             }
 
             Log.d("Login result", "Sign in success")
