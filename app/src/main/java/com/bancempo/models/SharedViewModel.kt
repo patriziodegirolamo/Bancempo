@@ -48,7 +48,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     val currentUser: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {
             if(authUser.value != null) {
-                println("--------------------${authUser.value!!.email}")
                 loadUser(authUser.value!!.email!!)
             }
         }
@@ -72,6 +71,13 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
             loadAdvs()
         }
+    }
+
+    fun afterLogin(){
+        val email = authUser.value!!.email!!
+        loadMyAdvs(email)
+        loadServices()
+        loadUser(email)
     }
 
     fun uploadBitmap(btm: Bitmap) {
@@ -237,7 +243,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
 
-    private fun loadServices() {
+    fun loadServices() {
         db.collection("services")
             .addSnapshotListener { r, e ->
                 if (e != null)
@@ -256,7 +262,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    private fun createService(title: String, createdBy: String): Skill {
+    fun createService(title: String, createdBy: String): Skill {
         return Skill(
             title,
             getCreationTime(),
@@ -265,7 +271,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
 
-    private fun loadMyAdvs(userId : String) {
+    fun loadMyAdvs(userId : String) {
         db.collection("advertisements")
             .whereEqualTo("userId", userId)
             .addSnapshotListener { r, e ->
@@ -306,7 +312,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    private fun loadAdvs() {
+    fun loadAdvs() {
         db.collection("advertisements")
             .orderBy("creationTime", Query.Direction.DESCENDING)
             .addSnapshotListener { r, e ->
@@ -346,7 +352,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
 
-    private fun createAdvFromBundle(bundle: Bundle, id: String): SmallAdv {
+    fun createAdvFromBundle(bundle: Bundle, id: String): SmallAdv {
         val title = bundle.getString("title") ?: ""
         val date = bundle.getString("date") ?: ""
         val description = bundle.getString("description") ?: ""
@@ -397,6 +403,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun modifyAdv(id: String, advBundle: Bundle) {
+        val userId = authUser.value!!.email
+        advBundle.putString("userId", userId)
+
         db.collection("advertisements").document(id)
             .set(createAdvFromBundle(advBundle, id))
             .addOnSuccessListener {

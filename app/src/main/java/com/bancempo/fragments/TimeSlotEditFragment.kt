@@ -153,7 +153,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                             bundle.putString("location", locationEdit.text.toString())
                             bundle.putString("note", noteEdit.text.toString())
                             bundle.putString("skill", skillEdit.text.toString())
-                            bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
 
                             sharedVM.modifyAdv(id!!, bundle)
 

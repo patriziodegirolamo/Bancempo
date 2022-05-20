@@ -72,6 +72,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.logoutItem -> {
                     logout()
+                    //sharedVM.cleanAfterLogout()
                 }
 
 
@@ -93,12 +94,12 @@ class MainActivity : AppCompatActivity() {
     public override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = sharedVM.authUser.value
-        if (currentUser == null) {
+        val authUser = sharedVM.authUser.value
+        if (authUser == null) {
             login()
-        } else {
-            findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button)
-                .setVisible(false)
+        }
+        else {
+            findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button).isVisible = false
         }
     }
 
@@ -123,8 +124,6 @@ class MainActivity : AppCompatActivity() {
                 .build(),
             RC_SIGN_IN
         )
-
-        println("--------------inlogin: ${sharedVM.authUser.value}")
     }
 
     private fun logout() {
@@ -148,19 +147,17 @@ class MainActivity : AppCompatActivity() {
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                Log.d("Login result", "Successfully signed in")
-                findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button)
-                    .setVisible(false)
+                Log.d("messaggio: Login result", "Successfully signed in")
+                findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button).isVisible = false
+                sharedVM.afterLogin()
             }
 
-            Log.d("Login result", "Sign in success")
-            // ...
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
             // response.getError().getErrorCode() and handle the error.
             // ...
-            Log.e("Login result", "Sign in failed")
+            Log.e("messaggio: Login result", "Sign in failed")
         }
 
     }
