@@ -54,7 +54,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
                     bundle.putString("duration", adv.duration)
                     bundle.putString("location", adv.location)
                     bundle.putString("note", adv.note)
-                    bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
+                    bundle.putString("skill", adv.skill)
                     findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
                 }
             }
@@ -113,7 +113,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
             bundle.putString("duration", data[position].duration)
             bundle.putString("location", data[position].location)
             bundle.putString("note", data[position].note)
-            bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
+            bundle.putString("skill", data[position].skill)
             bundle.putBoolean("isMyAdv", isMyAdvs)
 
             findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment, bundle)

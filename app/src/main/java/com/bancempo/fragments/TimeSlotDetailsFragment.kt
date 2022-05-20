@@ -10,6 +10,8 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bancempo.R
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -37,6 +39,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private lateinit var note: TextInputLayout
     private lateinit var note_ed: TextInputEditText
+
+    private lateinit var chipGroup: ChipGroup
+
+    private lateinit var skills: String
 
     private var isMyAdv = false
 
@@ -66,6 +72,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         note = view.findViewById(R.id.note_adv)
         note_ed = view.findViewById(R.id.edit_note_text)
 
+        chipGroup = view.findViewById(R.id.chipGroup)
+
 
         title_ed.setText(arguments?.getString("title"))
         description_ed.setText(arguments?.getString("description"))
@@ -75,7 +83,15 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         location_ed.setText(arguments?.getString("location"))
         note_ed.setText(arguments?.getString("note"))
 
-        val skill = arguments?.getString("skill")
+        skills = arguments?.getString("skill").toString()
+
+        skills.split(",").forEach{
+            val chip = Chip(activity)
+                chip.text = it
+                chip.setChipBackgroundColorResource(R.color.divider_color)
+                 chip.isCheckable = false
+                chipGroup.addView(chip)
+        }
 
         isMyAdv = arguments?.getBoolean("isMyAdv")!!
 
@@ -87,6 +103,16 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             location_ed.setText(bundle.getString("location"))
             note_ed.setText(bundle.getString("note"))
             duration_ed.setText(bundle.getString("duration"))
+            skills = bundle.getString("skill").toString()
+            chipGroup.removeAllViews()
+            skills.split(",").forEach{
+                val chip = Chip(activity)
+                chip.text = it
+                chip.setChipBackgroundColorResource(R.color.divider_color)
+                chip.isCheckable = false
+                chipGroup.addView(chip)
+            }
+
         }
     }
 
@@ -113,7 +139,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 bundle.putString("location", arguments?.getString("location"))
                 bundle.putString("note", arguments?.getString("note"))
                 bundle.putString("skill",  arguments?.getString("skill"))
-                bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
                 requireView().findNavController()
                     .navigate(R.id.action_timeSlotDetailsFragment_to_timeSlotEditFragment, bundle)
                 return super.onOptionsItemSelected(item)

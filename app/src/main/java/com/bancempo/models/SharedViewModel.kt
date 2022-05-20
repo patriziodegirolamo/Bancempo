@@ -406,6 +406,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         val userId = authUser.value!!.email
         advBundle.putString("userId", userId)
 
+
         db.collection("advertisements").document(id)
             .set(createAdvFromBundle(advBundle, id))
             .addOnSuccessListener {

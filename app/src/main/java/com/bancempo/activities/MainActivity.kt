@@ -51,6 +51,26 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.navView, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
 
+        sharedVM.currentUser.observe(this){
+            println("messaggio: currentUser -> ${it?.email}")
+        }
+
+        sharedVM.authUser.observe(this){
+            println("messaggio: authuse -> ${it?.email}")
+        }
+
+        sharedVM.services.observe(this){
+            println("messaggio: servs -> ${it.size}")
+        }
+
+        sharedVM.myAdvs.observe(this){
+            println("messaggio: myadvs -> ${it.size}")
+        }
+
+        sharedVM.advs.observe(this){
+            println("messaggio: advs -> ${it.size}")
+        }
+
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.goToTimeSlotList -> {
