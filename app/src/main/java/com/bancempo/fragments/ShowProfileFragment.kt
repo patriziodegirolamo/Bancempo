@@ -51,8 +51,6 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         skills_ed =view.findViewById(R.id.textViewSkills_ed)
         chipGroup = view.findViewById(R.id.chipGroup)
 
-        val prova = view.findViewById<TextView>(R.id.prova)
-
         sharedVM.currentUser.observe(viewLifecycleOwner){ user ->
             fullName_ed.setText(user.fullname)
             nickname_ed.setText(user.nickname)
@@ -62,13 +60,16 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             skills_ed.setText("")
             sharedVM.loadImageUser(photo)
 
-            textSkills = user.skills.fold(""){ first, second ->
-                first.plus(",").plus(second)
-            }
-            if(textSkills.isNotEmpty())
-                textSkills = textSkills.removeRange(0,1)
+            println("USER SKILLS ${user.skills}")
 
-           // prova.text=textSkills
+            chipGroup.removeAllViews()
+            user.skills.forEach{
+                val chip = Chip(activity)
+                chip.text = it
+                chip.setChipBackgroundColorResource(R.color.divider_color)
+                chip.isCheckable = false
+                chipGroup.addView(chip)
+            }
         }
     }
 
@@ -95,7 +96,19 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         bundle.putString("location", location_ed.text.toString())
         bundle.putString("email", email_ed.text.toString())
 
-        bundle.putString("skills", textSkills)
+        var chipText = ""
+        for (i in 0 until chipGroup.childCount) {
+            val chip = chipGroup.getChildAt(i) as Chip
+                println("--------CHIP ${chipGroup.childCount}")
+                if (i == chipGroup.childCount - 1) {
+                    chipText += "${chip.text}"
+
+                } else {
+                    chipText += "${chip.text},"
+                }
+        }
+        println("--------CHIPTEXT $chipText")
+        bundle.putString("skill", chipText)
 
         findNavController().navigate(R.id.action_showProfileFragment_to_editProfileFragment, bundle)
     }

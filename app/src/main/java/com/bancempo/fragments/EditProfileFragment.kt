@@ -88,7 +88,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         email_ed.setText(arguments?.getString("email"))
         location_ed.setText(arguments?.getString("location"))
         description_ed.setText(arguments?.getString("description"))
-        var skillsString : String? = arguments?.getString("skills")
+        var skillsString : String? = arguments?.getString("skill")
+
+        println("SKILLSTRING $skillsString")
 
 
         if (skillsString != null) {

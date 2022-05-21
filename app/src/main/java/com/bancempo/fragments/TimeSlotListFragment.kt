@@ -71,7 +71,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         .toList().isEmpty()) {
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
-                    emptyListTV.text = "Sorry, there are no available advertisements for that category!"
+                    emptyListTV.text = "Sorry, no available advertisements for that category!"
                 } else {
                     rv.visibility = View.VISIBLE
                     emptyListTV.visibility = View.GONE

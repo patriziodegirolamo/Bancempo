@@ -253,7 +253,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="20dp"
-                    android:layout_marginBottom="10dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
@@ -266,6 +265,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Skills"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
                             app:endIconMode="clear_text"
                             app:placeholderText="Insert note"
                             app:startIconDrawable="@drawable/ic_icons8_skills_24">

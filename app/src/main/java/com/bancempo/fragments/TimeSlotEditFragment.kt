@@ -126,7 +126,9 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             if(skills_string != null){
                 skills.forEach{
                     val chip = Chip(activity)
+
                    if(skills_string!!.split(",").contains(it)){
+                       println("CHECKED")
                        chip.isCheckable = true
                        chip.text = it
                        chip.isChecked = true

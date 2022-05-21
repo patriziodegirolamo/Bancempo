@@ -42,7 +42,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private lateinit var chipGroup: ChipGroup
 
-    private lateinit var skills: String
+    private var skills : String? = ""
 
     private var isMyAdv = false
 
@@ -74,7 +74,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         chipGroup = view.findViewById(R.id.chipGroup)
 
-
         title_ed.setText(arguments?.getString("title"))
         description_ed.setText(arguments?.getString("description"))
         date_ed.setText(arguments?.getString("date"))
@@ -83,17 +82,22 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         location_ed.setText(arguments?.getString("location"))
         note_ed.setText(arguments?.getString("note"))
 
-        skills = arguments?.getString("skill").toString()
+        skills = arguments?.getString("skill")
+        println("----ARG $arguments")
+        println("----SKILLS $skills")
 
-        skills.split(",").forEach{
-            val chip = Chip(activity)
+        skills?.split(",")?.forEach{
+            if(it != "") {
+                val chip = Chip(activity)
                 chip.text = it
                 chip.setChipBackgroundColorResource(R.color.divider_color)
-                 chip.isCheckable = false
+                chip.isCheckable = false
                 chipGroup.addView(chip)
+            }
         }
 
         isMyAdv = arguments?.getBoolean("isMyAdv")!!
+
 
         setFragmentResultListener("confirmationOkModifyToDetails") { _, bundle ->
             title_ed.setText(bundle.getString("title"))
@@ -103,17 +107,22 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             location_ed.setText(bundle.getString("location"))
             note_ed.setText(bundle.getString("note"))
             duration_ed.setText(bundle.getString("duration"))
-            skills = bundle.getString("skill").toString()
-            chipGroup.removeAllViews()
-            skills.split(",").forEach{
-                val chip = Chip(activity)
-                chip.text = it
-                chip.setChipBackgroundColorResource(R.color.divider_color)
-                chip.isCheckable = false
-                chipGroup.addView(chip)
-            }
+            skills = bundle.getString("skill")
+            println("----BUNDLE $bundle")
+            println("----SKILLS $skills")
 
+            chipGroup.removeAllViews()
+            skills!!.split(",").forEach{
+                if(it != "") {
+                    val chip = Chip(activity)
+                    chip.text = it
+                    chip.setChipBackgroundColorResource(R.color.divider_color)
+                    chip.isCheckable = false
+                    chipGroup.addView(chip)
+                }
+            }
         }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -130,15 +139,31 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             R.id.inDetailsEditAdv -> {
                 bundle.putBoolean("modifyFromDetails", true)
                 bundle.putString("id", arguments?.getString("id"))
-                bundle.putString("title", arguments?.getString("title"))
+                bundle.putString("title", title_ed.text.toString())
                 bundle.putInt("position", arguments?.getInt("position")!!)
-                bundle.putString("description", arguments?.getString("description"))
-                bundle.putString("duration", arguments?.getString("duration"))
-                bundle.putString("date", arguments?.getString("date"))
-                bundle.putString("time", arguments?.getString("time"))
-                bundle.putString("location", arguments?.getString("location"))
-                bundle.putString("note", arguments?.getString("note"))
-                bundle.putString("skill",  arguments?.getString("skill"))
+                bundle.putString("description", description_ed.text.toString())
+                bundle.putString("duration", duration_ed.text.toString())
+                bundle.putString("date", date_ed.text.toString())
+                bundle.putString("time", time_ed.text.toString())
+                bundle.putString("location", location_ed.text.toString())
+                bundle.putString("note", note_ed.text.toString())
+
+                var chipText = ""
+                for (i in 0 until chipGroup.childCount) {
+                    val chip = chipGroup.getChildAt(i) as Chip
+                        println("--------CHIP ${chipGroup.childCount}")
+                        if (i == chipGroup.childCount - 1) {
+                            chipText += "${chip.text}"
+
+                        } else {
+                            chipText += "${chip.text},"
+                        }
+                }
+
+                bundle.putString("skill",  chipText)
+
+                println("----ARG222 $chipText")
+
                 requireView().findNavController()
                     .navigate(R.id.action_timeSlotDetailsFragment_to_timeSlotEditFragment, bundle)
                 return super.onOptionsItemSelected(item)
