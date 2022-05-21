@@ -173,8 +173,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private fun validateTextInput(text: TextInputLayout, textEdit: TextInputEditText): Boolean {
         if (textEdit.text.isNullOrEmpty()) {
-            text.error = "Please, fill in this field!"
-            return false
+            if(text.hint != "Nickname") {
+                text.error = "Please, fill in this field!"
+                return false
+            }
+            else{
+                textEdit.setError("Please, fill in this field!")
+                return false
+            }
         } else {
             if (text.hint == "Description") {
                 return if (textEdit.text?.length!! > 200) {
@@ -184,7 +190,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     text.error = null
                     true
                 }
-            } else if (text.hint == "Full name" || text.hint == "Location") {
+            } else if (text.hint == "Full Name" || text.hint == "Location") {
                 return if (textEdit.text?.length!! > 40) {
                     text.error = "Your ${text.hint} is too long."
                     false
@@ -194,7 +200,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                 }
             } else if (text.hint == "Nickname") {
                 return if (textEdit.text?.length!! > 25) {
-                    text.error = "Your ${text.hint} is too long."
+                    textEdit.setError("Your ${text.hint} is too long.")
                     false
                 } else {
                     text.error = null
@@ -221,20 +227,25 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         if (!validateTextInput(fullName, fullName_ed)) {
             valid = false
+            println("FULLNAME $valid")
         }
         if (!validateTextInput(description, description_ed)) {
             valid = false
+            println("DESCRIPTION $valid")
         }
-        /*
+
         if (!validateTextInput(nickname, nickname_ed)) {
             valid = false
+            println("NICKNAME $valid")
         }
-        */
+
         if (!validateTextInput(email, email_ed)) {
             valid = false
+            println("EMAIL $valid")
         }
         if (!validateTextInput(location, location_ed)) {
             valid = false
+            println("LOCATION $valid")
         }
         return valid
     }

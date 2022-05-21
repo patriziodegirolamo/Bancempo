@@ -78,8 +78,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 }
 
                 rv.layoutManager = LinearLayoutManager(context)
+                println("---ACTUAL SKILL $skill")
                 rv.adapter =
-                    SmallAdvAdapter(sadvs.values.filter { adv -> adv.skill == skill}
+                    SmallAdvAdapter(sadvs.values.filter { adv -> adv.skill.contains(skill)}
                         .toList(), false)
 
             }
