@@ -250,7 +250,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Skills"
-                            app:placeholderText="Insert note"
+                            app:placeholderText="Insert a skill"
                             app:endIconMode="custom"
                             app:endIconDrawable="@drawable/ic_icons8_ok"
                             app:endIconContentDescription="Insert a skill"

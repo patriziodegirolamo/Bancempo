@@ -15,6 +15,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.text.toUpperCase
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -73,10 +74,31 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         skills_ed =view.findViewById(R.id.editTextSkills)
         chipGroup = view.findViewById(R.id.chipGroup)
 
+        skills_ed.setOnClickListener{
+            skills.error = null
+        }
+
         skills.setEndIconOnClickListener {
             if (skills_ed.text.toString().isNotEmpty()) {
-                addChip(skills_ed.text.toString())
-                skills_ed.setText("")
+                println("-----last ${skills_ed.text.toString().last().isWhitespace()}")
+                while(skills_ed.text.toString().last().isWhitespace()){
+                    skills_ed.setText(skills_ed.text.toString().dropLast(1))
+                }
+                var valid = true
+                for (i in 0 until chipGroup.childCount) {
+                    val chip = chipGroup.getChildAt(i) as Chip
+                    if(skills_ed.text.toString().toUpperCase() == chip.text.toString().toUpperCase()){
+                        valid = false
+                        break
+                    }
+                }
+                if(valid) {
+                    addChip(skills_ed.text.toString())
+                    skills_ed.setText("")
+                }
+                else{
+                    skills.setError("This skill has been already inserted!")
+                }
             }
         }
 
