@@ -168,6 +168,7 @@ class MainActivity : AppCompatActivity() {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 Log.d("messaggio: Login result", "Successfully signed in")
+                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
                 findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.sign_in_button).isVisible = false
                 sharedVM.afterLogin()
             }

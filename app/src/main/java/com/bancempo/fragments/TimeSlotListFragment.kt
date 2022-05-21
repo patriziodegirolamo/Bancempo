@@ -79,12 +79,25 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                 rv.layoutManager = LinearLayoutManager(context)
                 println("---ACTUAL SKILL $skill")
-                rv.adapter =
-                    SmallAdvAdapter(sadvs.values.filter { adv -> adv.skill.contains(skill)}
-                        .toList(), false)
+                skill.split(",").forEach {
+                    rv.adapter =
+                        SmallAdvAdapter(sadvs.values.filter { adv -> checkSkills(adv.skill, it)
+
+                        }.toList(), false)
+                }
 
             }
         }
+    }
+
+    private fun checkSkills(advSkill: String, skill: String): Boolean{
+        var valid = false;
+        advSkill.split(",").forEach{
+            if(it == skill){
+               valid = true;
+            }
+        }
+        return valid;
     }
 
 }

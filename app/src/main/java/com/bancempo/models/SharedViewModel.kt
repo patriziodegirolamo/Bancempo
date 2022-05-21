@@ -181,6 +181,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     batch.set(currentUserRef, user)
                 }
 
+                Toast.makeText(app.applicationContext, R.string.adv_edit_succ, Toast.LENGTH_SHORT)
+                    .show()
+
             }
 
     }
@@ -410,7 +413,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         db.collection("advertisements").document(id)
             .set(createAdvFromBundle(advBundle, id))
             .addOnSuccessListener {
-                Toast.makeText(app.applicationContext, R.string.adv_create_succ, Toast.LENGTH_SHORT)
+                Toast.makeText(app.applicationContext, R.string.adv_edit_succ, Toast.LENGTH_SHORT)
                     .show()
             }
             .addOnFailureListener {
