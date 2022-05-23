@@ -133,7 +133,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun loadImageUserById(userId: String, view: View){
-        val user = db.collection("users").document(userId).get()
+        db.collection("users").document(userId).get()
             .addOnSuccessListener { doc ->
                 val imageUser = doc!!.getString("imageUser")
                 if(imageUser != ""){
