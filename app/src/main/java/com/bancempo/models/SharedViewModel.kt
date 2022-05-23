@@ -2,23 +2,31 @@ package com.bancempo.models
 
 import android.app.Application
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.bancempo.R
 import com.bancempo.Skill
 import com.bancempo.SmallAdv
 import com.bancempo.data.User
+import com.bancempo.fragments.EditProfileFragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
@@ -27,15 +35,17 @@ import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+
 class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
-    //TODO: se da qualche nullpointer exception, sostituire i currentUser.value!!.email CON authUser.value!!.email
     private lateinit var auth: FirebaseAuth
     private var userState: FirebaseUser? = null
     val rootStorageDirectory = "gs://bancempo.appspot.com/"
     private val db = FirebaseFirestore.getInstance()
     private val storageReference = FirebaseStorage.getInstance()
 
-    val authUser: MutableLiveData<FirebaseUser?> by lazy{
+    val haveIloadNewImage = MutableLiveData<Boolean>(true)
+
+    val authUser: MutableLiveData<FirebaseUser?> by lazy {
         MutableLiveData<FirebaseUser?>().also {
             auth = Firebase.auth
             auth.addAuthStateListener { authState ->
@@ -47,7 +57,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val currentUser: MutableLiveData<User> by lazy {
         MutableLiveData<User>().also {
-            if(authUser.value != null) {
+            if (authUser.value != null) {
                 loadUser(authUser.value!!.email!!)
             }
         }
@@ -61,7 +71,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val myAdvs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
-            if(authUser.value != null) {
+            if (authUser.value != null) {
                 loadMyAdvs(authUser.value!!.email!!)
             }
         }
@@ -73,14 +83,15 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun afterLogin(){
+    fun afterLogin() {
         val email = authUser.value!!.email!!
         loadMyAdvs(email)
         loadServices()
         loadUser(email)
     }
 
-    fun uploadBitmap(btm: Bitmap) {
+    fun uploadBitmap(btm: Bitmap, view: View, skillsString: String) {
+        //println("bitmap: upload")
         val creationTimeNewImage = System.currentTimeMillis()
         val emailTruncated = currentUser.value!!.email.split("@")[0]
         val imageName = "profile_".plus(creationTimeNewImage.toString()).plus(".jpg")
@@ -92,51 +103,96 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         btm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
         myNewRef.putBytes(data).addOnSuccessListener {
-            if(toDelete){
+            if (toDelete) {
                 val myOldRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
                 myOldRef.delete().addOnSuccessListener {
                     db.collection("users").document(authUser.value!!.email!!)
                         .update("imageUser", myNewRef.toString())
-                        .addOnSuccessListener { println("-----------------update user") }
-                        .addOnFailureListener { println("--------------failing updating user")}
+                        .addOnSuccessListener {
+
+                            val photo = view.findViewById<ImageView>(R.id.profile_pic)
+                            photo.setImageBitmap(btm)
+                            updateUser(view, skillsString, true)
+                        }
+                        .addOnFailureListener { println("--------------failing updating user") }
                 }.addOnFailureListener {
                     println("---------------------not ok: $it")
                 }
-            }
-            else{
+            } else {
                 db.collection("users").document(authUser.value!!.email!!)
                     .update("imageUser", myNewRef.toString())
                     .addOnSuccessListener { println("----------------update user") }
-                    .addOnFailureListener { println("---------------failing updating user")}
+                    .addOnFailureListener { println("---------------failing updating user") }
             }
 
         }.addOnFailureListener {
-            Toast.makeText(app.applicationContext, "----------------Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(app.applicationContext, "----------------Error", Toast.LENGTH_SHORT)
+                .show()
         }
 
     }
 
-    fun loadImageUser(view: ImageView) {
-        if(currentUser.value?.imageUser != ""){
+    fun loadImageUser(iv: ImageView, view: View) {
+        if (currentUser.value?.imageUser != "") {
             val myRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
+            println("bitmap: load")
+            val pb = view.findViewById<ProgressBar>(R.id.progressBar)
+            if(pb != null)
+                pb.visibility = View.VISIBLE
 
             Glide.with(app.applicationContext).load(myRef)
+                .listener(object: RequestListener<Drawable>{
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        println("bitmap: ready!")
+                        if(pb!=null)
+                            pb.visibility = View.GONE
+                        iv.visibility = View.VISIBLE
+                        return false
+                    }
+
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        println("bitmap: failed!")
+                        //TODO: mettere un immagine per far capire che il caricamento non è andato a buon fine
+                        //iv.setImageBitmap(???)
+                        iv.visibility = View.VISIBLE
+                        return false
+                    }
+                }
+                )
                 .circleCrop()
-                .placeholder(R.drawable.ic_icons8_image_501).into(view)
-        }
-        else{
+                .into(iv)
+        } else {
             val idDrawable = app.resources.getDrawable(R.drawable.ic_icons8_image_501)
-            view.setImageDrawable(idDrawable)
+            iv.setImageDrawable(idDrawable)
         }
     }
 
-    fun updateUser(view: View, skillsString: String) {
+    fun loadSpinner(view: ImageView) {
+        Glide.with(app.applicationContext)
+            .load(R.drawable.loader)
+            .circleCrop()
+            .into(view)
+    }
+
+    fun updateUser(view: View, skillsString: String, updatingImg: Boolean) {
         val servicesDocRef = db.collection("services")
         val fullname = view.findViewById<TextInputEditText>(R.id.editTextFullName).text.toString()
         val nickname = view.findViewById<TextInputEditText>(R.id.editTextNickname).text.toString()
         val email = view.findViewById<TextInputEditText>(R.id.editTextEmail).text.toString()
         val location = view.findViewById<TextInputEditText>(R.id.editTextLocation).text.toString()
-        val description = view.findViewById<TextInputEditText>(R.id.editTextDescription).text.toString()
+        val description =
+            view.findViewById<TextInputEditText>(R.id.editTextDescription).text.toString()
 
         val finalList = mutableListOf<String>()
         for (skill in skillsString.split(",")) {
@@ -145,12 +201,16 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
         val currentUserRef = db.collection("users").document(currentUser.value!!.email)
 
+        if(!updatingImg){
+            haveIloadNewImage.value = false
+        }
+
         servicesDocRef
             .whereEqualTo("createdBy", currentUser.value!!.email)
             .get()
             .addOnSuccessListener { r ->
                 val initialList = mutableListOf<String>()
-                for(doc in r!!){
+                for (doc in r!!) {
                     initialList.add(doc.id)
                 }
                 val toAdd = finalList.minus(initialList)
@@ -166,10 +226,13 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     currentUser.value!!.imageUser
                 )
 
-                db.runBatch{ batch ->
+                db.runBatch { batch ->
                     //1st: create new service for each element of addingList
                     for (adding in toAdd) {
-                        batch.set(servicesDocRef.document(adding), createService(adding, currentUser.value!!.email))
+                        batch.set(
+                            servicesDocRef.document(adding),
+                            createService(adding, currentUser.value!!.email)
+                        )
                     }
 
                     //2nd: delete old services
@@ -179,16 +242,24 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
                     //3rd: replace list of skills in user
                     batch.set(currentUserRef, user)
+                }.addOnSuccessListener {
+                    if (updatingImg) {
+                        println("bitmap: end upload")
+                        haveIloadNewImage.value = true
+                        Toast.makeText(
+                            app.applicationContext,
+                            R.string.adv_edit_succ,
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
                 }
-
-                Toast.makeText(app.applicationContext, R.string.adv_edit_succ, Toast.LENGTH_SHORT)
-                    .show()
 
             }
 
     }
 
-    fun createUserIfDoesNotExists(){
+    fun createUserIfDoesNotExists() {
         db.collection("users")
             .whereEqualTo("email", authUser.value!!.email)
             .get()
@@ -274,15 +345,14 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
 
-    fun loadMyAdvs(userId : String) {
+    fun loadMyAdvs(userId: String) {
         db.collection("advertisements")
             .whereEqualTo("userId", userId)
             .addSnapshotListener { r, e ->
                 if (e != null) {
                     println("--- ERR ${e.message.toString()}")
                     myAdvs.value = hashMapOf()
-                }
-                else {
+                } else {
                     val advMap: HashMap<String, SmallAdv> = hashMapOf()
                     for (doc in r!!) {
                         val date = doc.getString("date")

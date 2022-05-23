@@ -4,11 +4,15 @@ package com.bancempo.fragments
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.MediatorLiveData
 import androidx.navigation.fragment.findNavController
 import com.bancempo.R
+import com.bancempo.data.User
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -35,6 +39,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
     private lateinit var description: TextInputLayout
     private lateinit var chipGroup: ChipGroup
     var textSkills = ""
+    var loadImg = true
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +63,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             location_ed.setText(user.location)
             description_ed.setText(user.description)
             skills_ed.setText("")
-            sharedVM.loadImageUser(photo)
+
 
             println("USER SKILLS ${user.skills}")
 
@@ -70,6 +75,33 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
                 chip.isCheckable = false
                 chipGroup.addView(chip)
             }
+
+            setFragmentResultListener("backFromEdit"){ _, _ ->
+                loadImg = false
+            }
+
+        }
+
+        sharedVM.haveIloadNewImage.observe(viewLifecycleOwner){
+            if(it){
+                //la foto è nuova
+                if(loadImg) {
+                    println("bitmap: load img")
+                    sharedVM.loadImageUser(photo, view)
+                }
+                else{
+                    val pb = view.findViewById<ProgressBar>(R.id.progressBar)
+                    pb.visibility = View.VISIBLE
+                    photo.visibility = View.INVISIBLE
+                    println("bitmap: spinner")
+                    loadImg = true
+                }
+            }
+            else{
+                //la foto è vecchia
+                sharedVM.loadImageUser(photo, view)
+            }
+
         }
     }
 

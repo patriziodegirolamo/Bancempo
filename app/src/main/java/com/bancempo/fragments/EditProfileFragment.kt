@@ -1,10 +1,9 @@
 package com.bancempo.fragments
 
-import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
-import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
@@ -15,7 +14,6 @@ import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.text.toUpperCase
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -27,7 +25,10 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.lang.Exception
+import java.util.*
 
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
@@ -54,6 +55,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private val REQUEST_IMAGE_CAPTURE = 1
     private val SELECT_PICTURE = 200
 
+    var btm: Bitmap? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -102,9 +104,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             }
         }
 
-        //get value from showprofile
-        sharedVM.loadImageUser(photo)
-
         fullName_ed.setText(arguments?.getString("fullname"))
         nickname_ed.setText(arguments?.getString("nickname"))
         email_ed.setText(arguments?.getString("email"))
@@ -150,6 +149,16 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             }
         }
 
+        val btmString = savedInstanceState?.getString("btmString")
+        if( btmString == null){
+            sharedVM.loadImageUser(photo, view)
+        }
+        else{
+            btm = stringToBitmap(btmString)
+            if(btm != null)
+                photo.setImageBitmap(btm)
+        }
+
         //handling on-press small image button
         editPicture.setOnClickListener {
             showPopup(editPicture)
@@ -173,16 +182,24 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                                 chipText += "${chip.text},"
                             }
                         }
-                        sharedVM.updateUser(view, chipText)
+                        if(btm != null){
+                            println("bitmap: upload bitmap")
+                            sharedVM.uploadBitmap(btm!!, view, chipText)
+                        }
+                        else{
+                            println("bitmap: update user without new photo")
+                            sharedVM.updateUser(view, chipText, updatingImg = false)
+                        }
+
+
+
                         setFragmentResult("backFromEdit", bundleOf(Pair("chipText", chipText)))
                         findNavController().popBackStack()
                     }
                 }
             })
-
     }
 
-    @SuppressLint("SdCardPath")
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -192,6 +209,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             chipText += "${chip.text},"
         }
         outState.putString("skills", chipText)
+
+        if(btm != null){
+            val btmString = bitmapToString(btm!!)
+            outState.putString("btmString", btmString)
+        }
+
+        else{
+        }
     }
 
 
@@ -320,14 +345,15 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             val bitmapPhoto = data.extras?.get("data") as Bitmap
-            sharedVM.uploadBitmap(bitmapPhoto)
+            //sharedVM.uploadBitmap(bitmapPhoto)
+            btm = bitmapPhoto
             photo.setImageBitmap(bitmapPhoto)
         }
 
         else if (requestCode == SELECT_PICTURE && resultCode == AppCompatActivity.RESULT_OK && data != null){
             val uriPhoto = data.data
             val bitmapPhoto = updateProfilePictureFromURI(uriPhoto!!)
-            sharedVM.uploadBitmap(bitmapPhoto)
+            btm = bitmapPhoto
             photo.setImageBitmap(bitmapPhoto)
         }
     }
@@ -367,6 +393,24 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             chipGroup.removeView(chip)
         }
         chipGroup.addView(chip)
+    }
+
+    private fun bitmapToString(bitmap: Bitmap): String {
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val b = baos.toByteArray()
+        return Base64.getEncoder().encodeToString(b)!!
+    }
+
+    private fun stringToBitmap(encodedString: String): Bitmap? {
+        return try {
+            val encodedByte = Base64.getDecoder().decode(encodedString)
+            val bitmap = BitmapFactory.decodeByteArray(encodedByte, 0,encodedByte.size)
+            bitmap
+        } catch(e:Exception){
+            e.message
+            null
+        }
     }
 
 }
