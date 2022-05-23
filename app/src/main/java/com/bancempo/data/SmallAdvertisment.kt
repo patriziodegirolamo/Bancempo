@@ -9,8 +9,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bancempo.models.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
 import java.time.LocalDateTime
@@ -20,7 +22,9 @@ import java.time.format.DateTimeFormatter
 data class SmallAdv(val id: String, val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String, val creationTime: String, val skill:String, val userId:String)
 
 class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : Boolean) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
+
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
+
         private val title: TextView = v.findViewById(R.id.tvSmallAdvTitle)
         private val date: TextView = v.findViewById(R.id.tvsmallAdvDate)
         private val time: TextView = v.findViewById(R.id.tvSmallAdvTime)
@@ -57,9 +61,13 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
                     bundle.putString("skill", adv.skill)
                     findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
                 }
+                image.visibility= View.GONE
             }
             else{
                 edit.isVisible = false
+                sharedVM.loadImageUserById(adv.userId, v)
+
+
             }
 
 
@@ -70,6 +78,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
         }
 
         private fun loadProfileImage(): Bitmap {
+
             val fileDir = "/data/user/0/com.bancempo/app_imageDir"
             val profilePictureFileName = "profile.jpeg"
 

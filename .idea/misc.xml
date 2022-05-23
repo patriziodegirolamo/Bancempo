@@ -3,50 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/feder/Desktop/Patti/Bancempo/app/src/main/res/drawable/ic_icons8_cestino_64.xml" value="0.1" />
-        <entry key="..\:/Users/feder/Desktop/Patti/Bancempo/app/src/main/res/layout-land/fragment_edit_profile.xml" value="0.2078125" />
-        <entry key="..\:/Users/feder/Desktop/Patti/Bancempo/app/src/main/res/layout/fragment_list_skills.xml" value="0.12335359675785208" />
-        <entry key="..\:/Users/feder/Desktop/Patti/Bancempo/app/src/main/res/layout/fragment_show_profile.xml" value="0.18070652173913043" />
-        <entry key="..\:/Users/feder/Desktop/Patti/Bancempo/app/src/main/res/layout/skill_item.xml" value="0.12335359675785208" />
-        <entry key="..\:/Users/feder/Desktop/Patti/Bancempo/app/src/main/res/menu/menu_profile.xml" value="0.1" />
-        <entry key="..\:/Users/feder/Desktop/Patti/Bancempo/app/src/main/res/menu/navdrawer_menu.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/feder/Desktop/funz2105/Bancempo/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/feder/Desktop/funz2105/Bancempo/app/src/main/res/layout/fragment_list_skills.xml" value="0.16927083333333334" />
+        <entry key="..\:/Users/feder/Desktop/funz2105/Bancempo/app/src/main/res/layout/fragment_login.xml" value="0.1" />
+        <entry key="..\:/Users/feder/Desktop/funz2105/Bancempo/app/src/main/res/layout/skill_item.xml" value="0.16927083333333334" />
+        <entry key="..\:/Users/feder/Desktop/funz2105/Bancempo/app/src/main/res/layout/small_advertisment.xml" value="0.4" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_baseline_email_24.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_icons8_skills_64.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_icons8_skills_64__1_.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout-land/fragment_edit_profile.xml" value="0.264" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout-land/fragment_show_profile.xml" value="0.264" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/activity_show_profile.xml" value="0.25" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_edit_profile.xml" value="0.264" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_show_profile.xml" value="0.2" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_time_slot_details.xml" value="0.2" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.264" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/fragment_time_slot_list.xml" value="0.1" />
-        <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/small_advertisment.xml" value="0.1322314049586777" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
-        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Release/app/src/main/res/drawable/ic_icons8_ok.xml" value="0.2495" />
-        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Release/app/src/main/res/layout-land/activity_edit_profile.xml" value="0.1" />
-        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Release/app/src/main/res/layout-land/activity_show_profile.xml" value="0.2" />
-        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Release/app/src/main/res/layout/activity_edit_profile.xml" value="0.1" />
-        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab2/Release/app/src/main/res/layout/activity_show_profile.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/carlos/Bancempo/app/src/main/res/drawable/circular_progress_bar.xml" value="0.18" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/carlos/Bancempo/app/src/main/res/drawable/description_edit.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/carlos/Bancempo/app/src/main/res/drawable/ic_icons8_email_64.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/carlos/Bancempo/app/src/main/res/drawable/skills_edit.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/carlos/Bancempo/app/src/main/res/layout-land/fragment_show_profile.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/carlos/Bancempo/app/src/main/res/layout/fragment_edit_profile.xml" value="0.18" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/carlos/Bancempo/app/src/main/res/layout/fragment_show_profile.xml" value="0.18" />
-        <entry key="app/src/main/res/drawable/ic_baseline_login_24.xml" value="0.221" />
-        <entry key="app/src/main/res/drawable/ic_icons8_logout_50.xml" value="0.221" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_show_profile.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_sign_in.xml" value="0.2126019945602901" />
-        <entry key="app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.12612227447627192" />
-        <entry key="app/src/main/res/layout/sign_in.xml" value="0.24326635314236852" />
-        <entry key="app/src/main/res/menu/navdrawer_menu.xml" value="0.13210773834972211" />
       </map>
     </option>
   </component>
@@ -55,12 +26,5 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
-  </component>
-  <component name="VisualizationToolProject">
-    <option name="state">
-      <ProjectState>
-        <option name="scale" value="0.136" />
-      </ProjectState>
-    </option>
   </component>
 </project>

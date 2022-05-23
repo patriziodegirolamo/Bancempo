@@ -132,6 +132,19 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     }
 
+    fun loadImageUserById(userId: String, view: View){
+        val user = db.collection("users").document(userId).get()
+            .addOnSuccessListener { doc ->
+                val imageUser = doc!!.getString("imageUser")
+                if(imageUser != ""){
+                    val ref = storageReference.getReferenceFromUrl(imageUser!!)
+                    val smallAdvIV = view.findViewById<ImageView>(R.id.smallAdv_image)
+                    Glide.with(app.applicationContext).load(ref)
+                        .into(smallAdvIV)
+                }
+            }
+    }
+
     fun loadImageUser(iv: ImageView, view: View) {
         if (currentUser.value?.imageUser != "") {
             val myRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
