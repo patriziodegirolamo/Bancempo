@@ -126,7 +126,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                 println("----advssss list $searchListOfAdvs")
 
-                if (sadvs.values.filter { adv -> adv.userId != sharedVM.authUser.value!!.email && adv.skill == skill }
+                if (searchListOfAdvs.filter { adv -> adv.userId != sharedVM.authUser.value!!.email && adv.skill == skill }
                         .toList().isEmpty() ) {
                     println("----Empty advssss")
                     rv.visibility = View.GONE
@@ -144,7 +144,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                 skill.split(",").forEach {
                     rv.adapter =
-                        SmallAdvAdapter1(sadvs.values.filter { adv ->
+                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                             checkSkills(adv.skill, it)
                         }.toList().sortedBy { adv -> adv.date }, false, sharedVM)
                 }
@@ -159,21 +159,21 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         if (pos == 1) {
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter1(sadvs.values.filter { adv ->
+                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                         checkSkills(adv.skill, it)
                                     }.toList().sortedByDescending { adv -> adv.date }, false, sharedVM)
                             }
                         } else if (pos == 2){
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter1(sadvs.values.filter { adv ->
+                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                         checkSkills(adv.skill, it)
                                     }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                             }
                         } else if (pos == 3){
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter1(sadvs.values.filter { adv ->
+                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                         checkSkills(adv.skill, it)
                                     }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
                             }
@@ -181,7 +181,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             skill.split(",").forEach {
                                 rv.adapter =
                                     SmallAdvAdapter1(
-                                        sadvs.values.filter { adv ->
+                                        searchListOfAdvs.filter { adv ->
                                             checkSkills(adv.skill, it)
                                         }.toList().sortedBy { adv -> adv.date },
                                         false,
