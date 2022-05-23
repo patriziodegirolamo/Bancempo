@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
+import androidx.core.view.isEmpty
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -330,6 +331,10 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         if(skills.isEmpty()){
             println("--- SKILLS $skills")
             text.error = "Define some skills in your profile settings!"
+            valid = false
+        }
+        if(chipGroup.checkedChipIds.isEmpty()){
+            text.error = "Define a skill for your adv!"
             valid = false
         }
         return valid
