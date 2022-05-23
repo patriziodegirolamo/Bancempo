@@ -13,6 +13,7 @@ import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 
 
@@ -27,9 +28,11 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
         private val time: TextView = v.findViewById(R.id.tvSmallAdvTime)
         private val location: TextView = v.findViewById(R.id.tvSmallAdvLocation)
         private val duration: TextView = v.findViewById(R.id.tvsmallAdvDuration)
+        private val delete: FloatingActionButton = v.findViewById(R.id.delete_adv)
         private val edit: FloatingActionButton = v.findViewById(R.id.edit_adv)
         private val image: ImageView = v.findViewById(R.id.smallAdv_image)
         private val res = v.context.resources
+        private val db = FirebaseFirestore.getInstance()
 
 
 
@@ -59,12 +62,26 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
                     findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
                 }
                 image.visibility= View.GONE
+                delete.isVisible = true
+                delete.setOnClickListener {
+
+                    db.collection("advertisements").document(adv.id)
+                        .delete()
+                        .addOnSuccessListener {
+                            println("------------- Deleted biiiitch")
+                        }
+                        .addOnFailureListener {
+                            println("-------------------Can't delete man, it's fucking indelible")
+
+                        }
+
+
+                }
             }
             else{
                 edit.isVisible = false
+                delete.isVisible = false
                 sharedVM.loadImageUserById(adv.userId, view)
-
-
             }
 
 

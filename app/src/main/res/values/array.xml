@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort">
+        <item>Sort by: </item>
+        <item>Ascending data</item>
+        <item>Descending data</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
+    </string-array>
+</resources>

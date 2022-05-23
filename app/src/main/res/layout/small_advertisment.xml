@@ -14,6 +14,7 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView5"
         android:layout_width="match_parent"
         android:layout_height="175dp"
         app:cardCornerRadius="16dp"
@@ -119,7 +120,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@color/divider_color_light"
         android:clickable="true"
-        android:contentDescription="add new adv"
+        android:contentDescription="edit adv"
         android:contextClickable="true"
         android:tag="fab"
         app:fabSize="mini"
@@ -128,6 +129,19 @@
         app:srcCompat="@drawable/ic_baseline_edit_24"
         tools:ignore="SpeakableTextPresentCheck" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/delete_adv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/red_500"
+        android:clickable="true"
+        android:contentDescription="delete adv"
+        android:contextClickable="true"
+        android:tag="fab"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="@+id/cardView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_icons8_cestino_64"
+        tools:ignore="SpeakableTextPresentCheck" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
