@@ -52,12 +52,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 rv.layoutManager = LinearLayoutManager(context)
                 rv.adapter =
                     SmallAdvAdapter(sadvs.values.sortedByDescending { x -> x.creationTime }
-                        .toList(), true)
+                        .toList(), true, sharedVM)
 
                 setFragmentResultListener("confirmationOkCreate") { _, _ ->
                     val adapter =
                         SmallAdvAdapter(sadvs.values.sortedByDescending { x -> x.creationTime }
-                            .toList(), true)
+                            .toList(), true, sharedVM)
                     adapter.notifyItemInserted(0)
                     rv.adapter = adapter
                 }
@@ -83,7 +83,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     rv.adapter =
                         SmallAdvAdapter(sadvs.values.filter { adv -> checkSkills(adv.skill, it)
 
-                        }.toList(), false)
+                        }.toList(), false, sharedVM)
                 }
 
             }

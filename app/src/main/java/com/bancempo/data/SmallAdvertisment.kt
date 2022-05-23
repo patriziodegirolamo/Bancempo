@@ -9,22 +9,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 
 data class SmallAdv(val id: String, val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String, val creationTime: String, val skill:String, val userId:String)
 
-class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : Boolean) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
+class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Boolean,
+                      private val sharedVM: SharedViewModel) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
 
     class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
-
         private val title: TextView = v.findViewById(R.id.tvSmallAdvTitle)
         private val date: TextView = v.findViewById(R.id.tvsmallAdvDate)
         private val time: TextView = v.findViewById(R.id.tvSmallAdvTime)
@@ -36,7 +33,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
 
 
 
-        fun bind(adv: SmallAdv, position: Int, isMyAdvs: Boolean){
+        fun bind(adv: SmallAdv, position: Int, isMyAdvs: Boolean, sharedVM: SharedViewModel, view: View){
             title.text = adv.title
             date.text = "Date: ${adv.date}"
             time.text = "Time: ${adv.time}"
@@ -65,7 +62,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
             }
             else{
                 edit.isVisible = false
-                sharedVM.loadImageUserById(adv.userId, v)
+                sharedVM.loadImageUserById(adv.userId, view)
 
 
             }
@@ -108,7 +105,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs : B
 
     //ti dice quale elemento della lista è correntemente visibile e la sua posizione il lista
     override fun onBindViewHolder(holder: SmallAdvHolder, position: Int) {
-        holder.bind(data[position], position, isMyAdvs)
+        holder.bind(data[position], position, isMyAdvs, sharedVM, holder.itemView)
 
         holder.itemView.setOnClickListener{
 
