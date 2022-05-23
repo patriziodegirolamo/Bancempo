@@ -82,10 +82,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         skills.setEndIconOnClickListener {
             if (skills_ed.text.toString().isNotEmpty()) {
-                println("-----last ${skills_ed.text.toString().last().isWhitespace()}")
-                while(skills_ed.text.toString().last().isWhitespace()){
-                    skills_ed.setText(skills_ed.text.toString().dropLast(1))
-                }
+                skills_ed.setText(skills_ed.text.toString().trim())
+                        //TODO SPAZI DENTRO STRINGA
                 var valid = true
                 for (i in 0 until chipGroup.childCount) {
                     val chip = chipGroup.getChildAt(i) as Chip
@@ -387,7 +385,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private fun addChip(text: String) {
         val chip = Chip(context)
-        chip.text = text
+        val lower = text.substring(1, text.length).toLowerCase()
+        val upper = text.capitalize().substring(0,1)
+        chip.text = upper + lower
         chip.isCloseIconVisible = true
         chip.setOnCloseIconClickListener {
             chipGroup.removeView(chip)
