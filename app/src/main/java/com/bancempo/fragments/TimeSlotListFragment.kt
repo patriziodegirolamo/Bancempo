@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -11,10 +12,12 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bancempo.ItemAdapter
 import com.bancempo.R
-import com.bancempo.SmallAdvAdapter
+import com.bancempo.SmallAdv
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.bancempo.SmallAdvAdapter as SmallAdvAdapter1
 
 
 class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
@@ -29,6 +32,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
         val emptyListTV = view.findViewById<TextView>(R.id.empty_list_tv)
         //   val spinnerFilter = view.findViewById<TextView>(R.id.filter_spinner)
+        val sb = view.findViewById<SearchView>(R.id.search_bar)
 
         val skill = arguments?.getString("skill")
 
@@ -72,12 +76,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                 rv.layoutManager = LinearLayoutManager(context)
                 rv.adapter =
-                    SmallAdvAdapter(sadvs.values.sortedByDescending { x -> x.creationTime }
+                    SmallAdvAdapter1(sadvs.values.sortedByDescending { x -> x.creationTime }
                         .toList(), true, sharedVM)
 
                 setFragmentResultListener("confirmationOkCreate") { _, _ ->
                     val adapter =
-                        SmallAdvAdapter(sadvs.values.sortedByDescending { x -> x.creationTime }
+                        SmallAdvAdapter1(sadvs.values.sortedByDescending { x -> x.creationTime }
                             .toList(), true, sharedVM)
                     adapter.notifyItemInserted(0)
                     rv.adapter = adapter
@@ -85,12 +89,46 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
             }
         } else {
+
+
             fab.isVisible = false
             sharedVM.advs.observe(viewLifecycleOwner) { sadvs ->
                 println("---- ${sadvs}")
                 println("----- ${sharedVM.authUser.value!!.email}")
+
+                var searchListOfAdvs: MutableList<SmallAdv> = sadvs.values.toMutableList()
+
+                sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextChange(newText: String): Boolean {
+
+                        searchListOfAdvs = sadvs.values.filter { x -> x.title.toLowerCase().contains(newText.toLowerCase()) && x.skill == skill}.toMutableList()
+                        if (searchListOfAdvs.isEmpty() ) {
+                            println("----Empty advssss")
+                            rv.visibility = View.GONE
+                            emptyListTV.visibility = View.VISIBLE
+                            emptyListTV.text = "Sorry, no available advertisements for that search!"
+                        } else {
+                            rv.visibility = View.VISIBLE
+                            emptyListTV.visibility = View.GONE
+                        }
+
+                        val newAdapter = SmallAdvAdapter1(searchListOfAdvs.toList(), false, sharedVM)
+                        rv.adapter = newAdapter
+                        return false
+                    }
+
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        // task HERE
+                        return false
+                    }
+
+                })
+
+                println("----advssss list $searchListOfAdvs")
+
                 if (sadvs.values.filter { adv -> adv.userId != sharedVM.authUser.value!!.email && adv.skill == skill }
-                        .toList().isEmpty()) {
+                        .toList().isEmpty() ) {
+                    println("----Empty advssss")
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
                     emptyListTV.text = "Sorry, no available advertisements for that category!"
@@ -101,9 +139,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                 rv.layoutManager = LinearLayoutManager(context)
                 println("---ACTUAL SKILL $skill")
+
+
+
                 skill.split(",").forEach {
                     rv.adapter =
-                        SmallAdvAdapter(sadvs.values.filter { adv ->
+                        SmallAdvAdapter1(sadvs.values.filter { adv ->
                             checkSkills(adv.skill, it)
                         }.toList().sortedBy { adv -> adv.date }, false, sharedVM)
                 }
@@ -118,28 +159,28 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         if (pos == 1) {
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter(sadvs.values.filter { adv ->
+                                    SmallAdvAdapter1(sadvs.values.filter { adv ->
                                         checkSkills(adv.skill, it)
                                     }.toList().sortedByDescending { adv -> adv.date }, false, sharedVM)
                             }
                         } else if (pos == 2){
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter(sadvs.values.filter { adv ->
+                                    SmallAdvAdapter1(sadvs.values.filter { adv ->
                                         checkSkills(adv.skill, it)
                                     }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                             }
                         } else if (pos == 3){
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter(sadvs.values.filter { adv ->
+                                    SmallAdvAdapter1(sadvs.values.filter { adv ->
                                         checkSkills(adv.skill, it)
                                     }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
                             }
                         } else {
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter(
+                                    SmallAdvAdapter1(
                                         sadvs.values.filter { adv ->
                                             checkSkills(adv.skill, it)
                                         }.toList().sortedBy { adv -> adv.date },
