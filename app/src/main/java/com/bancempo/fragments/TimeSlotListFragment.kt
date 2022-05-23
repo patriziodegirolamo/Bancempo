@@ -2,9 +2,12 @@ package com.bancempo.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.SearchView
+import androidx.compose.ui.text.toLowerCase
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,7 +15,6 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bancempo.ItemAdapter
 import com.bancempo.R
 import com.bancempo.SmallAdv
 import com.bancempo.models.SharedViewModel
@@ -23,6 +25,11 @@ import com.bancempo.SmallAdvAdapter as SmallAdvAdapter1
 class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     private val sharedVM: SharedViewModel by activityViewModels()
     private lateinit var spinnerSort: Spinner
+    private lateinit var locationFilter: TextView
+    private lateinit var searchLocation: EditText
+    private lateinit var dateFilter: TextView
+    private lateinit var searchDate: DatePicker
+
 
     @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,14 +38,20 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
         val rv = view.findViewById<RecyclerView>(R.id.recyclerView)
         val emptyListTV = view.findViewById<TextView>(R.id.empty_list_tv)
-        //   val spinnerFilter = view.findViewById<TextView>(R.id.filter_spinner)
         val sb = view.findViewById<SearchView>(R.id.search_bar)
 
         val skill = arguments?.getString("skill")
 
-        val spinnerSort = view.findViewById<Spinner>(R.id.sort_spinner)
+        spinnerSort = view.findViewById<Spinner>(R.id.sort_spinner)
+        locationFilter = view.findViewById<TextView>(R.id.filterLocation)
+        searchLocation = view.findViewById<EditText>(R.id.searchLocation)
+        dateFilter = view.findViewById<TextView>(R.id.filterDate)
+        searchDate = view.findViewById<DatePicker>(R.id.searchDate)
 
-// Create an ArrayAdapter using the string array and a default spinner layout
+
+        searchLocation.isVisible = false
+        searchDate.isVisible = false
+
         ArrayAdapter.createFromResource(
             this.requireContext(),
             R.array.sort,
@@ -50,6 +63,29 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             spinnerSort.adapter = adapter
         }
 
+        var first_click_searchLocation = true
+        locationFilter.setOnClickListener{
+            if(first_click_searchLocation == true) {
+                searchLocation.isVisible = true
+                first_click_searchLocation = false
+            }
+            else{
+                searchLocation.isVisible = false
+                first_click_searchLocation = true
+            }
+        }
+
+        var first_click_searchDate = true
+        dateFilter.setOnClickListener{
+            if(first_click_searchDate == true) {
+                searchDate.isVisible = true
+                first_click_searchDate = false
+            }
+            else{
+                searchDate.isVisible = false
+                first_click_searchDate = true
+            }
+        }
 
 
         if (skill == null) {
@@ -97,6 +133,32 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 println("----- ${sharedVM.authUser.value!!.email}")
 
                 var searchListOfAdvs: MutableList<SmallAdv> = sadvs.values.toMutableList()
+
+                 val textWatcher = object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                    }
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    }
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        searchListOfAdvs = sadvs.values.filter { x -> x.location.toLowerCase().contains(s.toString().toLowerCase())}.toMutableList()
+                        if (searchListOfAdvs.isEmpty() ) {
+                            println("----Empty advssss")
+                            rv.visibility = View.GONE
+                            emptyListTV.visibility = View.VISIBLE
+                            emptyListTV.text = "Sorry, no available advertisements for that search!"
+                        } else {
+                            rv.visibility = View.VISIBLE
+                            emptyListTV.visibility = View.GONE
+                        }
+
+                        val newAdapter = SmallAdvAdapter1(searchListOfAdvs.toList(), false, sharedVM)
+                        rv.adapter = newAdapter
+
+                    }
+                }
+                searchLocation.addTextChangedListener(textWatcher)
+
+
 
                 sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextChange(newText: String): Boolean {
