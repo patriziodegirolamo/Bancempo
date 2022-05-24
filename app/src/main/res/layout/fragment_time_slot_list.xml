@@ -7,40 +7,64 @@
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView6"
         android:layout_width="415dp"
         android:layout_height="0dp"
         android:backgroundTint="@color/divider_color_light"
         app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/sort_spinner"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/ly1">
 
+    </androidx.cardview.widget.CardView>
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_bar"
+    <LinearLayout
+        android:id="@+id/ly1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:alpha="5"
-        app:iconifiedByDefault="false"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:queryHint="Search advs" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_bar"
+            android:layout_width="193dp"
+            android:layout_height="wrap_content"
+            app:iconifiedByDefault="false"
+            app:queryHint="Search advs">
+
+        </androidx.appcompat.widget.SearchView>
+
+        <Spinner
+            android:id="@+id/sort_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="5"
+            android:clickable="false"
+            android:contentDescription="Sort spinner"
+            android:dropDownWidth="match_parent"
+            android:entries="@array/sort"
+            android:spinnerMode="dropdown"
+            android:theme="@style/Theme.MaterialComponents.Light" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="15dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="20dp"
         android:orientation="horizontal"
+        android:paddingBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_bar">
+        app:layout_constraintTop_toBottomOf="@+id/ly1">
 
 
         <LinearLayout
@@ -113,10 +137,10 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sort_spinner"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/empty_list_tv"
@@ -128,22 +152,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Spinner
-        android:id="@+id/sort_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:alpha="5"
-        android:clickable="false"
-        android:contentDescription="Sort spinner"
-        android:dropDownWidth="match_parent"
-        android:entries="@array/sort"
-        android:spinnerMode="dropdown"
-        android:theme="@style/Theme.MaterialComponents.Light"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
