@@ -15,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.bancempo.SignInActivity
 import com.bancempo.data.User
 import com.bancempo.databinding.ActivityMainBinding
 import com.bancempo.models.SharedViewModel
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     private val RC_SIGN_IN: Int = 1
 
     private val sharedVM: SharedViewModel by viewModels()
+    // Firebase instance variables
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,13 +94,22 @@ class MainActivity : AppCompatActivity() {
                     return@setNavigationItemSelectedListener true
                 }
                 R.id.logoutItem -> {
-                    logout()
+                    signOut()
                     //sharedVM.cleanAfterLogout()
                 }
 
 
             }
             false
+        }
+
+        // Initialize Firebase Auth and check if the user is signed in
+        auth = Firebase.auth
+        if (auth.currentUser == null) {
+            // Not signed in, launch the Sign In activity
+            startActivity(Intent(this, SignInActivity::class.java))
+            finish()
+            return
         }
 
         sharedVM.authUser.observe(this) { firebaseUser ->
@@ -192,6 +204,13 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.findNavController()
 
         return NavigationUI.navigateUp(navController, drawer)
+    }
+
+    private fun signOut() {
+        AuthUI.getInstance().signOut(this)
+        Toast.makeText(this, "Logout successful!", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(this, SignInActivity::class.java))
+        finish()
     }
 
 
