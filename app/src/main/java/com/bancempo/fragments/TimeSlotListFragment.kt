@@ -407,34 +407,131 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         id: Long
                     ) {
                         if(pos == 0){
-                            skill.split(",").forEach {
-                                newAdapter =
-                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                        adv.userId != sharedVM.authUser.value!!.email &&
-                                                checkSkills(adv.skill, it)
-                                    }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")) {
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                }
                             }
-
-
-
+                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
+                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
+                            else{
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
 
                             rv.adapter = newAdapter
                         }
                        else if(pos == 1){
-
-                            skill.split(",").forEach {
-                                newAdapter =
-                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                        adv.userId != sharedVM.authUser.value!!.email &&
-                                                checkSkills(adv.skill, it)
-                                    }.toList().sortedBy { adv ->
-                                        val arr = adv.date.split("/")
-                                        val dd = arr[0]
-                                        val mm = arr[1]
-                                        val yyyy = arr[2]
-                                        val new_date = yyyy+"/"+mm+"/"+dd
-                                        new_date
-                                    }, false, sharedVM)
+                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")) {
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
+                            }
+                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
+                            }
+                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
+                            }
+                            else{
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                        }.toList().sortedBy { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
                             }
 
                             rv.adapter = newAdapter
@@ -443,19 +540,80 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         else if (pos == 2) {
                             println("-----SORTED DESCENDING DATE ")
 
-                            skill.split(",").forEach {
-                                newAdapter =
-                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                        adv.userId != sharedVM.authUser.value!!.email &&
-                                                checkSkills(adv.skill, it)
-                                    }.toList().sortedByDescending { adv ->
-                                        val arr = adv.date.split("/")
-                                        val dd = arr[0]
-                                        val mm = arr[1]
-                                        val yyyy = arr[2]
-                                        val new_date = yyyy+"/"+mm+"/"+dd
-                                        new_date
-                                    }, false, sharedVM)
+                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")) {
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedByDescending { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
+                            }
+                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedByDescending { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
+                            }
+                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                        }.toList().sortedByDescending { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
+                            }
+                            else{
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                        }.toList().sortedByDescending { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
                             }
 
                             rv.adapter = newAdapter
@@ -464,13 +622,54 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         } else if (pos == 3) {
                             println("-----SORTED ASCENDING TITLE ")
 
-                            skill.split(",").forEach {
-                                newAdapter =
-                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                        adv.userId != sharedVM.authUser.value!!.email &&
-                                                checkSkills(adv.skill, it)
-                                    }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")) {
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                }
                             }
+                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
+                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
+                            else{
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
+
 
                             rv.adapter = newAdapter
 
@@ -479,13 +678,54 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         } else if (pos == 4) {
                             println("-----SORTED DESCENDING TITLE ")
 
-                            skill.split(",").forEach {
-                                newAdapter =
-                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                        adv.userId != sharedVM.authUser.value!!.email &&
-                                                checkSkills(adv.skill, it)
-                                    }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")) {
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                }
                             }
+                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
+                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")){
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                                    && adv.location.toLowerCase()
+                                                .contains(searchLocation.text.toString().toLowerCase())
+                                        }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
+                            else{
+                                skill.split(",").forEach {
+                                    newAdapter =
+                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
+                                            adv.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(adv.skill, it)
+                                        }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                }
+                            }
+
 
                             rv.adapter = newAdapter
 
