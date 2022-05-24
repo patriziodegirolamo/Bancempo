@@ -1,6 +1,7 @@
 package com.bancempo.fragments
 
 import android.content.ActivityNotFoundException
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -13,7 +14,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -29,7 +32,6 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.lang.Exception
 import java.util.*
-
 class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private val sharedVM: SharedViewModel by activityViewModels()
@@ -121,7 +123,26 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     chip.isCloseIconVisible = true
 
                     chip.setOnCloseIconClickListener {
-                        chipGroup.removeView(chip)
+                        if( sharedVM.myAdvs.value!!.values.filter { x -> x.skill.split(",").contains(chip.text)}.isNotEmpty() ){
+                            activity?.let {
+                                val builder = AlertDialog.Builder(it)
+                                builder.apply {
+                                    setPositiveButton("Yes, I am sure", DialogInterface.OnClickListener{ _, _ ->
+                                        println("chip: Yes, I'm sure!")
+                                        chipGroup.removeView(chip)
+                                    })
+                                    setNegativeButton("No, turn back", DialogInterface.OnClickListener{ _, _ ->
+                                        println("chip: Nope!")
+                                    })
+                                }
+                                builder.setTitle("Removing Advertisments")
+                                builder.setMessage(R.string.advs_delete_message)
+                                builder.show()
+                            }
+
+                        }else{
+                            chipGroup.removeView(chip)
+                        }
                     }
                     chipGroup.addView(chip)
                 }

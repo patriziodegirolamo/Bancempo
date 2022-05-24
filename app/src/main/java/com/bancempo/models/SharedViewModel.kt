@@ -199,7 +199,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun updateUser(view: View, skillsString: String, updatingImg: Boolean) {
+        val currentUserRef = db.collection("users").document(currentUser.value!!.email)
         val servicesDocRef = db.collection("services")
+        val advsDocRef = db.collection("advertisements")
         val fullname = view.findViewById<TextInputEditText>(R.id.editTextFullName).text.toString()
         val nickname = view.findViewById<TextInputEditText>(R.id.editTextNickname).text.toString()
         val email = view.findViewById<TextInputEditText>(R.id.editTextEmail).text.toString()
@@ -212,9 +214,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             if (skill != "")
                 finalList.add(skill)
         }
-        val currentUserRef = db.collection("users").document(currentUser.value!!.email)
 
-        if(!updatingImg){
+        if (!updatingImg) {
             haveIloadNewImage.value = false
         }
 
@@ -239,6 +240,14 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     currentUser.value!!.imageUser
                 )
 
+                println("chip: -> myadv ${myAdvs.value!!.values}")
+                println("chip: -> idToDel $toDelete")
+                val advsToDelete = myAdvs.value!!.values
+                    .filter { x -> containsSkill(toDelete,  x.skill.split(",")) }
+                    .toList()
+                println("chip: todelete -> ${advsToDelete.map { x -> x.id }}")
+
+
                 db.runBatch { batch ->
                     //1st: create new service for each element of addingList
                     for (adding in toAdd) {
@@ -249,8 +258,40 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     }
 
                     //2nd: delete old services
+                    var newCreatorId: String? = null
                     for (deleting in toDelete) {
-                        batch.delete(servicesDocRef.document(deleting))
+                        val skillToDelete = services.value!!.get(deleting)
+                        if (skillToDelete != null) {
+                            //se tra tutti gli advs che non sono creati da me, ce ne è almeno uno di questa skill
+                            advs.value!!.values.map{x -> println("adv: ${x.title}, skills: ${x.skill.split(",")}")}
+                            val advsNotCreatedByMeAssociatedToSkill =
+                                advs.value!!.values.filter { x ->
+                                    x.userId != currentUser.value!!.email &&
+                                            x.skill.split(",").contains(skillToDelete.title)
+                                }.toList()
+
+                            if (advsNotCreatedByMeAssociatedToSkill.isNotEmpty()) {
+                                newCreatorId = advsNotCreatedByMeAssociatedToSkill[0].userId
+
+                                //update skill con questo creatore
+                                batch.update(
+                                    servicesDocRef.document(deleting),
+                                    "createdBy",
+                                    newCreatorId
+                                )
+                            } else {
+                                //elimina skill
+                                batch.delete(servicesDocRef.document(deleting))
+                            }
+                        }
+                    }
+                    //in ogni caso elimina tutti i miei annunci associati a questa skill
+
+                    for (advToDelete in advsToDelete) {
+                        println("batch: prova $advToDelete")
+                        val docToDel = advsDocRef.document(advToDelete.id)
+                        println("batch: docref${ docToDel.path }")
+                        batch.delete(docToDel)
                     }
 
                     //3rd: replace list of skills in user
@@ -270,6 +311,15 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
             }
 
+    }
+
+    fun containsSkill(listToDelete: List<String>, skillsOfAdv: List<String>): Boolean{
+        for(del in listToDelete){
+            if(skillsOfAdv.contains(del)){
+                return true
+            }
+        }
+        return false
     }
 
     fun createUserIfDoesNotExists() {

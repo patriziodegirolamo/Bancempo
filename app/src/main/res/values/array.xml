@@ -2,8 +2,8 @@
 <resources>
     <string-array name="sort">
         <item>Sort by: </item>
-        <item>Ascending data</item>
-        <item>Descending data</item>
+        <item>Ascending date</item>
+        <item>Descending date</item>
         <item>A-Z</item>
         <item>Z-A</item>
     </string-array>
