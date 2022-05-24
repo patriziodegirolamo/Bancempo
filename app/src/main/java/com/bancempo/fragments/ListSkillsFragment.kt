@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.ItemAdapter
 import com.bancempo.R
-import com.bancempo.Skill
 import com.bancempo.models.SharedViewModel
 
 
@@ -33,22 +32,20 @@ class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
             val sb = view.findViewById<SearchView>(R.id.Search_bar)
             sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
-                    val searchListOfSkills = services.values.filter { x -> x.title.toLowerCase().contains(newText.toLowerCase()) }
+                    val searchListOfSkills = services.values.filter { x ->
+                        x.title.toLowerCase().contains(newText.toLowerCase())
+                    }
                     val newAdapter = ItemAdapter(searchListOfSkills.toList())
                     rv.adapter = newAdapter
                     return false
                 }
 
                 override fun onQueryTextSubmit(query: String): Boolean {
-                    // task HERE
                     return false
                 }
 
             })
         }
-
-
-
 
 
     }

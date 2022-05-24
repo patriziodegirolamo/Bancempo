@@ -1,5 +1,6 @@
 package com.bancempo
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -17,12 +18,26 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.io.File
 
 
-data class SmallAdv(val id: String, val title:String, val date:String, val description:String, val time:String, val duration:String, val location:String, val note:String, val creationTime: String, val skill:String, val userId:String)
+data class SmallAdv(
+    val id: String,
+    val title: String,
+    val date: String,
+    val description: String,
+    val time: String,
+    val duration: String,
+    val location: String,
+    val note: String,
+    val creationTime: String,
+    val skill: String,
+    val userId: String
+)
 
-class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Boolean,
-                      private val sharedVM: SharedViewModel) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>(){
+class SmallAdvAdapter(
+    private val data: List<SmallAdv>, private val isMyAdvs: Boolean,
+    private val sharedVM: SharedViewModel
+) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>() {
 
-    class SmallAdvHolder(v:View) : RecyclerView.ViewHolder(v){
+    class SmallAdvHolder(v: View) : RecyclerView.ViewHolder(v) {
         private val title: TextView = v.findViewById(R.id.tvSmallAdvTitle)
         private val date: TextView = v.findViewById(R.id.tvsmallAdvDate)
         private val time: TextView = v.findViewById(R.id.tvSmallAdvTime)
@@ -35,8 +50,14 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
         private val db = FirebaseFirestore.getInstance()
 
 
-
-        fun bind(adv: SmallAdv, position: Int, isMyAdvs: Boolean, sharedVM: SharedViewModel, view: View){
+        @SuppressLint("SetTextI18n")
+        fun bind(
+            adv: SmallAdv,
+            position: Int,
+            isMyAdvs: Boolean,
+            sharedVM: SharedViewModel,
+            view: View
+        ) {
             title.text = adv.title
             date.text = "Date: ${adv.date}"
             time.text = "Time: ${adv.time}"
@@ -44,9 +65,9 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
             duration.text = "Duration: ${adv.duration}"
             loadProfileImage()
 
-            if(isMyAdvs){
+            if (isMyAdvs) {
                 edit.isVisible = true
-                edit.setOnClickListener{
+                edit.setOnClickListener {
                     val bundle = Bundle()
                     bundle.putString("id", adv.id)
                     bundle.putBoolean("modifyFromList", true)
@@ -59,26 +80,23 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
                     bundle.putString("location", adv.location)
                     bundle.putString("note", adv.note)
                     bundle.putString("skill", adv.skill)
-                    findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotEditFragment, bundle)
+                    findNavController(it).navigate(
+                        R.id.action_timeSlotListFragment_to_timeSlotEditFragment,
+                        bundle
+                    )
                 }
-                image.visibility= View.GONE
+                image.visibility = View.GONE
                 delete.isVisible = true
                 delete.setOnClickListener {
 
                     db.collection("advertisements").document(adv.id)
                         .delete()
-                        .addOnSuccessListener {
-                            println("------------- Deleted biiiitch")
-                        }
-                        .addOnFailureListener {
-                            println("-------------------Can't delete man, it's fucking indelible")
-
-                        }
+                        .addOnSuccessListener {}
+                        .addOnFailureListener {}
 
 
                 }
-            }
-            else{
+            } else {
                 edit.isVisible = false
                 delete.isVisible = false
                 sharedVM.loadImageUserById(adv.userId, view)
@@ -87,7 +105,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
 
         }
 
-        fun unbind(){
+        fun unbind() {
             edit.setOnClickListener(null)
         }
 
@@ -96,14 +114,18 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
             val fileDir = "/data/user/0/com.bancempo/app_imageDir"
             val profilePictureFileName = "profile.jpeg"
 
-
-
             return File(fileDir, profilePictureFileName)
                 .run {
                     when (exists()) {
-                        true -> BitmapFactory.decodeFile(File(fileDir, profilePictureFileName).absolutePath)
+                        true -> BitmapFactory.decodeFile(
+                            File(
+                                fileDir,
+                                profilePictureFileName
+                            ).absolutePath
+                        )
                         false -> BitmapFactory.decodeResource(
-                            res, R.drawable.profile_pic_default)
+                            res, R.drawable.profile_pic_default
+                        )
                     }
                 }.also {
                     image.setImageBitmap(it)
@@ -124,7 +146,7 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
     override fun onBindViewHolder(holder: SmallAdvHolder, position: Int) {
         holder.bind(data[position], position, isMyAdvs, sharedVM, holder.itemView)
 
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
 
             val bundle = Bundle()
             bundle.putString("id", data[position].id)
@@ -139,14 +161,15 @@ class SmallAdvAdapter(private val data: List<SmallAdv>, private val isMyAdvs: Bo
             bundle.putString("skill", data[position].skill)
             bundle.putBoolean("isMyAdv", isMyAdvs)
 
-            findNavController(it).navigate(R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment, bundle)
+            findNavController(it).navigate(
+                R.id.action_timeSlotListFragment_to_timeSlotDetailsFragment,
+                bundle
+            )
         }
     }
 
     override fun getItemCount(): Int = data.size
 
-    //serve per non avere i listener attivi sui ghost elements
-    //TODO: da controllare come lo fa il prof a lezione
     override fun onViewDetachedFromWindow(holder: SmallAdvHolder) {
         super.onViewDetachedFromWindow(holder)
         holder.unbind()

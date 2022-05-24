@@ -9,13 +9,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.SearchView
-import androidx.compose.ui.text.toLowerCase
 import androidx.core.view.isVisible
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +20,6 @@ import com.bancempo.R
 import com.bancempo.SmallAdv
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.textfield.TextInputEditText
 import java.util.*
 import com.bancempo.SmallAdvAdapter as SmallAdvAdapter1
 
@@ -97,27 +93,520 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             }
 
             sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
-                if (sadvs.isEmpty()) {
+                var searchListOfMyAdvs: MutableList<SmallAdv> = sadvs.values.toMutableList()
+                var newMyAdapter: com.bancempo.SmallAdvAdapter? = null
+
+                //FILTER BY LOCATION
+                val textWatcher = object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+                    }
+
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                        var newMyAdvs: List<SmallAdv> = listOf()
+
+                        newMyAdvs = searchListOfMyAdvs.filter { x ->
+                                        x.location.toLowerCase()
+                                            .contains(s.toString().toLowerCase())
+                            }.toList()
+                            newMyAdapter =
+                                SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+
+                        if (newMyAdvs.isEmpty()) {
+                            rv.visibility = View.GONE
+                            emptyListTV.visibility = View.VISIBLE
+                            emptyListTV.text = "Sorry, no available advertisements for that search!"
+                        } else {
+                            rv.visibility = View.VISIBLE
+                            emptyListTV.visibility = View.GONE
+                        }
+
+                        rv.adapter = newMyAdapter
+
+                        if (dateFilter.text.toString() != "Filter by date ") {
+                            dateFilter.setText(dateFilter.text.toString() + " ")
+                            dateFilter.setText(dateFilter.text.trim())
+                            dateFilter.setText(dateFilter.text.toString() + " ")
+                        }
+
+                    }
+                }
+                searchLocation.addTextChangedListener(textWatcher)
+
+
+                //FILTER BY DATE
+                val textWatcherDate = object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+
+                        if (dateFilter.text.toString() == "Filter by date ") {
+                            dateFilter.setCompoundDrawablesWithIntrinsicBounds(
+                                0,
+                                0,
+                                R.drawable.ic_icons8_modifica_il_calendario_24,
+                                0
+                            )
+
+                            var newMyAdvs: List<SmallAdv> = listOf()
+
+                            if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+
+                                newMyAdvs = searchListOfMyAdvs.filter { x ->
+                                        x.location.toLowerCase()
+                                            .contains(searchLocation.text.toString().toLowerCase())
+                                    }.toList()
+
+                                newMyAdapter =
+                                    SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+
+                                if (newMyAdvs.isEmpty()) {
+                                    rv.visibility = View.GONE
+                                    emptyListTV.visibility = View.VISIBLE
+                                    emptyListTV.text =
+                                        "Sorry, no available advertisements for that search!"
+                                } else {
+                                    rv.visibility = View.VISIBLE
+                                    emptyListTV.visibility = View.GONE
+                                }
+                            }
+                            rv.adapter = newMyAdapter
+
+
+                        } else {
+                            dateFilter.setCompoundDrawablesWithIntrinsicBounds(
+                                0,
+                                0,
+                                R.drawable.ic_icons8_xbox_x_48,
+                                0
+                            )
+
+                            var newMyAdvs: List<SmallAdv> = listOf()
+
+                            newMyAdvs = searchListOfMyAdvs.filter { x ->
+                                            x.date == s.toString().trim()
+                                }.toList()
+                                newMyAdapter =
+                                    SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+
+                            if (newMyAdvs.isEmpty()) {
+                                rv.visibility = View.GONE
+                                emptyListTV.visibility = View.VISIBLE
+                                emptyListTV.text =
+                                    "Sorry, no available advertisements for that search!"
+                            } else {
+                                rv.visibility = View.VISIBLE
+                                emptyListTV.visibility = View.GONE
+                            }
+                            if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+                                var newMyAdvs: List<SmallAdv> = listOf()
+
+                                newMyAdvs = searchListOfMyAdvs.filter { x ->
+                                                x.location.toLowerCase()
+                                                    .contains(
+                                                        searchLocation.text.toString().toLowerCase()
+                                                    ) && x.date == s.toString()
+                                            .trim()
+                                    }.toList()
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+
+                                if (newMyAdvs.isEmpty()) {
+                                    rv.visibility = View.GONE
+                                    emptyListTV.visibility = View.VISIBLE
+                                    emptyListTV.text =
+                                        "Sorry, no available advertisements for that search!"
+                                } else {
+                                    rv.visibility = View.VISIBLE
+                                    emptyListTV.visibility = View.GONE
+                                }
+                            }
+                        }
+
+                        rv.adapter = newMyAdapter
+
+                    }
+
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                    }
+                }
+                dateFilter.addTextChangedListener(textWatcherDate)
+
+                //FILTER BY SEARCHBAR
+                sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextChange(newText: String): Boolean {
+
+                        var newMyAdvs: List<SmallAdv> = listOf()
+
+                        newMyAdvs = searchListOfMyAdvs.filter { x ->
+                                        x.title.toLowerCase()
+                                            .contains(newText.toLowerCase())
+                            }.toList()
+                            newMyAdapter =
+                                SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+
+                        if (newMyAdvs.isEmpty()) {
+                            rv.visibility = View.GONE
+                            emptyListTV.visibility = View.VISIBLE
+                            emptyListTV.text = "Sorry, no available advertisements for that search!"
+                        } else {
+                            rv.visibility = View.VISIBLE
+                            emptyListTV.visibility = View.GONE
+                        }
+                        rv.adapter = newMyAdapter
+                        return false
+                    }
+
+                    override fun onQueryTextSubmit(query: String): Boolean {
+                        // task HERE
+                        return false
+                    }
+
+                })
+
+                //GENERALLY
+
+
+                if (searchListOfMyAdvs.isEmpty()) {
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
-                    emptyListTV.text = "No advertisements yet available. Create one now!"
+                    emptyListTV.text = "Sorry, no available advertisements for that category!"
                 } else {
                     rv.visibility = View.VISIBLE
                     emptyListTV.visibility = View.GONE
                 }
 
                 rv.layoutManager = LinearLayoutManager(context)
-                rv.adapter =
-                    SmallAdvAdapter1(sadvs.values.sortedByDescending { x -> x.creationTime }
-                        .toList(), true, sharedVM)
 
-                setFragmentResultListener("confirmationOkCreate") { _, _ ->
-                    val adapter =
-                        SmallAdvAdapter1(sadvs.values.sortedByDescending { x -> x.creationTime }
-                            .toList(), true, sharedVM)
-                    adapter.notifyItemInserted(0)
-                    rv.adapter = adapter
-                }
+
+                    newMyAdapter =
+                        SmallAdvAdapter1(sadvs.values.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+
+                searchListOfMyAdvs = sadvs.values.toMutableList()
+                rv.adapter = newMyAdapter
+
+                //SORT ADVS
+                spinnerSort.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View?,
+                        pos: Int,
+                        id: Long
+                    ) {
+                        if (pos == 0) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                           adv.location.toLowerCase()
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                           adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                           adv.location.toLowerCase()
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                            } else {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+
+                            }
+
+                            rv.adapter = newMyAdapter
+                        } else if (pos == 1) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                           adv.location.toLowerCase()
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy + "/" + mm + "/" + dd
+                                            new_date
+                                        }, false, sharedVM)
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                            adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy + "/" + mm + "/" + dd
+                                            new_date
+                                        }, false, sharedVM)
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                            adv.location.toLowerCase()
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
+                                        }.toList().sortedBy { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy + "/" + mm + "/" + dd
+                                            new_date
+                                        }, false, sharedVM)
+                            } else {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.toList().sortedBy { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy + "/" + mm + "/" + dd
+                                            new_date
+                                        }, false, sharedVM)
+                                }
+
+                            rv.adapter = newMyAdapter
+
+                        } else if (pos == 2) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+                                newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                            adv.location.toLowerCase()
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedByDescending { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy + "/" + mm + "/" + dd
+                                            new_date
+                                        }, false, sharedVM)
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                          adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedByDescending { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy + "/" + mm + "/" + dd
+                                            new_date
+                                        }, false, sharedVM)
+
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                           adv.location.toLowerCase()
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
+                                        }.toList().sortedByDescending { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy + "/" + mm + "/" + dd
+                                            new_date
+                                        }, false, sharedVM)
+
+                            } else {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.toList().sortedByDescending { adv ->
+                                            val arr = adv.date.split("/")
+                                            val dd = arr[0]
+                                            val mm = arr[1]
+                                            val yyyy = arr[2]
+                                            val new_date = yyyy + "/" + mm + "/" + dd
+                                            new_date
+                                        }, false, sharedVM)
+                            }
+
+                            rv.adapter = newMyAdapter
+
+
+                        } else if (pos == 3) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                            adv.location.toLowerCase()
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
+                                                    && adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                            adv.date.toLowerCase()
+                                                .contains(dateFilter.text.toString().toLowerCase())
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
+                                            adv.location.toLowerCase()
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
+                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+
+                            } else {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(searchListOfMyAdvs.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+
+                            }
+                            rv.adapter = newMyAdapter
+
+
+                        } else if (pos == 4) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(
+                                            searchListOfMyAdvs.filter { adv ->
+                                                adv.location.toLowerCase()
+                                                    .contains(
+                                                        searchLocation.text.toString().toLowerCase()
+                                                    )
+                                                        && adv.date.toLowerCase()
+                                                    .contains(
+                                                        dateFilter.text.toString().toLowerCase()
+                                                    )
+                                            }.toList().sortedByDescending { adv -> adv.title },
+                                            false,
+                                            sharedVM
+                                        )
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(
+                                            searchListOfMyAdvs.filter { adv ->
+                                                adv.date.toLowerCase()
+                                                    .contains(
+                                                        dateFilter.text.toString().toLowerCase()
+                                                    )
+                                            }.toList().sortedByDescending { adv -> adv.title },
+                                            false,
+                                            sharedVM
+                                        )
+
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
+
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(
+                                            searchListOfMyAdvs.filter { adv ->
+                                               adv.location.toLowerCase()
+                                                    .contains(
+                                                        searchLocation.text.toString().toLowerCase()
+                                                    )
+                                            }.toList().sortedByDescending { adv -> adv.title },
+                                            false,
+                                            sharedVM
+                                        )
+
+                            } else {
+                                    newMyAdapter =
+                                        SmallAdvAdapter1(
+                                            searchListOfMyAdvs.toList().sortedByDescending { adv -> adv.title },
+                                            false,
+                                            sharedVM
+                                        )
+                            }
+                            rv.adapter = newMyAdapter
+
+                        }
+                    }
+
+                    override fun onNothingSelected(arg0: AdapterView<*>?) {}
+                })
 
             }
         } else {
@@ -163,7 +652,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         }
 
                         if (newAdvs.isEmpty()) {
-                            println("----Empty advssss")
                             rv.visibility = View.GONE
                             emptyListTV.visibility = View.VISIBLE
                             emptyListTV.text = "Sorry, no available advertisements for that search!"
@@ -175,7 +663,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         rv.adapter = newAdapter
 
 
-                        if(dateFilter.text.toString() != "Filter by date "){
+                        if (dateFilter.text.toString() != "Filter by date ") {
                             dateFilter.setText(dateFilter.text.toString() + " ")
                             dateFilter.setText(dateFilter.text.trim())
                             dateFilter.setText(dateFilter.text.toString() + " ")
@@ -191,7 +679,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     override fun afterTextChanged(s: Editable?) {
 
                         if (dateFilter.text.toString() == "Filter by date ") {
-                            println("------${dateFilter.text}")
                             dateFilter.setCompoundDrawablesWithIntrinsicBounds(
                                 0,
                                 0,
@@ -201,14 +688,16 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                             var newAdvs: List<SmallAdv> = listOf()
 
-                            if(searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+                            if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
                                 var newAdvs: List<SmallAdv> = listOf()
 
                                 skill.split(",").forEach {
                                     newAdvs = searchListOfAdvs.filter { x ->
                                         x.userId != sharedVM.authUser.value!!.email &&
                                                 x.location.toLowerCase()
-                                                    .contains(searchLocation.text.toString().toLowerCase()) &&
+                                                    .contains(
+                                                        searchLocation.text.toString().toLowerCase()
+                                                    ) &&
                                                 checkSkills(x.skill, it)
                                     }.toList()
                                     newAdapter =
@@ -216,16 +705,15 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                 }
 
                                 if (newAdvs.isEmpty()) {
-                                    println("----Empty advssss")
                                     rv.visibility = View.GONE
                                     emptyListTV.visibility = View.VISIBLE
-                                    emptyListTV.text = "Sorry, no available advertisements for that search!"
+                                    emptyListTV.text =
+                                        "Sorry, no available advertisements for that search!"
                                 } else {
                                     rv.visibility = View.VISIBLE
                                     emptyListTV.visibility = View.GONE
                                 }
-                            }
-                            else {
+                            } else {
                                 skill.split(",").forEach {
                                     newAdvs = searchListOfAdvs.filter { x ->
                                         x.userId != sharedVM.authUser.value!!.email && checkSkills(
@@ -238,7 +726,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                 }
 
                                 if (newAdvs.isEmpty()) {
-                                    println("----Empty advssss")
                                     rv.visibility = View.GONE
                                     emptyListTV.visibility = View.VISIBLE
                                     emptyListTV.text =
@@ -275,33 +762,36 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             }
 
                             if (newAdvs.isEmpty()) {
-                                println("----Empty advssss")
                                 rv.visibility = View.GONE
                                 emptyListTV.visibility = View.VISIBLE
-                                emptyListTV.text = "Sorry, no available advertisements for that search!"
+                                emptyListTV.text =
+                                    "Sorry, no available advertisements for that search!"
                             } else {
                                 rv.visibility = View.VISIBLE
                                 emptyListTV.visibility = View.GONE
                             }
-                            if(searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+                            if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
                                 var newAdvs: List<SmallAdv> = listOf()
 
                                 skill.split(",").forEach {
                                     newAdvs = searchListOfAdvs.filter { x ->
                                         x.userId != sharedVM.authUser.value!!.email &&
                                                 x.location.toLowerCase()
-                                                    .contains(searchLocation.text.toString().toLowerCase()) &&
-                                                checkSkills(x.skill, it) && x.date == s.toString().trim()
+                                                    .contains(
+                                                        searchLocation.text.toString().toLowerCase()
+                                                    ) &&
+                                                checkSkills(x.skill, it) && x.date == s.toString()
+                                            .trim()
                                     }.toList()
                                     newAdapter =
                                         SmallAdvAdapter1(newAdvs, false, sharedVM)
                                 }
 
                                 if (newAdvs.isEmpty()) {
-                                    println("----Empty advssss")
                                     rv.visibility = View.GONE
                                     emptyListTV.visibility = View.VISIBLE
-                                    emptyListTV.text = "Sorry, no available advertisements for that search!"
+                                    emptyListTV.text =
+                                        "Sorry, no available advertisements for that search!"
                                 } else {
                                     rv.visibility = View.VISIBLE
                                     emptyListTV.visibility = View.GONE
@@ -352,7 +842,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         }
 
                         if (newAdvs.isEmpty()) {
-                            println("----Empty advssss")
                             rv.visibility = View.GONE
                             emptyListTV.visibility = View.VISIBLE
                             emptyListTV.text = "Sorry, no available advertisements for that search!"
@@ -371,11 +860,23 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                 })
 
-                println("----advssss list $searchListOfAdvs")
-
                 //GENERALLY
+                skill.split(",").forEach {
+                    newAdapter =
+                        SmallAdvAdapter1(sadvs.values.filter { adv ->
+                            adv.userId != sharedVM.authUser.value!!.email &&
+                                    checkSkills(adv.skill, it)
+                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                }
+
+                skill.split(",").forEach {
+                    searchListOfAdvs = sadvs.values.filter { adv ->
+                            adv.userId != sharedVM.authUser.value!!.email &&
+                                    checkSkills(adv.skill, it)
+                        }.toList().sortedBy { adv -> adv.title }.toMutableList()
+                }
+
                 if (searchListOfAdvs.isEmpty()) {
-                    println("----Empty advssss")
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
                     emptyListTV.text = "Sorry, no available advertisements for that category!"
@@ -385,17 +886,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 }
 
                 rv.layoutManager = LinearLayoutManager(context)
-                println("---ACTUAL SKILL $skill")
 
-
-                skill.split(",").forEach {
-                    newAdapter =
-                        SmallAdvAdapter1(sadvs.values.filter { adv ->
-                            adv.userId != sharedVM.authUser.value!!.email &&
-                                    checkSkills(adv.skill, it)
-                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
-                }
-                searchListOfAdvs = sadvs.values.toMutableList()
                 rv.adapter = newAdapter
 
                 //SORT ADVS
@@ -406,23 +897,26 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         pos: Int,
                         id: Long
                     ) {
-                        if(pos == 0){
-                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")) {
+                        if (pos == 0) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                             adv.userId != sharedVM.authUser.value!!.email &&
                                                     checkSkills(adv.skill, it)
                                                     && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
                                                     && adv.date.toLowerCase()
                                                 .contains(dateFilter.text.toString().toLowerCase())
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
-                            }
-                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")){
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
@@ -432,20 +926,21 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 .contains(dateFilter.text.toString().toLowerCase())
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
-                            }
-                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")){
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                             adv.userId != sharedVM.authUser.value!!.email &&
                                                     checkSkills(adv.skill, it)
                                                     && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
-                            }
-                            else{
+                            } else {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
@@ -456,17 +951,19 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             }
 
                             rv.adapter = newAdapter
-                        }
-                       else if(pos == 1){
-                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")) {
+                        } else if (pos == 1) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                             adv.userId != sharedVM.authUser.value!!.email &&
                                                     checkSkills(adv.skill, it)
                                                     && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
                                                     && adv.date.toLowerCase()
                                                 .contains(dateFilter.text.toString().toLowerCase())
                                         }.toList().sortedBy { adv ->
@@ -474,13 +971,13 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val dd = arr[0]
                                             val mm = arr[1]
                                             val yyyy = arr[2]
-                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
                                         }, false, sharedVM)
                                 }
-                            }
-                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")){
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
@@ -493,31 +990,32 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val dd = arr[0]
                                             val mm = arr[1]
                                             val yyyy = arr[2]
-                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
                                         }, false, sharedVM)
                                 }
-                            }
-                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")){
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                             adv.userId != sharedVM.authUser.value!!.email &&
                                                     checkSkills(adv.skill, it)
                                                     && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
                                         }.toList().sortedBy { adv ->
                                             val arr = adv.date.split("/")
                                             val dd = arr[0]
                                             val mm = arr[1]
                                             val yyyy = arr[2]
-                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
                                         }, false, sharedVM)
                                 }
-                            }
-                            else{
+                            } else {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
@@ -528,7 +1026,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val dd = arr[0]
                                             val mm = arr[1]
                                             val yyyy = arr[2]
-                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
                                         }, false, sharedVM)
                                 }
@@ -536,19 +1034,19 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                             rv.adapter = newAdapter
 
-                        }
-                        else if (pos == 2) {
-                            println("-----SORTED DESCENDING DATE ")
-
-                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")) {
+                        } else if (pos == 2) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                             adv.userId != sharedVM.authUser.value!!.email &&
                                                     checkSkills(adv.skill, it)
                                                     && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
                                                     && adv.date.toLowerCase()
                                                 .contains(dateFilter.text.toString().toLowerCase())
                                         }.toList().sortedByDescending { adv ->
@@ -556,13 +1054,13 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val dd = arr[0]
                                             val mm = arr[1]
                                             val yyyy = arr[2]
-                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
                                         }, false, sharedVM)
                                 }
-                            }
-                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")){
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
@@ -575,31 +1073,32 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val dd = arr[0]
                                             val mm = arr[1]
                                             val yyyy = arr[2]
-                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
                                         }, false, sharedVM)
                                 }
-                            }
-                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")){
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                             adv.userId != sharedVM.authUser.value!!.email &&
                                                     checkSkills(adv.skill, it)
                                                     && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
                                         }.toList().sortedByDescending { adv ->
                                             val arr = adv.date.split("/")
                                             val dd = arr[0]
                                             val mm = arr[1]
                                             val yyyy = arr[2]
-                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
                                         }, false, sharedVM)
                                 }
-                            }
-                            else{
+                            } else {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
@@ -610,7 +1109,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val dd = arr[0]
                                             val mm = arr[1]
                                             val yyyy = arr[2]
-                                            val new_date = yyyy+"/"+mm+"/"+dd
+                                            val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
                                         }, false, sharedVM)
                                 }
@@ -620,24 +1119,25 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
 
                         } else if (pos == 3) {
-                            println("-----SORTED ASCENDING TITLE ")
-
-                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                             adv.userId != sharedVM.authUser.value!!.email &&
                                                     checkSkills(adv.skill, it)
                                                     && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
                                                     && adv.date.toLowerCase()
                                                 .contains(dateFilter.text.toString().toLowerCase())
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
-                            }
-                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")){
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
@@ -647,20 +1147,21 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 .contains(dateFilter.text.toString().toLowerCase())
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
-                            }
-                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")){
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                             adv.userId != sharedVM.authUser.value!!.email &&
                                                     checkSkills(adv.skill, it)
                                                     && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
+                                                .contains(
+                                                    searchLocation.text.toString().toLowerCase()
+                                                )
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
-                            }
-                            else{
+                            } else {
                                 skill.split(",").forEach {
                                     newAdapter =
                                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
@@ -674,55 +1175,76 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             rv.adapter = newAdapter
 
 
-
                         } else if (pos == 4) {
-                            println("-----SORTED DESCENDING TITLE ")
-
-                            if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")) {
+                            if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
+                                && (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
-                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                            adv.userId != sharedVM.authUser.value!!.email &&
-                                                    checkSkills(adv.skill, it)
-                                                    && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
-                                                    && adv.date.toLowerCase()
-                                                .contains(dateFilter.text.toString().toLowerCase())
-                                        }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                        SmallAdvAdapter1(
+                                            searchListOfAdvs.filter { adv ->
+                                                adv.userId != sharedVM.authUser.value!!.email &&
+                                                        checkSkills(adv.skill, it)
+                                                        && adv.location.toLowerCase()
+                                                    .contains(
+                                                        searchLocation.text.toString().toLowerCase()
+                                                    )
+                                                        && adv.date.toLowerCase()
+                                                    .contains(
+                                                        dateFilter.text.toString().toLowerCase()
+                                                    )
+                                            }.toList().sortedByDescending { adv -> adv.title },
+                                            false,
+                                            sharedVM
+                                        )
                                 }
-                            }
-                            else if((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")){
+                            } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
+                                (dateFilter.text.toString() != "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
-                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                            adv.userId != sharedVM.authUser.value!!.email &&
-                                                    checkSkills(adv.skill, it)
-                                                    && adv.date.toLowerCase()
-                                                .contains(dateFilter.text.toString().toLowerCase())
-                                        }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                        SmallAdvAdapter1(
+                                            searchListOfAdvs.filter { adv ->
+                                                adv.userId != sharedVM.authUser.value!!.email &&
+                                                        checkSkills(adv.skill, it)
+                                                        && adv.date.toLowerCase()
+                                                    .contains(
+                                                        dateFilter.text.toString().toLowerCase()
+                                                    )
+                                            }.toList().sortedByDescending { adv -> adv.title },
+                                            false,
+                                            sharedVM
+                                        )
                                 }
-                            }
-                            else if((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")){
+                            } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
+                                (dateFilter.text.toString() == "Filter by date ")
+                            ) {
                                 skill.split(",").forEach {
                                     newAdapter =
-                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                            adv.userId != sharedVM.authUser.value!!.email &&
-                                                    checkSkills(adv.skill, it)
-                                                    && adv.location.toLowerCase()
-                                                .contains(searchLocation.text.toString().toLowerCase())
-                                        }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                        SmallAdvAdapter1(
+                                            searchListOfAdvs.filter { adv ->
+                                                adv.userId != sharedVM.authUser.value!!.email &&
+                                                        checkSkills(adv.skill, it)
+                                                        && adv.location.toLowerCase()
+                                                    .contains(
+                                                        searchLocation.text.toString().toLowerCase()
+                                                    )
+                                            }.toList().sortedByDescending { adv -> adv.title },
+                                            false,
+                                            sharedVM
+                                        )
                                 }
-                            }
-                            else{
+                            } else {
                                 skill.split(",").forEach {
                                     newAdapter =
-                                        SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                            adv.userId != sharedVM.authUser.value!!.email &&
-                                                    checkSkills(adv.skill, it)
-                                        }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                        SmallAdvAdapter1(
+                                            searchListOfAdvs.filter { adv ->
+                                                adv.userId != sharedVM.authUser.value!!.email &&
+                                                        checkSkills(adv.skill, it)
+                                            }.toList().sortedByDescending { adv -> adv.title },
+                                            false,
+                                            sharedVM
+                                        )
                                 }
                             }
 
@@ -740,18 +1262,18 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     }
 
     private fun checkSkills(advSkill: String, skill: String): Boolean {
-        var valid = false;
+        var valid = false
         advSkill.split(",").forEach {
             if (it == skill) {
-                valid = true;
+                valid = true
             }
         }
-        return valid;
+        return valid
     }
 
     //Date
     private fun showDialogOfDatePicker() {
-        val datePickerFragment = TimeSlotListFragment.DatePickerFragment(dateFilter)
+        val datePickerFragment = DatePickerFragment(dateFilter)
         datePickerFragment.show(requireActivity().supportFragmentManager, "datePicker")
 
     }
@@ -770,11 +1292,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             c.set(year, month, day)
 
             retainInstance = true
-        }
-
-        override fun onSaveInstanceState(outState: Bundle) {
-            super.onSaveInstanceState(outState)
-
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -8,19 +8,15 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.bancempo.R
 import com.bancempo.Skill
 import com.bancempo.SmallAdv
 import com.bancempo.data.User
-import com.bancempo.fragments.EditProfileFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.textfield.TextInputEditText
@@ -91,7 +87,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun uploadBitmap(btm: Bitmap, view: View, skillsString: String) {
-        //println("bitmap: upload")
         val creationTimeNewImage = System.currentTimeMillis()
         val emailTruncated = currentUser.value!!.email.split("@")[0]
         val imageName = "profile_".plus(creationTimeNewImage.toString()).plus(".jpg")
@@ -114,15 +109,14 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                             photo.setImageBitmap(btm)
                             updateUser(view, skillsString, true)
                         }
-                        .addOnFailureListener { println("--------------failing updating user") }
+                        .addOnFailureListener { }
                 }.addOnFailureListener {
-                    println("---------------------not ok: $it")
                 }
             } else {
                 db.collection("users").document(authUser.value!!.email!!)
                     .update("imageUser", myNewRef.toString())
-                    .addOnSuccessListener { println("----------------update user") }
-                    .addOnFailureListener { println("---------------failing updating user") }
+                    .addOnSuccessListener { }
+                    .addOnFailureListener { }
             }
 
         }.addOnFailureListener {
@@ -148,7 +142,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     fun loadImageUser(iv: ImageView, view: View) {
         if (currentUser.value?.imageUser != "") {
             val myRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
-            println("bitmap: load")
             val pb = view.findViewById<ProgressBar>(R.id.progressBar)
             if(pb != null)
                 pb.visibility = View.VISIBLE
@@ -162,7 +155,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        println("bitmap: ready!")
                         if(pb!=null)
                             pb.visibility = View.GONE
                         iv.visibility = View.VISIBLE
@@ -175,9 +167,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        println("bitmap: failed!")
-                        //TODO: mettere un immagine per far capire che il caricamento non è andato a buon fine
-                        //iv.setImageBitmap(???)
                         iv.visibility = View.VISIBLE
                         return false
                     }
@@ -240,13 +229,10 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     currentUser.value!!.imageUser
                 )
 
-                println("chip: -> myadv ${myAdvs.value!!.values}")
-                println("chip: -> idToDel $toDelete")
                 val advsToDelete = advs.value!!.values
                     .filter { x -> x.userId == currentUser.value!!.email
                             && containsSkill(toDelete,  x.skill.split(",")) }
                     .toList()
-                println("chip: todelete -> ${advsToDelete.map { x -> x.id }}")
 
 
                 db.runBatch { batch ->
@@ -264,7 +250,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val skillToDelete = services.value!!.get(deleting)
                         if (skillToDelete != null) {
                             //se tra tutti gli advs che non sono creati da me, ce ne è almeno uno di questa skill
-                            advs.value!!.values.map{x -> println("adv: ${x.title}, skills: ${x.skill.split(",")}")}
                             val advsNotCreatedByMeAssociatedToSkill =
                                 advs.value!!.values.filter { x ->
                                     x.userId != currentUser.value!!.email &&
@@ -289,9 +274,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     //in ogni caso elimina tutti i miei annunci associati a questa skill
 
                     for (advToDelete in advsToDelete) {
-                        println("batch: prova $advToDelete")
                         val docToDel = advsDocRef.document(advToDelete.id)
-                        println("batch: docref${ docToDel.path }")
                         batch.delete(docToDel)
                     }
 
@@ -299,7 +282,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     batch.set(currentUserRef, user)
                 }.addOnSuccessListener {
                     if (updatingImg) {
-                        println("bitmap: end upload")
                         haveIloadNewImage.value = true
                         Toast.makeText(
                             app.applicationContext,
@@ -342,15 +324,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         .set(newUser)
                         .addOnSuccessListener {
                             currentUser.value = newUser
-                            println("user creato nel db")
                         }
                         .addOnFailureListener {
-                            println("impossibile creare user nel db")
                         }
                 }
             }
             .addOnFailureListener {
-                println("problema nel trovare lo user con questa email");
             }
     }
 
@@ -414,7 +393,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             .whereEqualTo("userId", userId)
             .addSnapshotListener { r, e ->
                 if (e != null) {
-                    println("--- ERR ${e.message.toString()}")
                     myAdvs.value = hashMapOf()
                 } else {
                     val advMap: HashMap<String, SmallAdv> = hashMapOf()
@@ -500,7 +478,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         val skill = bundle.getString("skill") ?: ""
         val userId = bundle.getString("userId") ?: ""
 
-        println("---------userid: $userId")
         return SmallAdv(
             id,
             title,

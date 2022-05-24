@@ -6,12 +6,10 @@ import android.app.Dialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.util.TypedValue
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
-import androidx.core.view.isEmpty
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -20,7 +18,6 @@ import androidx.navigation.fragment.findNavController
 import com.bancempo.R
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
@@ -52,12 +49,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     private lateinit var duration: TextInputLayout
     private lateinit var durationEdit: TextInputEditText
 
-    private lateinit var chipGroup : ChipGroup
-    private var skills_string : String? = ""
+    private lateinit var chipGroup: ChipGroup
+    private var skillsString: String? = ""
 
     private lateinit var skills: List<String>
-    private lateinit var skills_error:  TextInputLayout
-    private lateinit var skills_errorEdit:  TextInputEditText
+    private lateinit var skills_error: TextInputLayout
+    private lateinit var skills_errorEdit: TextInputEditText
 
     private lateinit var slider: Slider
 
@@ -92,10 +89,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         dateEdit.setText(arguments?.getString("date"))
         timeslotEdit.setText(arguments?.getString("time"))
         durationEdit.setText(arguments?.getString("duration"))
-        skills_string = arguments?.getString("skill")
-
-
-        println("-----------LIST SKILLS $skills_string")
+        skillsString = arguments?.getString("skill")
 
 
         title.error = null
@@ -124,30 +118,27 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             confirmButton.visibility = View.GONE
             slider.value = durationEdit.text.toString().toFloat()
 
-            if(skills_string != null){
-                skills.forEach{
+            if (skillsString != null) {
+                skills.forEach {
                     val chip = Chip(activity)
 
-                   if(skills_string!!.split(",").contains(it)){
-                       println("CHECKED")
-                       chip.isCheckable = true
-                       chip.text = it
-                       chip.isChecked = true
-                       chip.isCloseIconVisible = true
-                       chip.setChipBackgroundColorResource(R.color.light_primary_color)
-                       chip.isSelected = true
-                       chipGroup.addView(chip)
-                   }
-                    else{
-                       chip.isCheckable = true
-                       chip.text = it
-                       chip.isChecked = false
-                       chip.setChipBackgroundColorResource(R.color.divider_color)
-                       chipGroup.addView(chip)
-                   }
+                    if (skillsString!!.split(",").contains(it)) {
+                        chip.isCheckable = true
+                        chip.text = it
+                        chip.isChecked = true
+                        chip.isCloseIconVisible = true
+                        chip.setChipBackgroundColorResource(R.color.light_primary_color)
+                        chip.isSelected = true
+                        chipGroup.addView(chip)
+                    } else {
+                        chip.isCheckable = true
+                        chip.text = it
+                        chip.isChecked = false
+                        chip.setChipBackgroundColorResource(R.color.divider_color)
+                        chipGroup.addView(chip)
+                    }
                     chip.setOnClickListener {
                         chip.isChecked = true
-                        println("--- CHIPS CHECKED${chip.isChecked}")
                         chip.isCloseIconVisible = true
                         chip.setChipBackgroundColorResource(R.color.light_primary_color)
                     }
@@ -158,8 +149,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     }
                 }
             }
-            }
-            else {
+        } else {
             skills.forEach {
                 val chip = Chip(activity)
                 chip.isCheckable = true
@@ -169,7 +159,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
                 chip.setOnClickListener {
                     chip.isChecked = true
-                    println("--- CHIPS CHECKED${chip.isChecked}")
                     chip.isCloseIconVisible = true
                     chip.setChipBackgroundColorResource(R.color.light_primary_color)
                 }
@@ -198,8 +187,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 var count = 0
                 for (i in 0 until chipGroup.childCount) {
                     val chip = chipGroup.getChildAt(i) as Chip
-                    if(chip.isChecked) {
-                        println("--------CHIP ${chipGroup.childCount}")
+                    if (chip.isChecked) {
                         if (count == chipGroup.checkedChipIds.size - 1) {
                             chipText += "${chip.text}"
 
@@ -209,7 +197,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                         count += 1
                     }
                 }
-                println("--------CHIPTEXT $chipText")
                 bundle.putString("skill", chipText)
 
                 sharedVM.addNewAdv(bundle)
@@ -249,8 +236,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                             var count = 0
                             for (i in 0 until chipGroup.childCount) {
                                 val chip = chipGroup.getChildAt(i) as Chip
-                                if(chip.isChecked) {
-                                    println("--------CHIP ${chipGroup.childCount}")
+                                if (chip.isChecked) {
                                     if (count == chipGroup.checkedChipIds.size - 1) {
                                         chipText += "${chip.text}"
 
@@ -260,7 +246,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                                     count += 1
                                 }
                             }
-                            println("--------CHIPTEXT $chipText")
                             bundle.putString("skill", chipText)
 
                             sharedVM.modifyAdv(id!!, bundle)
@@ -326,14 +311,13 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun validateSkills(skills: List<String>, text: TextInputLayout): Boolean{
+    private fun validateSkills(skills: List<String>, text: TextInputLayout): Boolean {
         var valid = true
-        if(skills.isEmpty()){
-            println("--- SKILLS $skills")
+        if (skills.isEmpty()) {
             text.error = "Define some skills in your profile settings!"
             valid = false
         }
-        if(chipGroup.checkedChipIds.isEmpty()){
+        if (chipGroup.checkedChipIds.isEmpty()) {
             text.error = "Define a skill for your adv!"
             valid = false
         }
@@ -364,7 +348,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         if (!validateTextInput(duration, durationEdit)) {
             valid = false
         }
-        if(!validateSkills(skills, skills_error)){
+        if (!validateSkills(skills, skills_error)) {
             valid = false
         }
         return valid
@@ -405,17 +389,12 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         }
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            println("---------SAVEDINSTANCE $savedInstanceState")
-            println("---------DATE ${date.text.toString()}")
-            println("---------DATE $date")
-
             if (savedInstanceState != null) {
                 year = savedInstanceState.getInt("year")
                 month = savedInstanceState.getInt("month")
                 day = savedInstanceState.getInt("day")
             } else {
                 if (date.text.toString() != "") {
-                    println("-------------- + ${date.text}")
                     year = date.text!!.split("/").elementAt(2).toInt()
                     month = date.text!!.split("/").elementAt(1).toInt() - 1
                     day = date.text!!.split("/").elementAt(0).toInt()
@@ -455,7 +434,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             super.onCreate(savedInstanceState)
             if (modify) {
                 val arrTime = timeslot.text.toString().split(":")
-                println("------------$arrTime")
                 val hh = arrTime[0].toInt()
                 val mm = arrTime[1].toInt()
                 c.set(Calendar.HOUR_OF_DAY, hh)
