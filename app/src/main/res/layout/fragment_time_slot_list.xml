@@ -59,14 +59,9 @@
                 android:id="@+id/filterDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_icons8_doppio_gi__16"
-                android:text="Filter by date" />
+                android:drawableEnd="@drawable/ic_icons8_modifica_il_calendario_24"
+                android:text="Filter by date " />
 
-            <DatePicker
-                android:id="@+id/searchDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp" />
         </LinearLayout>
 
         <Spinner

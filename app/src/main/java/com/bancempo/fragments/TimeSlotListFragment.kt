@@ -1,6 +1,8 @@
 package com.bancempo.fragments
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +11,8 @@ import android.widget.*
 import androidx.appcompat.widget.SearchView
 import androidx.compose.ui.text.toLowerCase
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -19,6 +23,8 @@ import com.bancempo.R
 import com.bancempo.SmallAdv
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.textfield.TextInputEditText
+import java.util.*
 import com.bancempo.SmallAdvAdapter as SmallAdvAdapter1
 
 
@@ -28,8 +34,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     private lateinit var locationFilter: TextView
     private lateinit var searchLocation: EditText
     private lateinit var dateFilter: TextView
-    private lateinit var searchDate: DatePicker
-
 
     @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,11 +50,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         locationFilter = view.findViewById<TextView>(R.id.filterLocation)
         searchLocation = view.findViewById<EditText>(R.id.searchLocation)
         dateFilter = view.findViewById<TextView>(R.id.filterDate)
-        searchDate = view.findViewById<DatePicker>(R.id.searchDate)
 
 
         searchLocation.isVisible = false
-        searchDate.isVisible = false
 
         ArrayAdapter.createFromResource(
             this.requireContext(),
@@ -64,27 +66,21 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         }
 
         var first_click_searchLocation = true
-        locationFilter.setOnClickListener{
-            if(first_click_searchLocation == true) {
+        locationFilter.setOnClickListener {
+            if (first_click_searchLocation == true) {
                 searchLocation.isVisible = true
                 first_click_searchLocation = false
-            }
-            else{
+            } else {
                 searchLocation.isVisible = false
                 first_click_searchLocation = true
             }
         }
 
-        var first_click_searchDate = true
-        dateFilter.setOnClickListener{
-            if(first_click_searchDate == true) {
-                searchDate.isVisible = true
-                first_click_searchDate = false
-            }
-            else{
-                searchDate.isVisible = false
-                first_click_searchDate = true
-            }
+        dateFilter.setOnClickListener {
+            if (dateFilter.text.toString() == "Filter by date ")
+                showDialogOfDatePicker()
+            else
+                dateFilter.text = "Filter by date "
         }
 
 
@@ -134,14 +130,37 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                 var searchListOfAdvs: MutableList<SmallAdv> = sadvs.values.toMutableList()
 
-                 val textWatcher = object : TextWatcher {
+
+                //FILTER BY LOCATION
+                val textWatcher = object : TextWatcher {
                     override fun afterTextChanged(s: Editable?) {
                     }
-                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
                     }
-                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        searchListOfAdvs = sadvs.values.filter { x -> x.location.toLowerCase().contains(s.toString().toLowerCase())}.toMutableList()
-                        if (searchListOfAdvs.isEmpty() ) {
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                        skill.split(",").forEach {
+                            searchListOfAdvs = sadvs.values.filter { x ->
+                                x.userId != sharedVM.authUser.value!!.email &&
+                                        x.location.toLowerCase()
+                                            .contains(s.toString().toLowerCase()) &&
+                                        checkSkills(x.skill, it)
+                            }.sortedBy { adv -> adv.date }.toMutableList()
+                        }
+
+                        if (searchListOfAdvs.isEmpty()) {
                             println("----Empty advssss")
                             rv.visibility = View.GONE
                             emptyListTV.visibility = View.VISIBLE
@@ -151,20 +170,126 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             emptyListTV.visibility = View.GONE
                         }
 
-                        val newAdapter = SmallAdvAdapter1(searchListOfAdvs.toList(), false, sharedVM)
+                        val newAdapter =
+                            SmallAdvAdapter1(searchListOfAdvs.toList(), false, sharedVM)
                         rv.adapter = newAdapter
 
                     }
                 }
                 searchLocation.addTextChangedListener(textWatcher)
 
+                //FILTER BY DATE
+                val textWatcherDate = object : TextWatcher {
+                    override fun afterTextChanged(s: Editable?) {
+
+                        if (dateFilter.text.toString() == "Filter by date ") {
+                            println("------${dateFilter.text}")
+                            dateFilter.setCompoundDrawablesWithIntrinsicBounds(
+                                0,
+                                0,
+                                R.drawable.ic_icons8_modifica_il_calendario_24,
+                                0
+                            )
+
+                            skill.split(",").forEach {
+                                searchListOfAdvs = sadvs.values.filter { x ->
+                                    x.userId != sharedVM.authUser.value!!.email && checkSkills(
+                                        x.skill,
+                                        it
+                                    )
+                                }.sortedBy { adv -> adv.date }.toMutableList()
+                            }
+                            if (searchListOfAdvs.isEmpty()) {
+                                println("----Empty advssss")
+                                rv.visibility = View.GONE
+                                emptyListTV.visibility = View.VISIBLE
+                                emptyListTV.text =
+                                    "Sorry, no available advertisements for that search!"
+                            } else {
+                                rv.visibility = View.VISIBLE
+                                emptyListTV.visibility = View.GONE
+                            }
+
+                            val newAdapter =
+                                SmallAdvAdapter1(searchListOfAdvs.toList(), false, sharedVM)
+                            rv.adapter = newAdapter
+
+                            if(searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+                                searchLocation.setText(searchLocation.text.toString() + " ")
+                                searchLocation.setText(searchLocation.text.trim())
+                            }
+
+                        } else {
+                            dateFilter.setCompoundDrawablesWithIntrinsicBounds(
+                                0,
+                                0,
+                                R.drawable.ic_icons8_xbox_x_48,
+                                0
+                            )
+
+                            skill.split(",").forEach {
+                                searchListOfAdvs = sadvs.values.filter { x ->
+                                    x.userId != sharedVM.authUser.value!!.email &&
+                                            x.date == s.toString().trim() && checkSkills(
+                                        x.skill,
+                                        it
+                                    )
+                                }.sortedBy { adv -> adv.date }.toMutableList()
+                            }
+                            if (searchListOfAdvs.isEmpty()) {
+                                println("----Empty advssss")
+                                rv.visibility = View.GONE
+                                emptyListTV.visibility = View.VISIBLE
+                                emptyListTV.text =
+                                    "Sorry, no available advertisements for that search!"
+                            } else {
+                                rv.visibility = View.VISIBLE
+                                emptyListTV.visibility = View.GONE
+                            }
+
+                            val newAdapter =
+                                SmallAdvAdapter1(searchListOfAdvs.toList(), false, sharedVM)
+                            rv.adapter = newAdapter
+                        }
 
 
+                    }
+
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+
+                    }
+                }
+                dateFilter.addTextChangedListener(textWatcherDate)
+
+                //FILTER BY SEARCHBAR
                 sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextChange(newText: String): Boolean {
 
-                        searchListOfAdvs = sadvs.values.filter { x -> x.title.toLowerCase().contains(newText.toLowerCase()) && x.skill == skill}.toMutableList()
-                        if (searchListOfAdvs.isEmpty() ) {
+                        skill.split(",").forEach {
+                            searchListOfAdvs = sadvs.values.filter { x ->
+                                x.userId != sharedVM.authUser.value!!.email &&
+                                        x.title.toLowerCase()
+                                            .contains(newText.toLowerCase()) && checkSkills(
+                                    x.skill,
+                                    it
+                                )
+                            }.sortedBy { adv -> adv.date }.toMutableList()
+                        }
+
+                        if (searchListOfAdvs.isEmpty()) {
                             println("----Empty advssss")
                             rv.visibility = View.GONE
                             emptyListTV.visibility = View.VISIBLE
@@ -174,7 +299,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             emptyListTV.visibility = View.GONE
                         }
 
-                        val newAdapter = SmallAdvAdapter1(searchListOfAdvs.toList(), false, sharedVM)
+                        val newAdapter =
+                            SmallAdvAdapter1(searchListOfAdvs.toList(), false, sharedVM)
                         rv.adapter = newAdapter
                         return false
                     }
@@ -188,8 +314,14 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                 println("----advssss list $searchListOfAdvs")
 
-                if (searchListOfAdvs.filter { adv -> adv.userId != sharedVM.authUser.value!!.email && adv.skill == skill }
-                        .toList().isEmpty() ) {
+                //GENERALLY
+                skill.split(",").forEach {
+                    searchListOfAdvs = sadvs.values.filter { x ->
+                        x.userId != sharedVM.authUser.value!!.email && checkSkills(x.skill, it)
+                    }.toMutableList()
+                }
+
+                if (searchListOfAdvs.isEmpty()) {
                     println("----Empty advssss")
                     rv.visibility = View.GONE
                     emptyListTV.visibility = View.VISIBLE
@@ -203,14 +335,15 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 println("---ACTUAL SKILL $skill")
 
 
-
                 skill.split(",").forEach {
                     rv.adapter =
                         SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                            checkSkills(adv.skill, it)
+                            adv.userId != sharedVM.authUser.value!!.email &&
+                                    checkSkills(adv.skill, it)
                         }.toList().sortedBy { adv -> adv.date }, false, sharedVM)
                 }
 
+                //SORT ADVS
                 spinnerSort.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
                         parent: AdapterView<*>,
@@ -221,23 +354,31 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         if (pos == 1) {
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                        checkSkills(adv.skill, it)
-                                    }.toList().sortedByDescending { adv -> adv.date }, false, sharedVM)
+                                    SmallAdvAdapter1(
+                                        searchListOfAdvs.filter { adv ->
+                                            checkSkills(adv.skill, it)
+                                        }.toList().sortedByDescending { adv -> adv.date },
+                                        false,
+                                        sharedVM
+                                    )
                             }
-                        } else if (pos == 2){
+                        } else if (pos == 2) {
                             skill.split(",").forEach {
                                 rv.adapter =
                                     SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
                                         checkSkills(adv.skill, it)
                                     }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                             }
-                        } else if (pos == 3){
+                        } else if (pos == 3) {
                             skill.split(",").forEach {
                                 rv.adapter =
-                                    SmallAdvAdapter1(searchListOfAdvs.filter { adv ->
-                                        checkSkills(adv.skill, it)
-                                    }.toList().sortedByDescending { adv -> adv.title }, false, sharedVM)
+                                    SmallAdvAdapter1(
+                                        searchListOfAdvs.filter { adv ->
+                                            checkSkills(adv.skill, it)
+                                        }.toList().sortedByDescending { adv -> adv.title },
+                                        false,
+                                        sharedVM
+                                    )
                             }
                         } else {
                             skill.split(",").forEach {
@@ -270,5 +411,46 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         return valid;
     }
 
-}
+    //Date
+    private fun showDialogOfDatePicker() {
+        val datePickerFragment = TimeSlotListFragment.DatePickerFragment(dateFilter)
+        datePickerFragment.show(requireActivity().supportFragmentManager, "datePicker")
 
+    }
+
+
+    class DatePickerFragment(private val date: TextView) :
+        DialogFragment(), DatePickerDialog.OnDateSetListener {
+
+        private var c = Calendar.getInstance()
+        private var year = c.get(Calendar.YEAR)
+        private var month = c.get(Calendar.MONTH)
+        private var day = c.get(Calendar.DAY_OF_MONTH)
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            c.set(year, month, day)
+
+            retainInstance = true
+        }
+
+        override fun onSaveInstanceState(outState: Bundle) {
+            super.onSaveInstanceState(outState)
+
+        }
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+
+            return DatePickerDialog(requireContext(), this, year, month, day)
+        }
+
+        @SuppressLint("SetTextI18n")
+        override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
+            this.year = year
+            this.month = month
+            this.day = day
+            date.text = ("${day}/${(month + 1)}/${year} ")
+        }
+
+    }
+}
