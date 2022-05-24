@@ -242,8 +242,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
                 println("chip: -> myadv ${myAdvs.value!!.values}")
                 println("chip: -> idToDel $toDelete")
-                val advsToDelete = myAdvs.value!!.values
-                    .filter { x -> containsSkill(toDelete,  x.skill.split(",")) }
+                val advsToDelete = advs.value!!.values
+                    .filter { x -> x.userId == currentUser.value!!.email
+                            && containsSkill(toDelete,  x.skill.split(",")) }
                     .toList()
                 println("chip: todelete -> ${advsToDelete.map { x -> x.id }}")
 
