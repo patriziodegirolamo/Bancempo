@@ -13,6 +13,8 @@ import androidx.lifecycle.MutableLiveData
 import com.bancempo.R
 import com.bancempo.Skill
 import com.bancempo.SmallAdv
+import com.bancempo.data.Conversation
+import com.bancempo.data.Message
 import com.bancempo.data.User
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -30,6 +32,8 @@ import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
@@ -67,6 +71,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val myAdvs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
+            //TODO CAPIRE SE SERVE
             if (authUser.value != null) {
                 loadMyAdvs(authUser.value!!.email!!)
             }
@@ -79,11 +84,25 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    val conversations: MutableLiveData<HashMap<String, Conversation>> by lazy {
+        MutableLiveData<HashMap<String, Conversation>>().also {
+            if (authUser.value != null) {
+                loadConversationsAsker(authUser.value!!.email!!)
+            }
+        }
+    }
+
+    val messages: MutableLiveData<HashMap<String, Message>> by lazy {
+        MutableLiveData<HashMap<String, Message>>().also {
+        }
+    }
+
     fun afterLogin() {
         val email = authUser.value!!.email!!
-        loadMyAdvs(email)
-        loadServices()
         loadUser(email)
+        loadMyAdvs(email)
+        loadConversationsAsker(email)
+        loadServices()
     }
 
     fun uploadBitmap(btm: Bitmap, view: View, skillsString: String) {
@@ -531,6 +550,81 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                 Toast.makeText(app.applicationContext, "Error", Toast.LENGTH_SHORT).show()
             }
 
+    }
+
+    fun loadConversationsAsker(userId: String){
+        println("-----------USER ${userId}")
+        db.collection("conversations")
+            .whereEqualTo("idAsker", userId)
+            .addSnapshotListener { r, e ->
+                if (e != null)
+                    conversations.value = hashMapOf()
+                else {
+                    val convsMap: HashMap<String, Conversation> = hashMapOf()
+                    for (doc in r!!) {
+                        println("------ ${doc}")
+                        val idConv = doc.id
+                        val idAdv = doc.getString("idAdv")
+                        val idAsker = doc.getString("idAsker")
+                        val idBidder = doc.getString("idBidder")
+                        val conversation = Conversation(idConv!!, idAdv!!, idAsker!!, idBidder!!)
+                        convsMap[doc.id] = conversation
+                    }
+                    conversations.value = convsMap
+                }
+            }
+    }
+
+    fun createNewConversation(idAdv: String, idBidder: String, text: String){
+        val newId = db.collection("conversations").document().id
+        val newConv = Conversation(newId, idAdv, currentUser.value!!.email, idBidder)
+        db.collection("conversations").document(newId)
+            .set(newConv)
+            .addOnSuccessListener {
+                println("---------------------------------------- funzionato ${newId}")
+                createNewMessage(newId, text)
+
+            }
+            .addOnCanceledListener {
+                println("---------------------------------------- ERROR")
+            }
+    }
+
+    fun loadMessages(idConv: String){
+        db.collection("messages")
+            .whereEqualTo("idConv", idConv)
+            .addSnapshotListener { r, e ->
+                if (e != null)
+                    messages.value = hashMapOf()
+                else {
+                    val msgsMap: HashMap<String, Message> = hashMapOf()
+                    for (doc in r!!) {
+                        val idMsg = doc.getString("idMsg")
+                        val idConv = doc.getString("idConv")
+                        val date = doc.getString("date")
+                        val text = doc.getString("text")
+
+                        val msg = Message(idMsg!!, idConv!!, date!!, text!!)
+                        msgsMap[doc.id] = msg
+                    }
+                    messages.value = msgsMap
+                }
+            }
+    }
+
+    fun createNewMessage(idConv: String, text: String){
+        val date = getCreationTime()
+        val newId = db.collection("messages").document().id
+        val newMsg = Message(newId, idConv, date, text)
+
+        db.collection("messages").document(newId)
+            .set(newMsg)
+            .addOnSuccessListener {
+                println("---------------------------------------- funzionato")
+            }
+            .addOnCanceledListener {
+                println("---------------------------------------- ERROR")
+            }
     }
 
 

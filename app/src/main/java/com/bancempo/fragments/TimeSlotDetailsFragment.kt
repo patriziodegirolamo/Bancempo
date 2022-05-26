@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
@@ -42,9 +43,13 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private lateinit var chipGroup: ChipGroup
 
+    private lateinit var chatButton: Button
+
     private var skills: String? = ""
 
     private var isMyAdv = false
+
+    private lateinit var idBidder: String
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,6 +79,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         chipGroup = view.findViewById(R.id.chipGroup)
 
+        chatButton = view.findViewById(R.id.button_chat)
+
         titleEd.setText(arguments?.getString("title"))
         descriptionEd.setText(arguments?.getString("description"))
         dateEd.setText(arguments?.getString("date"))
@@ -81,6 +88,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         durationEd.setText(arguments?.getString("duration"))
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
+
+        idBidder = arguments?.getString("idBidder")!!
 
         skills = arguments?.getString("skill")
 
@@ -95,6 +104,22 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         }
 
         isMyAdv = arguments?.getBoolean("isMyAdv")!!
+
+        chatButton.setOnClickListener{
+            var bundle = Bundle()
+
+            bundle.putString("idAdv", arguments?.getString("id"))
+            bundle.putString("title", titleEd.text.toString())
+            bundle.putString("duration", durationEd.text.toString())
+            bundle.putString("date", dateEd.text.toString())
+            bundle.putString("time", timeEd.text.toString())
+            bundle.putString("location", locationEd.text.toString())
+            bundle.putString("idBidder", idBidder)
+
+            //NAVIGATION CHAT FRAGMENT
+            requireView().findNavController()
+                .navigate(R.id.action_timeSlotDetailsFragment_to_chatFragment, bundle)
+        }
 
 
         setFragmentResultListener("confirmationOkModifyToDetails") { _, bundle ->

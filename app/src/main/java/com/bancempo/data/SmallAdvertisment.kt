@@ -159,6 +159,7 @@ class SmallAdvAdapter(
             bundle.putString("location", data[position].location)
             bundle.putString("note", data[position].note)
             bundle.putString("skill", data[position].skill)
+            bundle.putString("idBidder", data[position].userId)
             bundle.putBoolean("isMyAdv", isMyAdvs)
 
             findNavController(it).navigate(

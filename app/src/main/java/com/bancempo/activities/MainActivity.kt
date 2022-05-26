@@ -63,6 +63,12 @@ class MainActivity : AppCompatActivity() {
         sharedVM.advs.observe(this) {
         }
 
+        sharedVM.conversations.observe(this){
+        }
+
+        sharedVM.messages.observe(this){
+        }
+
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.goToTimeSlotList -> {
