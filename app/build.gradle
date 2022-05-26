@@ -100,12 +100,4 @@ dependencies {
     // https://mvnrepository.com/artifact/com.firebaseui/firebase-ui-auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.1'
 
-
-
-
-
-
-
-
-
 }

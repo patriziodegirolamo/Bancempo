@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 import com.bancempo.SmallAdvAdapter as SmallAdvAdapter1
 
+//TODO BARRA DI RICERCA IN COMBO CON ALTRI FILTRI
 
 class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     private val sharedVM: SharedViewModel by activityViewModels()
@@ -123,7 +124,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             .contains(s.toString().toLowerCase())
                             }.toList()
                             newMyAdapter =
-                                SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+                                SmallAdvAdapter1(newMyAdvs, true, sharedVM)
 
                         if (newMyAdvs.isEmpty()) {
                             rv.visibility = View.GONE
@@ -169,7 +170,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                     }.toList()
 
                                 newMyAdapter =
-                                    SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+                                    SmallAdvAdapter1(newMyAdvs, true, sharedVM)
 
                                 if (newMyAdvs.isEmpty()) {
                                     rv.visibility = View.GONE
@@ -198,7 +199,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             x.date == s.toString().trim()
                                 }.toList()
                                 newMyAdapter =
-                                    SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+                                    SmallAdvAdapter1(newMyAdvs, true, sharedVM)
 
                             if (newMyAdvs.isEmpty()) {
                                 rv.visibility = View.GONE
@@ -220,7 +221,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             .trim()
                                     }.toList()
                                     newMyAdapter =
-                                        SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+                                        SmallAdvAdapter1(newMyAdvs, true, sharedVM)
 
                                 if (newMyAdvs.isEmpty()) {
                                     rv.visibility = View.GONE
@@ -268,7 +269,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             .contains(newText.toLowerCase())
                             }.toList()
                             newMyAdapter =
-                                SmallAdvAdapter1(newMyAdvs, false, sharedVM)
+                                SmallAdvAdapter1(newMyAdvs, true, sharedVM)
 
                         if (newMyAdvs.isEmpty()) {
                             rv.visibility = View.GONE
@@ -305,7 +306,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
 
                     newMyAdapter =
-                        SmallAdvAdapter1(sadvs.values.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                        SmallAdvAdapter1(sadvs.values.toList().sortedBy { adv -> adv.title }, true, sharedVM)
 
                 searchListOfMyAdvs = sadvs.values.toMutableList()
                 rv.adapter = newMyAdapter
@@ -330,7 +331,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 )
                                                     && adv.date.toLowerCase()
                                                 .contains(dateFilter.text.toString().toLowerCase())
-                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                        }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
 
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
                                 (dateFilter.text.toString() != "Filter by date ")
@@ -339,7 +340,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
                                            adv.date.toLowerCase()
                                                 .contains(dateFilter.text.toString().toLowerCase())
-                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                        }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
                                 (dateFilter.text.toString() == "Filter by date ")
                             ) {
@@ -349,10 +350,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 .contains(
                                                     searchLocation.text.toString().toLowerCase()
                                                 )
-                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                        }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
                             } else {
                                     newMyAdapter =
-                                        SmallAdvAdapter1(searchListOfMyAdvs.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                        SmallAdvAdapter1(searchListOfMyAdvs.toList().sortedBy { adv -> adv.title }, true, sharedVM)
 
                             }
 
@@ -376,7 +377,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val yyyy = arr[2]
                                             val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
-                                        }, false, sharedVM)
+                                        }, true, sharedVM)
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
                                 (dateFilter.text.toString() != "Filter by date ")
                             ) {
@@ -391,7 +392,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val yyyy = arr[2]
                                             val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
-                                        }, false, sharedVM)
+                                        }, true, sharedVM)
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
                                 (dateFilter.text.toString() == "Filter by date ")
                             ) {
@@ -409,7 +410,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val yyyy = arr[2]
                                             val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
-                                        }, false, sharedVM)
+                                        }, true, sharedVM)
                             } else {
 
                                     newMyAdapter =
@@ -420,7 +421,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val yyyy = arr[2]
                                             val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
-                                        }, false, sharedVM)
+                                        }, true, sharedVM)
                                 }
 
                             rv.adapter = newMyAdapter
@@ -444,7 +445,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val yyyy = arr[2]
                                             val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
-                                        }, false, sharedVM)
+                                        }, true, sharedVM)
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
                                 (dateFilter.text.toString() != "Filter by date ")
                             ) {
@@ -460,7 +461,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val yyyy = arr[2]
                                             val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
-                                        }, false, sharedVM)
+                                        }, true, sharedVM)
 
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
                                 (dateFilter.text.toString() == "Filter by date ")
@@ -479,7 +480,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val yyyy = arr[2]
                                             val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
-                                        }, false, sharedVM)
+                                        }, true, sharedVM)
 
                             } else {
 
@@ -491,7 +492,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             val yyyy = arr[2]
                                             val new_date = yyyy + "/" + mm + "/" + dd
                                             new_date
-                                        }, false, sharedVM)
+                                        }, true, sharedVM)
                             }
 
                             rv.adapter = newMyAdapter
@@ -509,7 +510,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 )
                                                     && adv.date.toLowerCase()
                                                 .contains(dateFilter.text.toString().toLowerCase())
-                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                        }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
                                 (dateFilter.text.toString() != "Filter by date ")
                             ) {
@@ -518,7 +519,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
                                             adv.date.toLowerCase()
                                                 .contains(dateFilter.text.toString().toLowerCase())
-                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                        }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
 
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
                                 (dateFilter.text.toString() == "Filter by date ")
@@ -530,11 +531,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 .contains(
                                                     searchLocation.text.toString().toLowerCase()
                                                 )
-                                        }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                        }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
 
                             } else {
                                     newMyAdapter =
-                                        SmallAdvAdapter1(searchListOfMyAdvs.toList().sortedBy { adv -> adv.title }, false, sharedVM)
+                                        SmallAdvAdapter1(searchListOfMyAdvs.toList().sortedBy { adv -> adv.title }, true, sharedVM)
 
                             }
                             rv.adapter = newMyAdapter
@@ -557,7 +558,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                         dateFilter.text.toString().toLowerCase()
                                                     )
                                             }.toList().sortedByDescending { adv -> adv.title },
-                                            false,
+                                            true,
                                             sharedVM
                                         )
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
@@ -572,7 +573,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                         dateFilter.text.toString().toLowerCase()
                                                     )
                                             }.toList().sortedByDescending { adv -> adv.title },
-                                            false,
+                                            true,
                                             sharedVM
                                         )
 
@@ -588,7 +589,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                         searchLocation.text.toString().toLowerCase()
                                                     )
                                             }.toList().sortedByDescending { adv -> adv.title },
-                                            false,
+                                            true,
                                             sharedVM
                                         )
 
@@ -596,7 +597,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                     newMyAdapter =
                                         SmallAdvAdapter1(
                                             searchListOfMyAdvs.toList().sortedByDescending { adv -> adv.title },
-                                            false,
+                                            true,
                                             sharedVM
                                         )
                             }
