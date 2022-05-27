@@ -1,11 +1,13 @@
 package com.bancempo.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -50,6 +52,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private lateinit var chatButton: Button
 
+    private lateinit var slotUnavailable: TextView
+
     private lateinit var idAdv: String
 
     private var skills: String? = ""
@@ -59,6 +63,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private lateinit var idBidder: String
 
 
+    @SuppressLint("ResourceAsColor")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
@@ -87,6 +92,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         chipGroup = view.findViewById(R.id.chipGroup)
 
         chatButton = view.findViewById(R.id.button_chat)
+        slotUnavailable = view.findViewById(R.id.slotNotAvailable)
+        slotUnavailable.isVisible = false
 
         titleEd.setText(arguments?.getString("title"))
         descriptionEd.setText(arguments?.getString("description"))
@@ -131,7 +138,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             chatButton.visibility = View.GONE
             //SE ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO TUA O NON ESISTE UNA CONVERSAZIONE VISUALIZZA IL BOTTONE CHAT
             sharedVM.conversations.observe(viewLifecycleOwner){ convs ->
-               var advConvs = convs.values.filter { conv ->
+               val advConvs = convs.values.filter { conv ->
                    conv.idAdv == idAdv
                }
                 if(advConvs.isEmpty()){
@@ -139,6 +146,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 }
                 else if(advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }.isNotEmpty()){
                     chatButton.visibility = View.VISIBLE
+                }
+                else{
+                    slotUnavailable.setText("This adv is unavailable at that moment!")
+                    slotUnavailable.isVisible = true
                 }
             }
         }
