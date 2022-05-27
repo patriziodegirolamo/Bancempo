@@ -72,7 +72,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         sharedVM.messages.observe(viewLifecycleOwner){ messagesConv ->
             println("----------MESSAGES ${messagesConv}")
             rv.adapter =
-                MessageAdapter(messagesConv.values.sortedByDescending { x -> x.date }.toList(), sharedVM)
+                MessageAdapter(messagesConv.values.sortedBy { x -> x.date }.toList(), sharedVM)
         }
 
         sharedVM.conversations.observe(viewLifecycleOwner){
