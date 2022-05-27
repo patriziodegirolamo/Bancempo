@@ -199,13 +199,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun loadSpinner(view: ImageView) {
-        Glide.with(app.applicationContext)
-            .load(R.drawable.loader)
-            .circleCrop()
-            .into(view)
-    }
-
     fun updateUser(view: View, skillsString: String, updatingImg: Boolean) {
         val currentUserRef = db.collection("users").document(currentUser.value!!.email)
         val servicesDocRef = db.collection("services")
@@ -563,12 +556,11 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     val convsMap: HashMap<String, Conversation> = hashMapOf()
                     for (doc in r!!) {
                         println("------ ${doc}")
-                        val idConv = doc.id
                         val idAdv = doc.getString("idAdv")
                         val idAsker = doc.getString("idAsker")
                         val idBidder = doc.getString("idBidder")
-                        val conversation = Conversation(idConv!!, idAdv!!, idAsker!!, idBidder!!)
-                        convsMap[doc.id] = conversation
+                        val conversation = Conversation(idAdv!!, idAsker!!, idBidder!!)
+                        convsMap[idAdv] = conversation
                     }
                     conversations.value = convsMap
                 }
@@ -576,13 +568,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun createNewConversation(idAdv: String, idBidder: String, text: String){
-        val newId = db.collection("conversations").document().id
-        val newConv = Conversation(newId, idAdv, currentUser.value!!.email, idBidder)
-        db.collection("conversations").document(newId)
+        //val newId = db.collection("conversations").document().id
+        val newConv = Conversation(idAdv, currentUser.value!!.email, idBidder)
+        db.collection("conversations").document(idAdv)
             .set(newConv)
             .addOnSuccessListener {
-                println("---------------------------------------- funzionato ${newId}")
-                createNewMessage(newId, text, to = idBidder, from = currentUser.value!!.email)
+                createNewMessage(idAdv, text, to = idBidder, from = currentUser.value!!.email)
 
             }
             .addOnCanceledListener {
@@ -590,9 +581,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun loadMessages(idConv: String){
+    fun loadMessages(idAdv: String){
         db.collection("messages")
-            .whereEqualTo("idConv", idConv)
+            .whereEqualTo("idAdv", idAdv)
             //.orderBy("date")
             //.orderBy("date", Query.Direction.DESCENDING)
             .addSnapshotListener { r, e ->
@@ -602,13 +593,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     val msgsMap: HashMap<String, Message> = hashMapOf()
                     for (doc in r!!) {
                         val idMsg = doc.getString("idMsg")
-                        val idConv = doc.getString("idConv")
                         val date = doc.getString("date")
                         val text = doc.getString("text")
                         val from = doc.getString("from")
                         val to = doc.getString("to")
                         println("msg: $text")
-                        val msg = Message(idMsg!!, idConv!!, date!!, text!!, from!!, to!!)
+                        val msg = Message(idMsg!!, idAdv, date!!, text!!, from!!, to!!)
                         msgsMap[doc.id] = msg
                     }
                     messages.value = msgsMap
@@ -616,10 +606,10 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun createNewMessage(idConv: String, text: String, from: String, to: String){
+    fun createNewMessage(idAdv: String, text: String, from: String, to: String){
         val date = getCreationTime()
         val newId = db.collection("messages").document().id
-        val newMsg = Message(newId, idConv, date, text, from, to)
+        val newMsg = Message(newId, idAdv, date, text, from, to)
 
         db.collection("messages").document(newId)
             .set(newMsg)

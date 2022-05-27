@@ -18,8 +18,7 @@ import com.bancempo.models.SharedViewModel
 class ChatFragment : Fragment(R.layout.fragment_chat) {
     private val sharedVM: SharedViewModel by activityViewModels()
 
-    private var conversations: HashMap<String, Conversation>? = null
-    private var conversationAdv: Conversation? = null
+    private var currentConversation: Conversation? = null
 
     private lateinit var title: String
     private lateinit var idAdv: String
@@ -39,6 +38,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val rv = view.findViewById<RecyclerView>(R.id.recycler_gchat)
         rv.layoutManager = LinearLayoutManager(context)
 
+
         title = arguments?.getString("title")!!
         idAdv = arguments?.getString("idAdv")!!
         idBidder = arguments?.getString("idBidder")!!
@@ -49,6 +49,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         textAcceptOrRefuse = view.findViewById(R.id.textAcceptOrRefuse)
         acceptButton = view.findViewById(R.id.acceptProposal)
         refuseButton = view.findViewById(R.id.refuseProposal)
+
+
+        currentConversation = sharedVM.conversations.value!!.getOrDefault(idAdv, null)
 
         if(idBidder == sharedVM.currentUser.value!!.email){
             textAcceptOrRefuse.visibility = View.VISIBLE
@@ -61,6 +64,31 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             refuseButton.visibility = View.GONE
         }
 
+        sendButton.setOnClickListener{
+            if(currentConversation == null){
+                if(textMsg.text.isEmpty()){
+                    textMsg.error = "Write a message!"
+                }
+                else{
+                    sharedVM.createNewConversation(idAdv, idBidder, textMsg.text.toString())
+                    sharedVM.loadMessages(idAdv)
+                    textMsg.setText("")
+                }
+            }
+            else{
+                if (textMsg.text.isEmpty()) {
+                    textMsg.error = "Write a message!"
+                } else {
+                    sharedVM.createNewMessage(idAdv, textMsg.text.toString()
+                        , to = idBidder, from = sharedVM.currentUser.value!!.email)
+                    textMsg.setText("")
+                }
+            }
+
+        }
+
+
+
         acceptButton.setOnClickListener{
 
         }
@@ -70,47 +98,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
         sharedVM.messages.observe(viewLifecycleOwner){ messagesConv ->
-            println("----------MESSAGES ${messagesConv}")
             rv.adapter =
                 MessageAdapter(messagesConv.values.sortedBy { x -> x.date }.toList(), sharedVM)
-        }
-
-        sharedVM.conversations.observe(viewLifecycleOwner){
-            conversations = it
-            conversationAdv = conversations!!.values.filter { conv -> conv.idAdv  ==  idAdv}.getOrNull(0)
-
-            if(conversationAdv == null){
-                //NON HA CONVERSAZIONE PER QUELL'ANNUNCIO
-                //CREA NUOVA CONVERSAZIONE
-                println("---------NO CONV PER ADV")
-                sendButton.setOnClickListener{
-                    if(textMsg.text.isEmpty()){
-                        textMsg.error = "Write a message!"
-                    }
-                    else{
-                        sharedVM.createNewConversation(idAdv, idBidder, textMsg.text.toString())
-                        textMsg.setText("")
-                    }
-                }
-                println("------CONVERSATIONS ${sharedVM.conversations.value}")
-            }
-            else {
-                //CARICA MESSAGGI VECCHI DELLA CONVERSAZIONE
-                println("-----SI CONV PER ADV")
-                println("------CONVERSATIONS ${conversationAdv}")
-                sharedVM.loadMessages(conversationAdv!!.idConv)
-
-                sendButton.setOnClickListener {
-                    if (textMsg.text.isEmpty()) {
-                        textMsg.error = "Write a message!"
-                    } else {
-                        sharedVM.createNewMessage(conversationAdv!!.idConv, textMsg.text.toString()
-                        , to = idBidder, from = sharedVM.currentUser.value!!.email)
-                        textMsg.setText("")                    }
-
-                }
-            }
-
         }
 
     }

@@ -8,10 +8,12 @@ import android.view.View
 import android.widget.Button
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bancempo.R
+import com.bancempo.models.SharedViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
@@ -19,6 +21,8 @@ import com.google.android.material.textfield.TextInputLayout
 
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
+    private val sharedVM: SharedViewModel by activityViewModels()
+
     private lateinit var title: TextInputLayout
     private lateinit var titleEd: TextInputEditText
 
@@ -115,8 +119,14 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         chatButton.setOnClickListener{
             val bundle = Bundle()
+            val idAdv = arguments?.getString("id")
 
-            bundle.putString("idAdv", arguments?.getString("id"))
+            //fire the observer in chatfragment
+            sharedVM.loadMessages(idAdv!!)
+            println("now: carica i messaggi prima di entrare nella chat")
+
+
+            bundle.putString("idAdv", idAdv)
             bundle.putString("title", titleEd.text.toString())
             bundle.putString("duration", durationEd.text.toString())
             bundle.putString("date", dateEd.text.toString())

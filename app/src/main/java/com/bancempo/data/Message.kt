@@ -18,7 +18,7 @@ import com.bancempo.models.SharedViewModel
 
 data class Message(
     val idMsg: String,
-    val idConv: String,
+    val idAdv: String,
     val date: String,
     val text: String,
     val from: String,
