@@ -582,7 +582,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             .set(newConv)
             .addOnSuccessListener {
                 println("---------------------------------------- funzionato ${newId}")
-                createNewMessage(newId, text)
+                createNewMessage(newId, text, to = idBidder, from = currentUser.value!!.email)
 
             }
             .addOnCanceledListener {
@@ -593,6 +593,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     fun loadMessages(idConv: String){
         db.collection("messages")
             .whereEqualTo("idConv", idConv)
+            //.orderBy("date")
+            //.orderBy("date", Query.Direction.DESCENDING)
             .addSnapshotListener { r, e ->
                 if (e != null)
                     messages.value = hashMapOf()
@@ -603,8 +605,10 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val idConv = doc.getString("idConv")
                         val date = doc.getString("date")
                         val text = doc.getString("text")
-
-                        val msg = Message(idMsg!!, idConv!!, date!!, text!!)
+                        val from = doc.getString("from")
+                        val to = doc.getString("to")
+                        println("msg: $text")
+                        val msg = Message(idMsg!!, idConv!!, date!!, text!!, from!!, to!!)
                         msgsMap[doc.id] = msg
                     }
                     messages.value = msgsMap
@@ -612,10 +616,10 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun createNewMessage(idConv: String, text: String){
+    fun createNewMessage(idConv: String, text: String, from: String, to: String){
         val date = getCreationTime()
         val newId = db.collection("messages").document().id
-        val newMsg = Message(newId, idConv, date, text)
+        val newMsg = Message(newId, idConv, date, text, from, to)
 
         db.collection("messages").document(newId)
             .set(newMsg)

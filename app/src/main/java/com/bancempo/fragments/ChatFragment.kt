@@ -2,16 +2,15 @@ package com.bancempo.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
 import com.bancempo.data.Conversation
-import com.bancempo.data.Message
+import com.bancempo.data.MessageAdapter
 import com.bancempo.models.SharedViewModel
 
 
@@ -20,7 +19,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private var conversations: HashMap<String, Conversation>? = null
     private var conversationAdv: Conversation? = null
-    private var messagesConv: HashMap<String, Message>? = null
 
     private lateinit var title: String
     private lateinit var idAdv: String
@@ -31,6 +29,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val rv = view.findViewById<RecyclerView>(R.id.recycler_gchat)
+        rv.layoutManager = LinearLayoutManager(context)
 
         println("------BUNDLE CHAT ${arguments}")
         println("------CONVERSATIONS ${sharedVM.conversations.value}")
@@ -44,9 +45,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
 
-        sharedVM.messages.observe(viewLifecycleOwner){
-            messagesConv = it
+        sharedVM.messages.observe(viewLifecycleOwner){ messagesConv ->
             println("----------MESSAGES ${messagesConv}")
+            rv.adapter =
+                MessageAdapter(messagesConv.values.sortedByDescending { x -> x.date }.toList(), sharedVM)
         }
 
         sharedVM.conversations.observe(viewLifecycleOwner){
@@ -78,7 +80,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     if (textMsg.text.isEmpty()) {
                         textMsg.error = "Write a message!"
                     } else {
-                        sharedVM.createNewMessage(conversationAdv!!.idConv, textMsg.text.toString())
+                        sharedVM.createNewMessage(conversationAdv!!.idConv, textMsg.text.toString()
+                        , to = idBidder, from = sharedVM.currentUser.value!!.email)
                         textMsg.setText("")                    }
 
                 }
