@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var idBidder: String
 
     private lateinit var sendButton: Button
+
+    private lateinit var textAcceptOrRefuse: TextView
+    private lateinit var acceptButton: Button
+    private lateinit var refuseButton: Button
+
     private lateinit var textMsg: EditText
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,9 +39,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         val rv = view.findViewById<RecyclerView>(R.id.recycler_gchat)
         rv.layoutManager = LinearLayoutManager(context)
 
-        println("------BUNDLE CHAT ${arguments}")
-        println("------CONVERSATIONS ${sharedVM.conversations.value}")
-
         title = arguments?.getString("title")!!
         idAdv = arguments?.getString("idAdv")!!
         idBidder = arguments?.getString("idBidder")!!
@@ -43,7 +46,28 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         sendButton = view.findViewById(R.id.button_gchat_send)
         textMsg = view.findViewById(R.id.edit_gchat_message)
 
+        textAcceptOrRefuse = view.findViewById(R.id.textAcceptOrRefuse)
+        acceptButton = view.findViewById(R.id.acceptProposal)
+        refuseButton = view.findViewById(R.id.refuseProposal)
 
+        if(idBidder == sharedVM.currentUser.value!!.email){
+            textAcceptOrRefuse.visibility = View.VISIBLE
+            acceptButton.visibility = View.VISIBLE
+            refuseButton.visibility = View.VISIBLE
+        }
+        else{
+            textAcceptOrRefuse.visibility = View.GONE
+            acceptButton.visibility = View.GONE
+            refuseButton.visibility = View.GONE
+        }
+
+        acceptButton.setOnClickListener{
+
+        }
+
+        refuseButton.setOnClickListener{
+
+        }
 
         sharedVM.messages.observe(viewLifecycleOwner){ messagesConv ->
             println("----------MESSAGES ${messagesConv}")

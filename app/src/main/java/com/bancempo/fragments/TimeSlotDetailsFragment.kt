@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
@@ -105,8 +106,15 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         isMyAdv = arguments?.getBoolean("isMyAdv")!!
 
+        if(isMyAdv){
+            chatButton.visibility = View.GONE
+        }
+        else{
+            chatButton.visibility = View.VISIBLE
+        }
+
         chatButton.setOnClickListener{
-            var bundle = Bundle()
+            val bundle = Bundle()
 
             bundle.putString("idAdv", arguments?.getString("id"))
             bundle.putString("title", titleEd.text.toString())
@@ -120,7 +128,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             requireView().findNavController()
                 .navigate(R.id.action_timeSlotDetailsFragment_to_chatFragment, bundle)
         }
-
 
         setFragmentResultListener("confirmationOkModifyToDetails") { _, bundle ->
             titleEd.setText(bundle.getString("title"))
