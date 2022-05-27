@@ -66,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         sharedVM.conversations.observe(this){
         }
 
+
         sharedVM.messages.observe(this){
         }
 

@@ -50,6 +50,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
     private lateinit var chatButton: Button
 
+    private lateinit var idAdv: String
+
     private var skills: String? = ""
 
     private var isMyAdv = false
@@ -94,6 +96,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
 
+        idAdv = arguments?.getString("id")!!
+
         idBidder = arguments?.getString("idBidder")!!
 
         skills = arguments?.getString("skill")
@@ -110,14 +114,36 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         isMyAdv = arguments?.getBoolean("isMyAdv")!!
 
-        if(isMyAdv){
+        if (isMyAdv) {
             chatButton.visibility = View.GONE
-        }
-        else{
-            chatButton.visibility = View.VISIBLE
+            //SE ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO VISUALIZZA IL BOTTONE CHAT
+            sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
+                convs.values.filter { conv ->
+                    conv.idBidder == sharedVM.currentUser.value!!.email
+                }.forEach { conv ->
+                    if (conv.idAdv == idAdv) {
+                        chatButton.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+        } else {
+            chatButton.visibility = View.GONE
+            //SE ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO TUA O NON ESISTE UNA CONVERSAZIONE VISUALIZZA IL BOTTONE CHAT
+            sharedVM.conversations.observe(viewLifecycleOwner){ convs ->
+               var advConvs = convs.values.filter { conv ->
+                   conv.idAdv == idAdv
+               }
+                if(advConvs.isEmpty()){
+                    chatButton.visibility = View.VISIBLE
+                }
+                else if(advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }.isNotEmpty()){
+                    chatButton.visibility = View.VISIBLE
+                }
+            }
         }
 
-        chatButton.setOnClickListener{
+        chatButton.setOnClickListener {
             val bundle = Bundle()
             val idAdv = arguments?.getString("id")
 

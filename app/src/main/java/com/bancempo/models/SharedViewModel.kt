@@ -87,7 +87,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     val conversations: MutableLiveData<HashMap<String, Conversation>> by lazy {
         MutableLiveData<HashMap<String, Conversation>>().also {
             if (authUser.value != null) {
-                loadConversationsAsker(authUser.value!!.email!!)
+                loadConversations()
             }
         }
     }
@@ -101,7 +101,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         val email = authUser.value!!.email!!
         loadUser(email)
         loadMyAdvs(email)
-        loadConversationsAsker(email)
+        loadConversations()
         loadServices()
     }
 
@@ -545,10 +545,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     }
 
-    fun loadConversationsAsker(userId: String){
-        println("-----------USER ${userId}")
+    fun loadConversations(){
         db.collection("conversations")
-            .whereEqualTo("idAsker", userId)
             .addSnapshotListener { r, e ->
                 if (e != null)
                     conversations.value = hashMapOf()
@@ -566,6 +564,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                 }
             }
     }
+
 
     fun createNewConversation(idAdv: String, idBidder: String, text: String){
         //val newId = db.collection("conversations").document().id

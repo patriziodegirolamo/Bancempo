@@ -112,7 +112,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     val advs = sharedVM.advs.value
 
                     if(advs != null &&  convs != null) {
-                        convs.values.forEach { conv ->
+                        convs.values.filter { conv ->
+                            conv.idAsker == sharedVM.currentUser.value!!.email
+                        }.forEach { conv ->
                             interests = advs.values.filter { adv -> adv.id == conv.idAdv && conv.idAsker == sharedVM.authUser.value!!.email}
                         }
 
