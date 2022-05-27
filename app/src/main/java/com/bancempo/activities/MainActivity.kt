@@ -92,6 +92,19 @@ class MainActivity : AppCompatActivity() {
                     signOut()
                 }
 
+                R.id.goToInterestsList -> {
+                    println("-----INT LIST")
+                    if (navController.currentDestination?.id != R.id.timeSlotListFragment) {
+                        println("-----INT LIST")
+                        val bundle = Bundle()
+                        bundle.putBoolean("myInterests", true)
+
+                        navController.navigate(R.id.timeSlotListFragment, bundle)
+                    }
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    return@setNavigationItemSelectedListener true
+                }
+
 
             }
             false
