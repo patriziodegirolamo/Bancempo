@@ -554,10 +554,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     val convsMap: HashMap<String, Conversation> = hashMapOf()
                     for (doc in r!!) {
                         println("------ ${doc}")
+                        val idConv = doc.getString("idConv")
                         val idAdv = doc.getString("idAdv")
                         val idAsker = doc.getString("idAsker")
                         val idBidder = doc.getString("idBidder")
-                        val conversation = Conversation(idAdv!!, idAsker!!, idBidder!!)
+                        val closed = doc.getBoolean("closed")
+                        val conversation = Conversation(idConv!!, idAdv!!, idAsker!!, idBidder!!, closed!!)
                         convsMap[idAdv] = conversation
                     }
                     conversations.value = convsMap
@@ -567,13 +569,25 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
 
     fun createNewConversation(idAdv: String, idBidder: String, text: String){
-        //val newId = db.collection("conversations").document().id
-        val newConv = Conversation(idAdv, currentUser.value!!.email, idBidder)
-        db.collection("conversations").document(idAdv)
+        val newId = db.collection("conversations").document().id
+        val newConv = Conversation(newId, idAdv, currentUser.value!!.email, idBidder, false)
+        db.collection("conversations").document(newId)
             .set(newConv)
             .addOnSuccessListener {
                 createNewMessage(idAdv, text, to = idBidder, from = currentUser.value!!.email)
 
+            }
+            .addOnCanceledListener {
+                println("---------------------------------------- ERROR")
+            }
+    }
+
+    fun closeConversation(idConv: String, idAdv: String, idAsker: String){
+        val newConv = Conversation(idConv, idAdv, idAsker, currentUser.value!!.email, true)
+        db.collection("conversations").document(idConv)
+            .set(newConv)
+            .addOnSuccessListener {
+                println("----------------- SUCCEED")
             }
             .addOnCanceledListener {
                 println("---------------------------------------- ERROR")

@@ -136,20 +136,34 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         } else {
             chatButton.visibility = View.GONE
-            //SE ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO TUA O NON ESISTE UNA CONVERSAZIONE VISUALIZZA IL BOTTONE CHAT
-            sharedVM.conversations.observe(viewLifecycleOwner){ convs ->
-               val advConvs = convs.values.filter { conv ->
-                   conv.idAdv == idAdv
-               }
-                if(advConvs.isEmpty()){
-                    chatButton.visibility = View.VISIBLE
+            //SE ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO TUA NON CHIUSA O NON ESISTE UNA CONVERSAZIONE VISUALIZZA IL BOTTONE CHAT
+            sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
+                var advConvs = convs.values.filter { conv ->
+                    conv.idAdv == idAdv
                 }
-                else if(advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }.isNotEmpty()){
+
+                if (advConvs.isEmpty()) {
+                    //NON ESISTONO CONVERSAZIONI PER QUESTO ANNUNCIO
                     chatButton.visibility = View.VISIBLE
-                }
-                else{
-                    slotUnavailable.setText("This adv is unavailable at that moment!")
-                    slotUnavailable.isVisible = true
+                } else {
+                    advConvs =
+                        advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }
+                    if (advConvs.isNotEmpty()) {
+                        //ESISTE UNA CONVERSAZIONE TUA PER QUESTO ANNUNCIO
+                        advConvs.forEach { conv ->
+                            // SE E' APERTA
+                            if (!conv.closed)
+                                chatButton.visibility = View.VISIBLE
+                            else {
+                                // SE E' CHIUSA
+                                slotUnavailable.setText("The bidder of this adv refused your request!")
+                            }
+                        }
+                    } else {
+                        //ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO MA NON E' TUA
+                        slotUnavailable.setText("This adv is unavailable at that moment!")
+                        slotUnavailable.isVisible = true
+                    }
                 }
             }
         }
