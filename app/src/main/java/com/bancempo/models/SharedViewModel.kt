@@ -419,6 +419,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val creationTime = doc.getString("creationTime")
                         val skill = doc.getString("skill")
                         val uid = doc.getString("userId")
+                        val booked = doc.getBoolean("booked")
                         val adv = SmallAdv(
                             doc.id,
                             title!!,
@@ -430,7 +431,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                             note!!,
                             creationTime!!,
                             skill!!,
-                            uid!!
+                            uid!!,
+                            booked!!,
                         )
                         advMap[doc.id] = adv
                     }
@@ -441,6 +443,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun loadAdvs() {
         db.collection("advertisements")
+            .whereEqualTo("booked", false)
             .orderBy("creationTime", Query.Direction.DESCENDING)
             .addSnapshotListener { r, e ->
                 if (e != null)
@@ -458,6 +461,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val creationTime = doc.getString("creationTime")
                         val skill = doc.getString("skill")
                         val userId = doc.getString("userId")
+                        val booked = doc.getBoolean("booked")
+
                         val adv = SmallAdv(
                             doc.id,
                             title!!,
@@ -469,7 +474,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                             note!!,
                             creationTime!!,
                             skill!!,
-                            userId!!
+                            userId!!,
+                            booked!!,
                         )
                         advMap[doc.id] = adv
                     }
@@ -501,7 +507,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             note,
             getCreationTime(),
             skill,
-            userId
+            userId,
+            false,
         )
     }
 
@@ -567,6 +574,20 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
+    fun createNewIdConv(): String {
+        return db.collection("conversations").document().id
+    }
+    fun createNewConversationWOMessages(idAdv: String, idBidder: String, newIdConv: String){
+        val newConv = Conversation(newIdConv, idAdv, currentUser.value!!.email, idBidder, false)
+        db.collection("conversations").document(newIdConv)
+            .set(newConv)
+            .addOnSuccessListener {
+                println("----------------------ok")
+            }
+            .addOnCanceledListener {
+                println("---------------------------------------- ERROR")
+            }
+    }
 
     fun createNewConversation(idAdv: String, idBidder: String, text: String){
         val newId = db.collection("conversations").document().id
@@ -582,18 +603,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun closeConversation(idConv: String, idAdv: String, idAsker: String){
-        val newConv = Conversation(idConv, idAdv, idAsker, currentUser.value!!.email, true)
-        db.collection("conversations").document(idConv)
-            .set(newConv)
-            .addOnSuccessListener {
-                println("----------------- SUCCEED")
-            }
-            .addOnCanceledListener {
-                println("---------------------------------------- ERROR")
-            }
-    }
-
+    //TODO: caricare i messaggi di una certa conversazione e non di un daato annuncio!
     fun loadMessages(idAdv: String){
         db.collection("messages")
             .whereEqualTo("idAdv", idAdv)
@@ -631,6 +641,30 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
             .addOnCanceledListener {
                 println("---------------------------------------- ERROR")
+            }
+    }
+
+    fun bookAdv(idAdv: String){
+        db.collection("advertisements").document(idAdv)
+            .update("booked", true)
+            .addOnSuccessListener {
+                Toast.makeText(app.applicationContext, "Booked!", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(app.applicationContext, "Error", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    fun closeConversation(idConv: String){
+        db.collection("conversations").document(idConv)
+            .update("closed", true)
+            .addOnSuccessListener {
+                Toast.makeText(app.applicationContext, "Closed!", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(app.applicationContext, "Error", Toast.LENGTH_SHORT).show()
             }
     }
 

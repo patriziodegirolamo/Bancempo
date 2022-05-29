@@ -53,6 +53,7 @@ class MessageAdapter(private val messageList: List<Message>, private val sharedV
     }
 
     inner class OtherMessageViewHolder(v: View): RecyclerView.ViewHolder(v){
+        val nickname = v.findViewById<TextView>(R.id.text_gchat_user_other)
         val dateMsg = v.findViewById<TextView>(R.id.text_gchat_date_other)
         val textMsg = v.findViewById<TextView>(R.id.text_gchat_message_other)
         val timeMsg = v.findViewById<TextView>(R.id.text_gchat_timestamp_other)

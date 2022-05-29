@@ -103,6 +103,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
 
+
+        var createNewConv: Boolean? = false
         idAdv = arguments?.getString("id")!!
 
         idBidder = arguments?.getString("idBidder")!!
@@ -121,49 +123,60 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
         isMyAdv = arguments?.getBoolean("isMyAdv")!!
 
-        if (isMyAdv) {
-            chatButton.visibility = View.GONE
-            //SE ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO VISUALIZZA IL BOTTONE CHAT
-            sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
-                convs.values.filter { conv ->
-                    conv.idBidder == sharedVM.currentUser.value!!.email
-                }.forEach { conv ->
-                    if (conv.idAdv == idAdv) {
-                        chatButton.visibility = View.VISIBLE
-                    }
+        sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
+            createNewConv = false
+            if (isMyAdv) {
+                val filtered = convs.values.filter { conv ->
+                    conv.idBidder == sharedVM.currentUser.value!!.email &&
+                            conv.idAdv == idAdv
                 }
-            }
-
-        } else {
-            chatButton.visibility = View.GONE
-            //SE ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO TUA NON CHIUSA O NON ESISTE UNA CONVERSAZIONE VISUALIZZA IL BOTTONE CHAT
-            sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
-                var advConvs = convs.values.filter { conv ->
-                    conv.idAdv == idAdv
-                }
-
-                if (advConvs.isEmpty()) {
-                    //NON ESISTONO CONVERSAZIONI PER QUESTO ANNUNCIO
+                if (filtered.isNotEmpty()) {
                     chatButton.visibility = View.VISIBLE
                 } else {
-                    advConvs =
-                        advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }
-                    if (advConvs.isNotEmpty()) {
-                        //ESISTE UNA CONVERSAZIONE TUA PER QUESTO ANNUNCIO
-                        advConvs.forEach { conv ->
-                            // SE E' APERTA
-                            if (!conv.closed)
-                                chatButton.visibility = View.VISIBLE
-                            else {
-                                // SE E' CHIUSA
-                                slotUnavailable.setText("The bidder of this adv refused your request!")
-                            }
-                        }
-                    } else {
-                        //ESISTE UNA CONVERSAZIONE PER QUESTO ANNUNCIO MA NON E' TUA
-                        slotUnavailable.setText("This adv is unavailable at that moment!")
+                    chatButton.visibility = View.GONE
+                }
+                slotUnavailable.isVisible = false
+
+            } else {
+                val advConvs = convs.values.filter { conv -> conv.idAdv == idAdv }
+                val myAdvConvs = advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }
+                val myAdvsOpened = myAdvConvs.filter { x -> !x.closed }
+                val otherAdvConvs = advConvs.filter { conv -> conv.idAsker != sharedVM.currentUser.value!!.email }
+                val otherAdvsClosed = otherAdvConvs.filter { x -> x.closed }
+
+                println("now: closed degli altri:${otherAdvsClosed.size}; convs altri:${otherAdvConvs.size}")
+                //NON ESISTONO CONVERSAZIONI PER QUESTO ANNUNCIO
+                if (advConvs.isEmpty()) {
+                    chatButton.visibility = View.VISIBLE
+                    slotUnavailable.isVisible = false
+                }
+
+                //ESISTONO DELLE CONVERSAZIONI LEGATE A ME
+                else if (myAdvConvs.isNotEmpty()) {
+
+                    if (myAdvsOpened.isEmpty()) {
+                        chatButton.visibility = View.GONE
+                        slotUnavailable.text = getString(R.string.conversationRefused)
                         slotUnavailable.isVisible = true
+                    } else {
+                        chatButton.visibility = View.VISIBLE
+                        slotUnavailable.isVisible = false
+
                     }
+                }
+
+                //ESISTONO DELLE CONVERSAZIONI NON MIE MA TUTTE CHIUSE
+                else if(otherAdvsClosed.size == otherAdvConvs.size){
+                    chatButton.visibility = View.VISIBLE
+                    slotUnavailable.isVisible = false
+                    createNewConv = true
+                }
+
+                //ESISTONO CONVERSAZIONI NON MIE TRA CUI ALMENO UNA APERTA
+                else{
+                    chatButton.visibility = View.GONE
+                    slotUnavailable.text = getString(R.string.adv_unavailable)
+                    slotUnavailable.isVisible = true
                 }
             }
         }
@@ -171,11 +184,25 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         chatButton.setOnClickListener {
             val bundle = Bundle()
             val idAdv = arguments?.getString("id")
+            var idConv: String? = null
 
-            //fire the observer in chatfragment
-            sharedVM.loadMessages(idAdv!!)
-            println("now: carica i messaggi prima di entrare nella chat")
+            if(createNewConv == true){
+                idConv = sharedVM.createNewIdConv()
+                sharedVM.createNewConversationWOMessages(idAdv!!, idBidder, idConv)
+                sharedVM.loadMessages(idAdv)
+                println("now: nuova chat")
+            }
+            else{
+                val _conv = sharedVM.conversations.value!!
+                    .values.filter { x -> !x.closed && x.idAdv == idAdv}
 
+                if(_conv.isNotEmpty())
+                    idConv = _conv[0].idConv
+
+                sharedVM.loadMessages(idAdv!!)
+                println("now: carica i messaggi prima di entrare nella chat")
+
+            }
 
             bundle.putString("idAdv", idAdv)
             bundle.putString("title", titleEd.text.toString())

@@ -29,7 +29,8 @@ data class SmallAdv(
     val note: String,
     val creationTime: String,
     val skill: String,
-    val userId: String
+    val userId: String,
+    val booked: Boolean
 )
 
 class SmallAdvAdapter(

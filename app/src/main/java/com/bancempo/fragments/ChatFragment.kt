@@ -88,13 +88,25 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
 
 
+        var idConv: String? = null
+        val _convs = sharedVM.conversations.value!!.values.filter { x -> !x.closed && x.idAdv == idAdv}
+        if( _convs.isNotEmpty())
+            idConv = _convs[0].idConv
 
         acceptButton.setOnClickListener{
-
+            println("now: setta $idAdv come accepted")
+            sharedVM.bookAdv(idAdv)
+            acceptButton.visibility = View.GONE
+            refuseButton.visibility = View.GONE
+            textAcceptOrRefuse.visibility = View.GONE
         }
 
         refuseButton.setOnClickListener{
-
+            println("now: setta $idConv")
+            sharedVM.closeConversation(idConv!!)
+            acceptButton.visibility = View.GONE
+            refuseButton.visibility = View.GONE
+            textAcceptOrRefuse.visibility = View.GONE
         }
 
         sharedVM.messages.observe(viewLifecycleOwner){ messagesConv ->
