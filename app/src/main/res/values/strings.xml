@@ -16,6 +16,7 @@
     <string name="navdrawer_time_slot_list">Your advertisements</string>
     <string name="navdrawer_show_profile">Profile</string>
     <string name="navdrawer_interests_list">Your interests</string>
+    <string name="navdrawer_booked_list">Your reservations</string>
     <string name="label_timeSlotEditFragment">Edit Advertisement</string>
     <string name="label_showProfileFragment">Profile</string>
     <string name="label_timeSlotDetailsFragment">Advertisement Details</string>

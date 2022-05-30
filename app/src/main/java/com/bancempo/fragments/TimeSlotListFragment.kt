@@ -48,8 +48,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         searchLocation = view.findViewById<EditText>(R.id.searchLocation)
         dateFilter = view.findViewById<TextView>(R.id.filterDate)
         val myInterests =  arguments?.getBoolean("myInterests")
+        val myReservations = arguments?.getBoolean("myInterests")
 
-        if(myInterests == null || !myInterests) {
+        if(myInterests == null || !myInterests || myReservations == null || !myReservations) {
         searchLocation.isVisible = false
 
         ArrayAdapter.createFromResource(
@@ -102,7 +103,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             }
 
             //MY INTERESTS
-            //TODO AGGIUSTA INTERESTS
             if(myInterests != null && myInterests){
                 var newMyInterestsAdapter: com.bancempo.SmallAdvAdapter? = null
                 var interests: List<SmallAdv> = listOf()
@@ -170,7 +170,23 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     })
                 }
             }
-            else {
+            else if(myReservations != null && myReservations){
+                var newMyReservationsAdapter: com.bancempo.SmallAdvAdapter? = null
+                var reservations: List<SmallAdv> = listOf()
+
+                rv.layoutManager = LinearLayoutManager(context)
+
+                //Carico gli adv booked di cui sono il creatore
+                sharedVM.bookedAdvs.observe(viewLifecycleOwner){ advs ->
+                    if(advs.isNotEmpty()) {
+                        reservations =
+                            advs.values.filter { adv -> adv.userId == sharedVM.currentUser.value!!.email && adv.booked }
+                    }
+                }
+
+
+
+            } else {
 
                 sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
                     var searchListOfMyAdvs: MutableList<SmallAdv> = sadvs.values.toMutableList()

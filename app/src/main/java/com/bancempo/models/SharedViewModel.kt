@@ -84,6 +84,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    val bookedAdvs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
+        MutableLiveData<HashMap<String, SmallAdv>>().also {
+            loadBookedAdvs()
+        }
+    }
+
     val conversations: MutableLiveData<HashMap<String, Conversation>> by lazy {
         MutableLiveData<HashMap<String, Conversation>>().also {
             if (authUser.value != null) {
@@ -450,6 +456,50 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     fun loadAdvs() {
         db.collection("advertisements")
             .whereEqualTo("booked", false)
+            .orderBy("creationTime", Query.Direction.DESCENDING)
+            .addSnapshotListener { r, e ->
+                if (e != null)
+                    println("--- ERR $e")
+                else {
+                    val advMap: HashMap<String, SmallAdv> = hashMapOf()
+                    for (doc in r!!) {
+                        val date = doc.getString("date")
+                        val description = doc.getString("description")
+                        val duration = doc.getString("duration")
+                        val location = doc.getString("location")
+                        val note = doc.getString("note")
+                        val time = doc.getString("time")
+                        val title = doc.getString("title")
+                        val creationTime = doc.getString("creationTime")
+                        val skill = doc.getString("skill")
+                        val userId = doc.getString("userId")
+                        val booked = doc.getBoolean("booked")
+
+                        val adv = SmallAdv(
+                            doc.id,
+                            title!!,
+                            date!!,
+                            description!!,
+                            time!!,
+                            duration!!,
+                            location!!,
+                            note!!,
+                            creationTime!!,
+                            skill!!,
+                            userId!!,
+                            booked!!,
+                        )
+                        advMap[doc.id] = adv
+                    }
+                    advs.value = advMap
+                }
+            }
+    }
+
+
+    fun loadBookedAdvs() {
+        db.collection("advertisements")
+            .whereEqualTo("booked", true)
             .orderBy("creationTime", Query.Direction.DESCENDING)
             .addSnapshotListener { r, e ->
                 if (e != null)

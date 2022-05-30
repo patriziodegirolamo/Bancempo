@@ -63,6 +63,9 @@ class MainActivity : AppCompatActivity() {
         sharedVM.advs.observe(this) {
         }
 
+        sharedVM.bookedAdvs.observe(this) {
+        }
+
         sharedVM.conversations.observe(this){
         }
 
@@ -102,6 +105,19 @@ class MainActivity : AppCompatActivity() {
                         println("-----INT LIST")
                         val bundle = Bundle()
                         bundle.putBoolean("myInterests", true)
+
+                        navController.navigate(R.id.timeSlotListFragment, bundle)
+                    }
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
+                    return@setNavigationItemSelectedListener true
+                }
+
+                R.id.goToBookedList -> {
+                    println("-----INT LIST")
+                    if (navController.currentDestination?.id != R.id.timeSlotListFragment) {
+                        println("-----INT LIST")
+                        val bundle = Bundle()
+                        bundle.putBoolean("myReservations", true)
 
                         navController.navigate(R.id.timeSlotListFragment, bundle)
                     }
