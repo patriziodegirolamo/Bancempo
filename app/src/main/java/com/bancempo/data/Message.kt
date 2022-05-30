@@ -18,7 +18,7 @@ import com.bancempo.models.SharedViewModel
 
 data class Message(
     val idMsg: String,
-    val idAdv: String,
+    val idConv: String,
     val date: String,
     val text: String,
     val from: String,
@@ -65,10 +65,12 @@ class MessageAdapter(private val messageList: List<Message>, private val sharedV
             val effDate = arrDate[0]
             val arrTime = arrDate[1].split(":")
             val effTime = arrTime[0].plus(":").plus(arrTime[1])
+            val sender = sharedVM.users.value!!.values.filter { us -> us.email == mes.from }
 
             textMsg.text = mes.text
             dateMsg.text = effDate
             timeMsg.text = effTime
+            nickname.text = sender.get(0).nickname
         }
     }
 

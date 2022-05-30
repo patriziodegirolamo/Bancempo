@@ -97,6 +97,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    val users: MutableLiveData<HashMap<String, User>> by lazy {
+        MutableLiveData<HashMap<String, User>>().also {
+                loadUsers()
+        }
+    }
+
     fun afterLogin() {
         val email = authUser.value!!.email!!
         loadUser(email)
@@ -555,8 +561,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     fun loadConversations(){
         db.collection("conversations")
             .addSnapshotListener { r, e ->
-                if (e != null)
+                if (e != null) {
                     conversations.value = hashMapOf()
+                }
                 else {
                     val convsMap: HashMap<String, Conversation> = hashMapOf()
                     for (doc in r!!) {
@@ -567,48 +574,47 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val idBidder = doc.getString("idBidder")
                         val closed = doc.getBoolean("closed")
                         val conversation = Conversation(idConv!!, idAdv!!, idAsker!!, idBidder!!, closed!!)
-                        convsMap[idAdv] = conversation
+                        convsMap[idConv] = conversation
                     }
                     conversations.value = convsMap
+                    println("---------- ${conversations.value}")
                 }
             }
     }
 
-    fun createNewIdConv(): String {
-        return db.collection("conversations").document().id
-    }
-    fun createNewConversationWOMessages(idAdv: String, idBidder: String, newIdConv: String){
-        val newConv = Conversation(newIdConv, idAdv, currentUser.value!!.email, idBidder, false)
-        db.collection("conversations").document(newIdConv)
-            .set(newConv)
-            .addOnSuccessListener {
-                println("----------------------ok")
-            }
-            .addOnCanceledListener {
-                println("---------------------------------------- ERROR")
-            }
-    }
-
     fun createNewConversation(idAdv: String, idBidder: String, text: String){
+        println("--------- CREATE CONV $idAdv $idBidder")
         val newId = db.collection("conversations").document().id
         val newConv = Conversation(newId, idAdv, currentUser.value!!.email, idBidder, false)
         db.collection("conversations").document(newId)
             .set(newConv)
             .addOnSuccessListener {
-                createNewMessage(idAdv, text, to = idBidder, from = currentUser.value!!.email)
-
+                println("-------SUCCESS")
+                createNewMessage(newId, text, to = idBidder, from = currentUser.value!!.email)
             }
             .addOnCanceledListener {
                 println("---------------------------------------- ERROR")
             }
     }
 
-    //TODO: caricare i messaggi di una certa conversazione e non di un daato annuncio!
-    fun loadMessages(idAdv: String){
+    fun createNewMessage(idConv: String, text: String, from: String, to: String){
+        val date = getCreationTime()
+        val newId = db.collection("messages").document().id
+        val newMsg = Message(newId, idConv, date, text, from, to)
+
+        db.collection("messages").document(newId)
+            .set(newMsg)
+            .addOnSuccessListener {
+                println("---------------------------------------- funzionato")
+            }
+            .addOnCanceledListener {
+                println("---------------------------------------- ERROR")
+            }
+    }
+
+    fun loadMessages(idConv: String){
         db.collection("messages")
-            .whereEqualTo("idAdv", idAdv)
-            //.orderBy("date")
-            //.orderBy("date", Query.Direction.DESCENDING)
+            .whereEqualTo("idConv", idConv)
             .addSnapshotListener { r, e ->
                 if (e != null)
                     messages.value = hashMapOf()
@@ -621,26 +627,11 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val from = doc.getString("from")
                         val to = doc.getString("to")
                         println("msg: $text")
-                        val msg = Message(idMsg!!, idAdv, date!!, text!!, from!!, to!!)
+                        val msg = Message(idMsg!!, idConv, date!!, text!!, from!!, to!!)
                         msgsMap[doc.id] = msg
                     }
                     messages.value = msgsMap
                 }
-            }
-    }
-
-    fun createNewMessage(idAdv: String, text: String, from: String, to: String){
-        val date = getCreationTime()
-        val newId = db.collection("messages").document().id
-        val newMsg = Message(newId, idAdv, date, text, from, to)
-
-        db.collection("messages").document(newId)
-            .set(newMsg)
-            .addOnSuccessListener {
-                println("---------------------------------------- funzionato")
-            }
-            .addOnCanceledListener {
-                println("---------------------------------------- ERROR")
             }
     }
 
@@ -665,6 +656,33 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
             .addOnFailureListener {
                 Toast.makeText(app.applicationContext, "Error", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    fun loadUsers() {
+        db.collection("users")
+            .addSnapshotListener { r, e ->
+                if (e != null)
+                    users.value = hashMapOf()
+                else {
+                    val usersMap: HashMap<String, User> = hashMapOf()
+                    for (doc in r!!) {
+                        val nickname = doc.getString("nickname")
+                        val fullname = doc.getString("fullname")
+                        val email = doc.getString("email")
+                        val location = doc.getString("location")
+                        val description = doc.getString("description")
+                        val listOfSkills = doc.data["skills"] as List<String>
+                        val imageUser = doc.getString("imageUser")
+                        val user = User(
+                            fullname!!, nickname!!, description!!, location!!,
+                            email!!, listOfSkills, imageUser!!
+                        )
+
+                        usersMap[doc.id] = user
+                    }
+                    users.value = usersMap
+                }
             }
     }
 

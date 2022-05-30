@@ -102,6 +102,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             }
 
             //MY INTERESTS
+            //TODO AGGIUSTA INTERESTS
             if(myInterests != null && myInterests){
                 var newMyInterestsAdapter: com.bancempo.SmallAdvAdapter? = null
                 var interests: List<SmallAdv> = listOf()
@@ -113,11 +114,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                     if(advs != null &&  convs != null) {
                         convs.values.filter { conv ->
-                            conv.idAsker == sharedVM.currentUser.value!!.email
+                            conv.idAsker == sharedVM.currentUser.value!!.email && !conv.closed
                         }.forEach { conv ->
-                            interests = advs.values.filter { adv -> adv.id == conv.idAdv && conv.idAsker == sharedVM.authUser.value!!.email}
+                            interests = advs.values.filter { adv -> adv.id == conv.idAdv}
                         }
 
+                        println("---------ADVS ${advs.values}")
                         println("--------- INTERESTS $interests")
                         newMyInterestsAdapter =
                             SmallAdvAdapter1(interests, false, sharedVM)

@@ -14,7 +14,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
+import com.bancempo.data.MessageAdapter
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -126,11 +129,13 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
             createNewConv = false
             if (isMyAdv) {
+                //L'UTENTE LOGGATO E' IL BIDDER, VEDO SE ESISTONO CONVERSAZIONI APERTE PER QUELL'ANNUNCIO
                 val filtered = convs.values.filter { conv ->
                     conv.idBidder == sharedVM.currentUser.value!!.email &&
-                            conv.idAdv == idAdv
+                            conv.idAdv == idAdv && !conv.closed
                 }
                 if (filtered.isNotEmpty()) {
+                    //SE NE ESISTE ALMENO UNA VISUALIZZO IL BOTTONE CHAT
                     chatButton.visibility = View.VISIBLE
                 } else {
                     chatButton.visibility = View.GONE
@@ -138,42 +143,60 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 slotUnavailable.isVisible = false
 
             } else {
+                //SE SONO LOGGATO COME ASKER
+                println("------------- ${convs.values}}")
+
+                // tutte le conversazioni di quell'annuncio
                 val advConvs = convs.values.filter { conv -> conv.idAdv == idAdv }
+                println("-------------ADVCONVS $idAdv ${convs.values.filter { conv -> conv.idAdv == idAdv }}")
+                //tutte le mie conversazioni di quell'annuncio
                 val myAdvConvs = advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }
+                println("-------------MYADVCONVS ${advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }}")
+
+                //tutte le mie conversazioni di quell'annuncio aperte
                 val myAdvsOpened = myAdvConvs.filter { x -> !x.closed }
+                println("-------------MYADVOPENED ${myAdvConvs.filter { x -> !x.closed }}")
+
+                //tutte le conversazioni di quell'annuncio non mie
                 val otherAdvConvs = advConvs.filter { conv -> conv.idAsker != sharedVM.currentUser.value!!.email }
+                //tutte le conversazioni di quell'annuncio chiuse non mie
                 val otherAdvsClosed = otherAdvConvs.filter { x -> x.closed }
 
                 println("now: closed degli altri:${otherAdvsClosed.size}; convs altri:${otherAdvConvs.size}")
                 //NON ESISTONO CONVERSAZIONI PER QUESTO ANNUNCIO
                 if (advConvs.isEmpty()) {
+                    //il bottone chat è visibile a tutti gli asker
                     chatButton.visibility = View.VISIBLE
                     slotUnavailable.isVisible = false
+                    createNewConv = true
                 }
 
                 //ESISTONO DELLE CONVERSAZIONI LEGATE A ME
                 else if (myAdvConvs.isNotEmpty()) {
 
                     if (myAdvsOpened.isEmpty()) {
+                        //se sono chiuse non posso più visualizzare il pulsante chat
+                            // vengo avvisato che il bidder ha rifiutato la mia richiesta
                         chatButton.visibility = View.GONE
                         slotUnavailable.text = getString(R.string.conversationRefused)
                         slotUnavailable.isVisible = true
                     } else {
+                        println("------------------ GIUSTO")
                         chatButton.visibility = View.VISIBLE
                         slotUnavailable.isVisible = false
-
+                        createNewConv = false
                     }
                 }
-
                 //ESISTONO DELLE CONVERSAZIONI NON MIE MA TUTTE CHIUSE
                 else if(otherAdvsClosed.size == otherAdvConvs.size){
+                    println("------------------ GIUSTO")
                     chatButton.visibility = View.VISIBLE
                     slotUnavailable.isVisible = false
                     createNewConv = true
                 }
-
                 //ESISTONO CONVERSAZIONI NON MIE TRA CUI ALMENO UNA APERTA
                 else{
+                    //non posso visualizzare bottone chat e mi avvisano della negoziazione in corso
                     chatButton.visibility = View.GONE
                     slotUnavailable.text = getString(R.string.adv_unavailable)
                     slotUnavailable.isVisible = true
@@ -181,11 +204,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             }
         }
 
+        //Quando premo il pulsante chat mi rimanda solo al chatFragment
         chatButton.setOnClickListener {
             val bundle = Bundle()
             val idAdv = arguments?.getString("id")
-            var idConv: String? = null
-
+            /*
             if(createNewConv == true){
                 idConv = sharedVM.createNewIdConv()
                 sharedVM.createNewConversationWOMessages(idAdv!!, idBidder, idConv)
@@ -203,14 +226,20 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 println("now: carica i messaggi prima di entrare nella chat")
 
             }
+             */
 
             bundle.putString("idAdv", idAdv)
             bundle.putString("title", titleEd.text.toString())
             bundle.putString("duration", durationEd.text.toString())
+            bundle.putString("description", descriptionEd.text.toString())
             bundle.putString("date", dateEd.text.toString())
             bundle.putString("time", timeEd.text.toString())
             bundle.putString("location", locationEd.text.toString())
+            bundle.putString("note", noteEd.text.toString())
+            bundle.putString("skill", skills)
+            bundle.putBoolean("isMyAdv", isMyAdv)
             bundle.putString("idBidder", idBidder)
+            bundle.putBoolean("newConv", createNewConv!!)
 
             //NAVIGATION CHAT FRAGMENT
             requireView().findNavController()
