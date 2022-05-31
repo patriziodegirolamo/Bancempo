@@ -65,13 +65,13 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val services: MutableLiveData<HashMap<String, Skill>> by lazy {
         MutableLiveData<HashMap<String, Skill>>().also {
-            loadServices()
+            if (authUser.value != null)
+                loadServices()
         }
     }
 
     val myAdvs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
-            //TODO CAPIRE SE SERVE
             if (authUser.value != null) {
                 loadMyAdvs(authUser.value!!.email!!)
             }
@@ -80,13 +80,15 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val advs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
-            loadAdvs()
+            if (authUser.value != null)
+                loadAdvs()
         }
     }
 
     val bookedAdvs: MutableLiveData<HashMap<String, SmallAdv>> by lazy {
         MutableLiveData<HashMap<String, SmallAdv>>().also {
-            loadBookedAdvs()
+            if (authUser.value != null)
+                loadBookedAdvs()
         }
     }
 
@@ -105,16 +107,15 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val users: MutableLiveData<HashMap<String, User>> by lazy {
         MutableLiveData<HashMap<String, User>>().also {
+            if (authUser.value != null)
                 loadUsers()
         }
     }
 
-    fun afterLogin() {
-        val email = authUser.value!!.email!!
+    fun afterLogin(currentUser: FirebaseUser) {
+        val email = currentUser.email!!
         loadUser(email)
-        loadAdvs()
         loadMyAdvs(email)
-        loadBookedAdvs()
         loadConversations()
         loadServices()
     }
