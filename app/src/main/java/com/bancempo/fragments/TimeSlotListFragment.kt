@@ -191,7 +191,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
 
 
-            } else {
+            }
+            else {
 
                 sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
                     var searchListOfMyAdvs: MutableList<SmallAdv> = sadvs.values.toMutableList()
@@ -734,7 +735,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
             sharedVM.advs.observe(viewLifecycleOwner) { sadvs ->
 
-
+                println("-----$sadvs")
                 var searchListOfAdvs: MutableList<SmallAdv> = sadvs.values.toMutableList()
                 var newAdapter: com.bancempo.SmallAdvAdapter? = null
 
