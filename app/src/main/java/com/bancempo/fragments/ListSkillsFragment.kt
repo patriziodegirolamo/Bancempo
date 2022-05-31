@@ -11,15 +11,49 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.ItemAdapter
 import com.bancempo.R
 import com.bancempo.models.SharedViewModel
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.widget.Button
+import androidx.core.view.isVisible
+import com.bancempo.R.id.Search_bar
 
 
 class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
 
     private val sharedVM: SharedViewModel by activityViewModels()
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_filter, menu)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+            R.id.search -> {
+                val sb = view?.findViewById<SearchView>(
+                    Search_bar)
+                if (sb != null) {
+
+
+                    if(sb.isVisible)
+                        sb.isVisible=false
+                    else
+                        sb.isVisible=true
+
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         sharedVM.services.observe(viewLifecycleOwner) { services ->
 
@@ -29,7 +63,7 @@ class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
             val adapter = ItemAdapter(services.values.sortedBy { x -> x.title }.toList())
             rv.adapter = adapter
 
-            val sb = view.findViewById<SearchView>(R.id.Search_bar)
+            val sb = view.findViewById<SearchView>(Search_bar)
             sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
                     val searchListOfSkills = services.values.filter { x ->
