@@ -51,6 +51,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private lateinit var note: TextInputLayout
     private lateinit var noteEd: TextInputEditText
 
+    private lateinit var advof: TextView
+
     private lateinit var chipGroup: ChipGroup
 
     private lateinit var chatButton: Button
@@ -92,6 +94,8 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         note = view.findViewById(R.id.note_adv)
         noteEd = view.findViewById(R.id.edit_note_text)
 
+        advof = view.findViewById(R.id.advof)
+
         chipGroup = view.findViewById(R.id.chipGroup)
 
         chatButton = view.findViewById(R.id.button_chat)
@@ -102,6 +106,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         descriptionEd.setText(arguments?.getString("description"))
         dateEd.setText(arguments?.getString("date"))
         timeEd.setText(arguments?.getString("time"))
+        advof.setText("Adv of ${arguments?.getString("userId")}")
         durationEd.setText(arguments?.getString("duration"))
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
@@ -129,6 +134,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
             createNewConv = false
             if (isMyAdv) {
+                advof.isVisible=false
                 //L'UTENTE LOGGATO E' IL BIDDER, VEDO SE ESISTONO CONVERSAZIONI APERTE PER QUELL'ANNUNCIO
                 val filtered = convs.values.filter { conv ->
                     conv.idBidder == sharedVM.currentUser.value!!.email &&
