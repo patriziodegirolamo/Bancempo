@@ -81,10 +81,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         }
 
         dateFilter.setOnClickListener {
-            if (dateFilter.text.toString() == "Filter by date ")
+            if (dateFilter.text.toString() == getString(R.string.date))
                 showDialogOfDatePicker()
             else
-                dateFilter.text = "Filter by date "
+                dateFilter.text = getString(R.string.date)
         }
         }
         else{
@@ -238,7 +238,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                             rv.adapter = newMyAdapter
 
-                            if (dateFilter.text.toString() != "Filter by date ") {
+                            if (dateFilter.text.toString() != getString(R.string.date)) {
                                 dateFilter.setText(dateFilter.text.toString() + " ")
                                 dateFilter.setText(dateFilter.text.trim())
                                 dateFilter.setText(dateFilter.text.toString() + " ")
@@ -253,11 +253,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     val textWatcherDate = object : TextWatcher {
                         override fun afterTextChanged(s: Editable?) {
 
-                            if (dateFilter.text.toString() == "Filter by date ") {
+                            if (dateFilter.text.toString() == getString(R.string.date)) {
                                 dateFilter.setCompoundDrawablesWithIntrinsicBounds(
                                     0,
                                     0,
-                                    R.drawable.ic_icons8_modifica_il_calendario_24,
+                                    R.drawable.ic_baseline_today_24,
                                     0
                                 )
 
@@ -428,7 +428,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         ) {
                             if (pos == 0) {
                                 if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                    && (dateFilter.text.toString() != "Filter by date ")
+                                    && (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
                                     newMyAdapter =
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
@@ -441,7 +441,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
 
                                 } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                    (dateFilter.text.toString() != "Filter by date ")
+                                    (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
                                     newMyAdapter =
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
@@ -449,7 +449,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 .contains(dateFilter.text.toString().toLowerCase())
                                         }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
                                 } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                    (dateFilter.text.toString() == "Filter by date ")
+                                    (dateFilter.text.toString() == getString(R.string.date))
                                 ) {
                                     newMyAdapter =
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
@@ -470,7 +470,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                 rv.adapter = newMyAdapter
                             } else if (pos == 1) {
                                 if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                    && (dateFilter.text.toString() != "Filter by date ")
+                                    && (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
                                     newMyAdapter =
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
@@ -489,7 +489,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             new_date
                                         }, true, sharedVM)
                                 } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                    (dateFilter.text.toString() != "Filter by date ")
+                                    (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
                                     newMyAdapter =
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
@@ -504,7 +504,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             new_date
                                         }, true, sharedVM)
                                 } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                    (dateFilter.text.toString() == "Filter by date ")
+                                    (dateFilter.text.toString() == getString(R.string.date))
                                 ) {
 
                                     newMyAdapter =
@@ -540,7 +540,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                             } else if (pos == 2) {
                                 if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                    && (dateFilter.text.toString() != "Filter by date ")
+                                    && (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
                                     newMyAdapter =
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
@@ -559,7 +559,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             new_date
                                         }, true, sharedVM)
                                 } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                    (dateFilter.text.toString() != "Filter by date ")
+                                    (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
 
                                     newMyAdapter =
@@ -576,7 +576,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }, true, sharedVM)
 
                                 } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                    (dateFilter.text.toString() == "Filter by date ")
+                                    (dateFilter.text.toString() == getString(R.string.date))
                                 ) {
 
                                     newMyAdapter =
@@ -614,7 +614,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                             } else if (pos == 3) {
                                 if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                    && (dateFilter.text.toString() != "Filter by date ")
+                                    && (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
                                     newMyAdapter =
                                         SmallAdvAdapter1(searchListOfMyAdvs.filter { adv ->
@@ -626,7 +626,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 .contains(dateFilter.text.toString().toLowerCase())
                                         }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
                                 } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                    (dateFilter.text.toString() != "Filter by date ")
+                                    (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
 
                                     newMyAdapter =
@@ -636,7 +636,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }.toList().sortedBy { adv -> adv.title }, true, sharedVM)
 
                                 } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                    (dateFilter.text.toString() == "Filter by date ")
+                                    (dateFilter.text.toString() == getString(R.string.date))
                                 ) {
 
                                     newMyAdapter =
@@ -660,7 +660,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                             } else if (pos == 4) {
                                 if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                    && (dateFilter.text.toString() != "Filter by date ")
+                                    && (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
 
                                     newMyAdapter =
@@ -679,7 +679,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             sharedVM
                                         )
                                 } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                    (dateFilter.text.toString() != "Filter by date ")
+                                    (dateFilter.text.toString() != getString(R.string.date))
                                 ) {
 
                                     newMyAdapter =
@@ -695,7 +695,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         )
 
                                 } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                    (dateFilter.text.toString() == "Filter by date ")
+                                    (dateFilter.text.toString() == getString(R.string.date))
                                 ) {
 
                                     newMyAdapter =
@@ -783,7 +783,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         rv.adapter = newAdapter
 
 
-                        if (dateFilter.text.toString() != "Filter by date ") {
+                        if (dateFilter.text.toString() != getString(R.string.date)) {
                             dateFilter.setText(dateFilter.text.toString() + " ")
                             dateFilter.setText(dateFilter.text.trim())
                             dateFilter.setText(dateFilter.text.toString() + " ")
@@ -798,11 +798,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 val textWatcherDate = object : TextWatcher {
                     override fun afterTextChanged(s: Editable?) {
 
-                        if (dateFilter.text.toString() == "Filter by date ") {
+                        if (dateFilter.text.toString() == getString(R.string.date)) {
                             dateFilter.setCompoundDrawablesWithIntrinsicBounds(
                                 0,
                                 0,
-                                R.drawable.ic_icons8_modifica_il_calendario_24,
+                                R.drawable.ic_baseline_today_24,
                                 0
                             )
 
@@ -1019,7 +1019,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     ) {
                         if (pos == 0) {
                             if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")
+                                && (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1035,7 +1035,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")
+                                (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1047,7 +1047,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")
+                                (dateFilter.text.toString() == getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1073,7 +1073,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             rv.adapter = newAdapter
                         } else if (pos == 1) {
                             if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")
+                                && (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1096,7 +1096,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }, false, sharedVM)
                                 }
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")
+                                (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1115,7 +1115,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }, false, sharedVM)
                                 }
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")
+                                (dateFilter.text.toString() == getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1156,7 +1156,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                         } else if (pos == 2) {
                             if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")
+                                && (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1179,7 +1179,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }, false, sharedVM)
                                 }
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")
+                                (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1198,7 +1198,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }, false, sharedVM)
                                 }
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")
+                                (dateFilter.text.toString() == getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1240,7 +1240,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                         } else if (pos == 3) {
                             if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")
+                                && (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1256,7 +1256,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")
+                                (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1268,7 +1268,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         }.toList().sortedBy { adv -> adv.title }, false, sharedVM)
                                 }
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")
+                                (dateFilter.text.toString() == getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1297,7 +1297,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                         } else if (pos == 4) {
                             if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty())
-                                && (dateFilter.text.toString() != "Filter by date ")
+                                && (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1319,7 +1319,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         )
                                 }
                             } else if ((locationFilter.text.isBlank() || locationFilter.text.isEmpty()) &&
-                                (dateFilter.text.toString() != "Filter by date ")
+                                (dateFilter.text.toString() != getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =
@@ -1337,7 +1337,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                         )
                                 }
                             } else if ((locationFilter.text.isNotBlank() || locationFilter.text.isNotEmpty()) &&
-                                (dateFilter.text.toString() == "Filter by date ")
+                                (dateFilter.text.toString() == getString(R.string.date))
                             ) {
                                 skill.split(",").forEach {
                                     newAdapter =

@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
@@ -147,7 +148,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             refuseButton.visibility = View.GONE
             textAcceptOrRefuse.visibility = View.GONE
 
-            //TODO NAVIGAZIONE INDIETRO
+            findNavController().popBackStack()
         }
 
         refuseButton.setOnClickListener{
@@ -157,27 +158,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             refuseButton.visibility = View.GONE
             textAcceptOrRefuse.visibility = View.GONE
 
-
-            //NAVIGARE INDIETRO ?????
-            val bundle = Bundle()
-            bundle.putString("id", idAdv)
-            bundle.putString("title", title)
-            bundle.putString("date", arguments?.getString("date")!!)
-            bundle.putString("description", arguments?.getString("description")!!)
-            bundle.putString("time", arguments?.getString("time")!!)
-            bundle.putString("duration", arguments?.getString("duration")!!)
-            bundle.putString("location", arguments?.getString("location")!!)
-            bundle.putString("note", arguments?.getString("note")!!)
-            bundle.putString("skill", arguments?.getString("skill")!!)
-            bundle.putString("idBidder", idBidder)
-            bundle.putBoolean("isMyAdv", arguments?.getBoolean("isMyAdv")!!)
-
-            Navigation.findNavController(it).navigate(
-                R.id.action_chatFragment_to_timeSlotDetailsFragment,
-                bundle
-            )
-
-            //TODO AGGIUSTARE NAVIGAZIONE INDIETRO
+            findNavController().popBackStack()
 
         }
 

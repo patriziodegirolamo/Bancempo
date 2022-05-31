@@ -49,6 +49,8 @@
     <string name="logo_login_page">Logo login page</string>
     <string name="fui_sign_in_with_phone" />
     <string name="fui_sign_in_with_google" translation_description="Sign in button text">Sign in with Google</string>
+    <string name="date">Date </string>
+
 
 
 </resources>
