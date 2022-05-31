@@ -112,7 +112,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     fun afterLogin() {
         val email = authUser.value!!.email!!
         loadUser(email)
+        loadAdvs()
         loadMyAdvs(email)
+        loadBookedAdvs()
         loadConversations()
         loadServices()
     }
@@ -535,7 +537,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         )
                         advMap[doc.id] = adv
                     }
-                    advs.value = advMap
+                    bookedAdvs.value = advMap
                 }
             }
     }
