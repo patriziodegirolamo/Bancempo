@@ -118,6 +118,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         loadMyAdvs(email)
         loadConversations()
         loadServices()
+        loadUsers()
     }
 
     fun uploadBitmap(btm: Bitmap, view: View, skillsString: String) {
@@ -653,7 +654,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     fun createNewMessage(idConv: String, text: String, from: String, to: String){
         val date = getCreationTime()
         val newId = db.collection("messages").document().id
-        val newMsg = Message(newId, idConv, date, text, from, to)
+        val newMsg = Message(newId, idConv, date, text, from, to, false)
 
         db.collection("messages").document(newId)
             .set(newMsg)
@@ -680,7 +681,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val from = doc.getString("from")
                         val to = doc.getString("to")
                         println("msg: $text")
-                        val msg = Message(idMsg!!, idConv, date!!, text!!, from!!, to!!)
+                        val msg = Message(idMsg!!, idConv, date!!, text!!, from!!, to!!, false)
                         msgsMap[doc.id] = msg
                     }
                     messages.value = msgsMap
@@ -739,6 +740,13 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-
+    fun readMessage(idMess: String){
+        db.collection("messages")
+            .document(idMess)
+            .update("readed", true)
+            .addOnSuccessListener {
+                println("readed: letto!")
+            }
+    }
 }
 

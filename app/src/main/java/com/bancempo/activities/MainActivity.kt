@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.navView, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
 
-        /*
+
         sharedVM.currentUser.observe(this) {
         }
 
@@ -68,12 +68,13 @@ class MainActivity : AppCompatActivity() {
 
 
         sharedVM.messages.observe(this){
+
         }
 
         sharedVM.users.observe(this){
         }
 
-         */
+
 
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
