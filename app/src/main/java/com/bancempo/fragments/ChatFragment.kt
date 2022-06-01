@@ -35,6 +35,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var textAcceptOrRefuse: TextView
     private lateinit var acceptButton: Button
     private lateinit var refuseButton: Button
+    private lateinit var tvNoCredit: TextView
 
     private lateinit var textMsg: EditText
 
@@ -52,6 +53,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         idBidder = arguments?.getString("idBidder")!!
         duration = arguments?.getString("duration")!!
 
+        tvNoCredit = view.findViewById(R.id.tvNoCredit)
+        tvNoCredit.visibility = View.GONE
+
+
         sendButton = view.findViewById(R.id.button_gchat_send)
         textMsg = view.findViewById(R.id.edit_gchat_message)
 
@@ -62,18 +67,13 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         //Appena apro la chat se non è una conversazione nuova devo caricare i messaggi
         val createNewConv = arguments?.getBoolean("newConv")!!
-        println("------------$createNewConv")
         if(!createNewConv){
-            println("------------ ${sharedVM.conversations.value!!.values.filter { conv -> conv.idAdv == idAdv && !conv.closed }}")
             currentConversation = sharedVM.conversations.value!!.values.filter { conv -> conv.idAdv == idAdv && !conv.closed }.get(0)
-            println("---------------$currentConversation")
             sharedVM.loadMessages(currentConversation!!.idConv)
-            println("-------------${sharedVM.messages}")
         }
         else{
             //CANCELLARE MESSAGGI
-            println("---------------$currentConversation")
-            println("-------------- $idAdv $idBidder")
+
         }
 
         //Nei miei annunci posso accettare/rifiutare la richiesta quindi compaiono i bottoni
@@ -169,13 +169,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 acceptButton.visibility = View.GONE
                 refuseButton.visibility = View.GONE
                 textAcceptOrRefuse.visibility = View.GONE
+                tvNoCredit.visibility = View.GONE
 
                 findNavController().popBackStack()
             }
             else{
                 acceptButton.isEnabled = false
+                tvNoCredit.visibility = View.VISIBLE
                 //TODO: cosa fare se non ha soldi?
-                println("users: troppi pochi soldi!")
             }
 
         }
