@@ -119,6 +119,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         loadConversations()
         loadServices()
         loadUsers()
+        loadAdvs()
+        loadBookedAdvs()
     }
 
     fun uploadBitmap(btm: Bitmap, view: View, skillsString: String) {
@@ -161,11 +163,11 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     }
 
-    fun loadImageUserById(userId: String, view: View){
+    fun loadImageUserById(userId: String, view: View) {
         db.collection("users").document(userId).get()
             .addOnSuccessListener { doc ->
                 val imageUser = doc!!.getString("imageUser")
-                if(imageUser != ""){
+                if (imageUser != "") {
                     val ref = storageReference.getReferenceFromUrl(imageUser!!)
                     val smallAdvIV = view.findViewById<ImageView>(R.id.smallAdv_image)
                     Glide.with(app.applicationContext).load(ref)
@@ -174,15 +176,15 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun loadImageUser(iv: ImageView, view: View) {
-        if (currentUser.value?.imageUser != "") {
-            val myRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
+    fun loadImageUser(iv: ImageView, view: View, user: User) {
+        if (user.imageUser != "") {
+            val myRef = storageReference.getReferenceFromUrl(user.imageUser!!)
             val pb = view.findViewById<ProgressBar>(R.id.progressBar)
-            if(pb != null)
+            if (pb != null)
                 pb.visibility = View.VISIBLE
 
             Glide.with(app.applicationContext).load(myRef)
-                .listener(object: RequestListener<Drawable>{
+                .listener(object : RequestListener<Drawable> {
                     override fun onResourceReady(
                         resource: Drawable?,
                         model: Any?,
@@ -190,7 +192,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        if(pb!=null)
+                        if (pb != null)
                             pb.visibility = View.GONE
                         iv.visibility = View.VISIBLE
                         return false
@@ -254,12 +256,15 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     location,
                     email,
                     finalList,
-                    currentUser.value!!.imageUser
+                    currentUser.value!!.imageUser,
+                    currentUser.value!!.credit
                 )
 
                 val advsToDelete = advs.value!!.values
-                    .filter { x -> x.userId == currentUser.value!!.email
-                            && containsSkill(toDelete,  x.skill.split(",")) }
+                    .filter { x ->
+                        x.userId == currentUser.value!!.email
+                                && containsSkill(toDelete, x.skill.split(","))
+                    }
                     .toList()
 
 
@@ -324,9 +329,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     }
 
-    fun containsSkill(listToDelete: List<String>, skillsOfAdv: List<String>): Boolean{
-        for(del in listToDelete){
-            if(skillsOfAdv.contains(del)){
+    fun containsSkill(listToDelete: List<String>, skillsOfAdv: List<String>): Boolean {
+        for (del in listToDelete) {
+            if (skillsOfAdv.contains(del)) {
                 return true
             }
         }
@@ -346,7 +351,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         "",
                         authUser.value!!.email!!,
                         listOf(),
-                        ""
+                        "",
+                        0.0
                     )
                     db.collection("users").document(authUser.value!!.email!!)
                         .set(newUser)
@@ -376,9 +382,10 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val description = doc.getString("description")
                         val listOfSkills = doc.data["skills"] as List<String>
                         val imageUser = doc.getString("imageUser")
+                        val credit = doc.getDouble("credit") as Double
                         val user = User(
                             fullname!!, nickname!!, description!!, location!!,
-                            email!!, listOfSkills, imageUser!!
+                            email!!, listOfSkills, imageUser!!, credit
                         )
 
                         currentUser.value = user
@@ -612,13 +619,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     }
 
-    fun loadConversations(){
+    fun loadConversations() {
         db.collection("conversations")
             .addSnapshotListener { r, e ->
                 if (e != null) {
                     conversations.value = hashMapOf()
-                }
-                else {
+                } else {
                     val convsMap: HashMap<String, Conversation> = hashMapOf()
                     for (doc in r!!) {
                         println("------ ${doc}")
@@ -627,7 +633,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val idAsker = doc.getString("idAsker")
                         val idBidder = doc.getString("idBidder")
                         val closed = doc.getBoolean("closed")
-                        val conversation = Conversation(idConv!!, idAdv!!, idAsker!!, idBidder!!, closed!!)
+                        val conversation =
+                            Conversation(idConv!!, idAdv!!, idAsker!!, idBidder!!, closed!!)
                         convsMap[idConv] = conversation
                     }
                     conversations.value = convsMap
@@ -636,7 +643,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun createNewConversation(idAdv: String, idBidder: String, text: String){
+    fun createNewConversation(idAdv: String, idBidder: String, text: String) {
         println("--------- CREATE CONV $idAdv $idBidder")
         val newId = db.collection("conversations").document().id
         val newConv = Conversation(newId, idAdv, currentUser.value!!.email, idBidder, false)
@@ -651,7 +658,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun createNewMessage(idConv: String, text: String, from: String, to: String){
+    fun createNewMessage(idConv: String, text: String, from: String, to: String) {
         val date = getCreationTime()
         val newId = db.collection("messages").document().id
         val newMsg = Message(newId, idConv, date, text, from, to, false)
@@ -666,7 +673,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun loadMessages(idConv: String){
+    fun loadMessages(idConv: String) {
         db.collection("messages")
             .whereEqualTo("idConv", idConv)
             .addSnapshotListener { r, e ->
@@ -689,7 +696,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun bookAdv(idAdv: String){
+    fun bookAdv(idAdv: String) {
         db.collection("advertisements").document(idAdv)
             .update("booked", true)
             .addOnSuccessListener {
@@ -701,7 +708,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun closeConversation(idConv: String){
+    fun closeConversation(idConv: String) {
         db.collection("conversations").document(idConv)
             .update("closed", true)
             .addOnSuccessListener {
@@ -728,9 +735,10 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val description = doc.getString("description")
                         val listOfSkills = doc.data["skills"] as List<String>
                         val imageUser = doc.getString("imageUser")
+                        val credit = doc.getDouble("credit") as Double
                         val user = User(
                             fullname!!, nickname!!, description!!, location!!,
-                            email!!, listOfSkills, imageUser!!
+                            email!!, listOfSkills, imageUser!!, credit
                         )
 
                         usersMap[doc.id] = user
@@ -740,12 +748,33 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             }
     }
 
-    fun readMessage(idMess: String){
+    fun readMessage(idMess: String) {
         db.collection("messages")
             .document(idMess)
             .update("readed", true)
             .addOnSuccessListener {
                 println("readed: letto!")
+            }
+    }
+
+    fun createNewTransaction(idBidder: String, idAsker: String, amountOfTime: Double) {
+        val askerDocRef = db.collection("users").document(idAsker)
+        val bidderDocRef = db.collection("users").document(idBidder)
+
+        val creditAsker = users.value!!.get(idAsker)!!.credit
+        val creditBidder = users.value!!.get(idBidder)!!.credit
+
+        db.runBatch { batch ->
+            batch.update(askerDocRef, "credit", creditAsker - amountOfTime)
+            batch.update(bidderDocRef, "credit", creditBidder + amountOfTime)
+        }
+            .addOnSuccessListener {
+            Toast.makeText(app.applicationContext, "Transaction Completed!", Toast.LENGTH_SHORT)
+                .show()
+        }
+            .addOnFailureListener {
+                Toast.makeText(app.applicationContext, "Transaction Failed!", Toast.LENGTH_SHORT)
+                    .show()
             }
     }
 }

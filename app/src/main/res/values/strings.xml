@@ -51,7 +51,7 @@
     <string name="fui_sign_in_with_phone" />
     <string name="fui_sign_in_with_google" translation_description="Sign in button text">Sign in with Google</string>
     <string name="date">Date </string>
-
+    <string name="noCredit">L\'altro utente non ha credito sufficiente. Puoi attendere che lo maturi entro la data prevista o rifiutare la sua richiesta</string>
 
 
 </resources>

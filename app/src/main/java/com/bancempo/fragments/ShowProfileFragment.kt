@@ -24,6 +24,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
     private lateinit var emailEd: TextInputEditText
     private lateinit var locationEd: TextInputEditText
     private lateinit var skillsEd: TextInputEditText
+    private lateinit var creditEd: TextInputEditText
 
     private lateinit var photo: ImageView
     private lateinit var chipGroup: ChipGroup
@@ -40,6 +41,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         emailEd = view.findViewById(R.id.textViewEmail_ed)
         locationEd = view.findViewById(R.id.textViewLocation_ed)
         descriptionEd = view.findViewById(R.id.textViewDescription_ed)
+        creditEd = view.findViewById(R.id.tvCredit_ed)
 
         skillsEd = view.findViewById(R.id.textViewSkills_ed)
         chipGroup = view.findViewById(R.id.chipGroup)
@@ -50,6 +52,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             emailEd.setText(user.email)
             locationEd.setText(user.location)
             descriptionEd.setText(user.description)
+            creditEd.setText(user.credit.toString())
             skillsEd.setText("")
 
 
@@ -72,7 +75,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             if (it) {
                 //la foto è nuova
                 if (loadImg) {
-                    sharedVM.loadImageUser(photo, view)
+                    sharedVM.loadImageUser(photo, view, sharedVM.currentUser.value!!)
                 } else {
                     val pb = view.findViewById<ProgressBar>(R.id.progressBar)
                     pb.visibility = View.VISIBLE
@@ -81,7 +84,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
                 }
             } else {
                 //la foto è vecchia
-                sharedVM.loadImageUser(photo, view)
+                sharedVM.loadImageUser(photo, view, sharedVM.currentUser.value!!)
             }
 
         }

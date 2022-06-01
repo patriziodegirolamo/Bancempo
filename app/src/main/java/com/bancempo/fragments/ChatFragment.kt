@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
 import com.bancempo.data.Conversation
 import com.bancempo.data.MessageAdapter
+import com.bancempo.data.User
 import com.bancempo.models.SharedViewModel
 
 
@@ -26,6 +28,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var title: String
     private lateinit var idAdv: String
     private lateinit var idBidder: String
+    private lateinit var duration: String
 
     private lateinit var sendButton: Button
 
@@ -47,6 +50,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         title = arguments?.getString("title")!!
         idAdv = arguments?.getString("idAdv")!!
         idBidder = arguments?.getString("idBidder")!!
+        duration = arguments?.getString("duration")!!
 
         sendButton = view.findViewById(R.id.button_gchat_send)
         textMsg = view.findViewById(R.id.edit_gchat_message)
@@ -146,18 +150,34 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
         var idConv: String? = null
+        var idAsker : String? = null
+        var asker : User? = null
         val _convs = sharedVM.conversations.value!!.values.filter { x -> !x.closed && x.idAdv == idAdv}
-        if( _convs.isNotEmpty())
+        if( _convs.isNotEmpty()) {
             idConv = _convs[0].idConv
+            idAsker = _convs[0].idAsker
+            asker = sharedVM.users.value!!.get(idAsker)
+        }
 
-        acceptButton.setOnClickListener{
+        val amountOfTime = duration.toDouble()
+            acceptButton.setOnClickListener{
             println("now: setta $idAdv come accepted")
-            sharedVM.bookAdv(idAdv)
-            acceptButton.visibility = View.GONE
-            refuseButton.visibility = View.GONE
-            textAcceptOrRefuse.visibility = View.GONE
 
-            findNavController().popBackStack()
+            if(asker != null && asker.credit > amountOfTime){
+                sharedVM.bookAdv(idAdv)
+                sharedVM.createNewTransaction(idBidder, idAsker!!, amountOfTime)
+                acceptButton.visibility = View.GONE
+                refuseButton.visibility = View.GONE
+                textAcceptOrRefuse.visibility = View.GONE
+
+                findNavController().popBackStack()
+            }
+            else{
+                acceptButton.isEnabled = false
+                //TODO: cosa fare se non ha soldi?
+                println("users: troppi pochi soldi!")
+            }
+
         }
 
         refuseButton.setOnClickListener{
