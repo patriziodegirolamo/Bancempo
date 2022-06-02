@@ -135,11 +135,11 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            android:hint="Credit"
+                            android:hint="Credits (h) "
                             android:inputType="none"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp"
-                            app:startIconDrawable="@drawable/ic_icons8_nome_64">
+                            app:startIconDrawable="@drawable/ic_icons8_portafoglio_24">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/tvCredit_ed"
@@ -160,7 +160,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
@@ -199,7 +199,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
@@ -237,7 +237,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
@@ -277,7 +277,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
@@ -316,7 +316,7 @@
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
