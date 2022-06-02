@@ -3,6 +3,7 @@ import com.bancempo.R
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -41,6 +42,9 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         val navView = findViewById<NavigationView>(R.id.nav_view)
 
+
+
+
         NavigationUI.setupWithNavController(binding.navView, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
 
@@ -73,7 +77,6 @@ class MainActivity : AppCompatActivity() {
 
         sharedVM.users.observe(this){
         }
-
 
 
         navView.setNavigationItemSelectedListener {
@@ -132,6 +135,7 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize Firebase Auth and check if the user is signed in
         auth = Firebase.auth
+        println("-----------auth" + auth.currentUser)
         if (auth.currentUser == null) {
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
@@ -139,6 +143,7 @@ class MainActivity : AppCompatActivity() {
         }
         else{
             sharedVM.afterLogin(auth.currentUser!!)
+
         }
 
         sharedVM.authUser.observe(this) { firebaseUser ->
@@ -158,6 +163,10 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.findNavController()
 
+        var emtxt = drawer.findViewById<TextView>(R.id.email_text)
+        var ustxt = drawer.findViewById<TextView>(R.id.username_text)
+        ustxt.setText(sharedVM.currentUser?.value?.nickname!!)
+        emtxt.setText(auth.currentUser?.email!!)
         return NavigationUI.navigateUp(navController, drawer)
     }
 
