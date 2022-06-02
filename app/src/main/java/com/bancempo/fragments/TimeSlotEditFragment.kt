@@ -9,6 +9,7 @@ import android.text.format.DateFormat
 import android.view.View
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -149,6 +150,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 }
             }
         } else {
+
+            (activity as AppCompatActivity).supportActionBar?.title = "Create Advertisement"
             skills.forEach {
                 val chip = Chip(activity)
                 chip.isCheckable = true
