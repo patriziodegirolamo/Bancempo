@@ -80,6 +80,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:hint="Nickname"
+                                app:boxStrokeWidth="0dp"
+                                app:boxStrokeWidthFocused="0dp"
                                 app:endIconMode="clear_text">
 
 
@@ -135,6 +137,8 @@
                             android:focusable="false"
                             android:hint="Credit"
                             android:inputType="none"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
                             app:startIconDrawable="@drawable/ic_icons8_nome_64">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -153,11 +157,10 @@
                 </androidx.cardview.widget.CardView>
 
 
-
-
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
                     app:cardElevation="0dp">
 
                     <LinearLayout
@@ -173,6 +176,8 @@
                             android:focusable="false"
                             android:hint="Full Name"
                             android:inputType="none"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
                             app:startIconDrawable="@drawable/ic_icons8_nome_64">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -210,6 +215,8 @@
                             android:focusable="false"
                             android:hint="Email"
                             android:inputType="none"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
                             app:startIconDrawable="@drawable/ic_icons8_email_64">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -246,6 +253,8 @@
                             android:focusable="false"
                             android:hint="Location"
                             android:inputType="none"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
                             app:startIconDrawable="@drawable/ic_icons8_segnaposto_50">
 
                             <com.google.android.material.textfield.TextInputEditText
@@ -281,6 +290,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Description"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
                             app:startIconDrawable="@drawable/ic_icons8_documento_50">
 
                             >

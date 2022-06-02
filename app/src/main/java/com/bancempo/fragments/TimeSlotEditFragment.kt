@@ -115,7 +115,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         skills = sharedVM.currentUser.value?.skills!!
 
         if (modify) {
-            confirmButton.visibility = View.GONE
             slider.value = durationEdit.text.toString().toFloat()
 
             if (skillsString != null) {
