@@ -29,6 +29,7 @@
     <string name="adv_delete_succ">Removal successful</string>
     <string name="unsuccedes">Something went wrong. Please, try again!</string>
     <string name="no_adv">Sorry, no available advertisements for that search!</string>
+    <string name="no_skill">Sorry, no available skills for that search!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="small_adv_title">Title: </string>
@@ -52,6 +53,7 @@
     <string name="fui_sign_in_with_google" translation_description="Sign in button text">Sign in with Google</string>
     <string name="date">Date </string>
     <string name="noCredit">L\'altro utente non ha credito sufficiente. Puoi attendere che lo maturi entro la data prevista o rifiutare la sua richiesta</string>
+    <string name="no_skill_at_all">Sorry, no available skills!</string>
 
 
 </resources>
