@@ -7,15 +7,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.RatingBar
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.bancempo.R
 import com.bancempo.Skill
 import com.bancempo.SmallAdv
-import com.bancempo.data.Conversation
-import com.bancempo.data.Message
-import com.bancempo.data.User
+import com.bancempo.data.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -112,6 +111,22 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    val ratings: MutableLiveData<HashMap<String, Rating>> by lazy {
+        MutableLiveData<HashMap<String, Rating>>().also {
+            if (authUser.value != null) {
+                loadAllRatings()
+            }
+        }
+    }
+
+    val myReceivedRatings: MutableLiveData<HashMap<String, Rating>> by lazy {
+        MutableLiveData<HashMap<String, Rating>>().also {
+            if (authUser.value != null) {
+                loadMyRatings(authUser.value!!.email!!)
+            }
+        }
+    }
+
     fun afterLogin(currentUser: FirebaseUser) {
         val email = currentUser.email!!
         loadUser(email)
@@ -121,7 +136,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         loadUsers()
         loadAdvs()
         loadBookedAdvs()
-        //loadAllMessages()
+        loadMyRatings(email)
+        loadAllRatings()
     }
 
     fun uploadBitmap(btm: Bitmap, view: View, skillsString: String) {
@@ -260,7 +276,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     email,
                     finalList,
                     currentUser.value!!.imageUser,
-                    currentUser.value!!.credit
+                    currentUser.value!!.credit,
+                    currentUser.value!!.rating,
                 )
 
                 //elimina solo gli annunci che non sono prenotati,
@@ -370,7 +387,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         authUser.value!!.email!!,
                         listOf(),
                         "",
-                        0.0
+                        0.0,
+                        0.0,
                     )
                     db.collection("users").document(authUser.value!!.email!!)
                         .set(newUser)
@@ -401,9 +419,11 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val listOfSkills = doc.data["skills"] as List<String>
                         val imageUser = doc.getString("imageUser")
                         val credit = doc.getDouble("credit") as Double
+                        val rating = doc.getDouble("rating") as Double
+
                         val user = User(
                             fullname!!, nickname!!, description!!, location!!,
-                            email!!, listOfSkills, imageUser!!, credit
+                            email!!, listOfSkills, imageUser!!, credit, rating
                         )
 
                         currentUser.value = user
@@ -777,9 +797,10 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         val listOfSkills = doc.data["skills"] as List<String>
                         val imageUser = doc.getString("imageUser")
                         val credit = doc.getDouble("credit") as Double
+                        val rating = doc.getDouble("rating") as Double
                         val user = User(
                             fullname!!, nickname!!, description!!, location!!,
-                            email!!, listOfSkills, imageUser!!, credit
+                            email!!, listOfSkills, imageUser!!, credit, rating
                         )
 
                         usersMap[doc.id] = user
@@ -827,6 +848,93 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                 doc.reference.delete()
             }
         }
+    }
+
+
+    fun loadAllRatings() {
+        db.collection("ratings")
+            .orderBy("rating", Query.Direction.DESCENDING)
+            .addSnapshotListener { r, e ->
+                if (e != null)
+                    ratings.value = hashMapOf()
+                else {
+                    val ratingMap: HashMap<String, Rating> = hashMapOf()
+                    for (doc in r!!) {
+                        val idAuthor = doc.getString("idAuthor")
+                        val idReceiver = doc.getString("idReceiver")
+                        val idAdv = doc.getString("idAdv")
+                        val rating = doc.getDouble("rating") as Double
+                        val ratingText = doc.getString("ratingText")
+                        val ratingObj =
+                            Rating(idAuthor!!, idReceiver!!, idAdv!!, rating, ratingText!!)
+                        ratingMap[doc.id] = ratingObj
+                    }
+                    ratings.value = ratingMap
+                }
+            }
+    }
+
+    fun loadMyRatings(userId: String) {
+        db.collection("ratings")
+            .whereEqualTo("idReceiver", userId)
+            .orderBy("rating", Query.Direction.DESCENDING)
+            .addSnapshotListener { r, e ->
+                if (e != null)
+                    ratings.value = hashMapOf()
+                else {
+                    val ratingMap: HashMap<String, Rating> = hashMapOf()
+                    for (doc in r!!) {
+                        val idAuthor = doc.getString("idAuthor")
+                        val idReceiver = doc.getString("idReceiver")
+                        val idAdv = doc.getString("idAdv")
+                        val rating = doc.getDouble("rating") as Double
+                        val ratingText = doc.getString("ratingText")
+                        val ratingObj =
+                            Rating(idAuthor!!, idReceiver!!, idAdv!!, rating, ratingText!!)
+                        ratingMap[doc.id] = ratingObj
+                    }
+                    myReceivedRatings.value = ratingMap
+                }
+            }
+    }
+
+
+    fun createNewRating(
+        idAuthor: String,
+        idReceiver: String,
+        idAdv: String,
+        rating: Double,
+        ratingText: String
+    ) {
+        val newId = db.collection("ratings").document().id
+        val newRating = Rating(idAuthor, idReceiver, idAdv, rating, ratingText)
+        db.collection("ratings").document(newId)
+            .set(newRating)
+            .addOnSuccessListener {
+                println("-------SUCCESS")
+            }
+            .addOnCanceledListener {
+                println("---------------------------------------- ERROR")
+            }
+    }
+
+    fun submitNewRating(
+        idAuthor: String,
+        idReceiver: String,
+        idAdv: String,
+        advRating: Double,
+        advRatingText: String
+    ) {
+        val receiver = users.value!!.get(idReceiver)!!
+        val userRating = receiver.rating
+        val amount = ratings.value!!.values.filter { rating -> rating.idReceiver == idReceiver}.size
+        val newRating = if (amount == 0) {
+            advRating
+        } else {
+            (userRating + advRating) / amount + 1
+        }
+        db.collection("users").document(idReceiver).update("rating", newRating)
+        createNewRating(idAuthor, idReceiver, idAdv, advRating, advRatingText)
     }
 }
 

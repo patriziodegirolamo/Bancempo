@@ -1,25 +1,28 @@
 package com.bancempo.fragments
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
-import com.bancempo.data.MessageAdapter
+import com.bancempo.data.Rating
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -71,6 +74,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     private lateinit var idBidder: String
 
 
+    private lateinit var rateButton: Button
+
+
     @SuppressLint("ResourceAsColor", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -105,6 +111,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         slotUnavailable = view.findViewById(R.id.slotNotAvailable)
         slotUnavailable.isVisible = false
 
+        rateButton = view.findViewById(R.id.button_rate)
 
         val userId = arguments?.getString("userId")
         titleEd.setText(arguments?.getString("title"))
@@ -138,10 +145,34 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         reservationPage = arguments?.getBoolean("reservationPage")!!
 
 
+        sharedVM.ratings.observe(viewLifecycleOwner) { ratings ->
+            //TODO: da visualizzare solo se l'adv è terminato
+            val adv = sharedVM.advs.value!!.get(idAdv)!!
+
+            println("rating: ${ratings.values}")
+            if(adv.booked){
+                val list = ratings.values.filter { x ->
+                    x.idAdv == idAdv && x.idAuthor == sharedVM.currentUser.value!!.email
+                }
+                if (list.isEmpty()) {
+                    rateButton.visibility = View.VISIBLE
+                } else {
+                    rateButton.visibility = View.GONE
+                }
+            }
+            else{
+                rateButton.visibility = View.GONE
+            }
+
+
+        }
+
+
         sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
             createNewConv = false
+
             if (isMyAdv) {
-                advof.isVisible=false
+                advof.isVisible = false
                 //L'UTENTE LOGGATO E' IL BIDDER, VEDO SE ESISTONO CONVERSAZIONI APERTE PER QUELL'ANNUNCIO
                 val filtered = convs.values.filter { conv ->
                     conv.idBidder == sharedVM.currentUser.value!!.email &&
@@ -158,12 +189,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             } else {
                 if (reservationPage) {
                     //SONO LOGGATO COME BIDDER MA NON POSSO MODIFICARE L'ANNUNCIO
-                        chatButton.visibility = View.VISIBLE
+                    chatButton.visibility = View.VISIBLE
                     slotUnavailable.isVisible = false
+
+
                 } else {
                     //SE SONO LOGGATO COME ASKER
-                    println("------------- ${convs.values}}")
-
                     // tutte le conversazioni di quell'annuncio
                     val advConvs = convs.values.filter { conv -> conv.idAdv == idAdv }
                     println("-------------ADVCONVS $idAdv ${convs.values.filter { conv -> conv.idAdv == idAdv }}")
@@ -225,12 +256,23 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             }
         }
 
-        advof.setOnClickListener{
+        advof.setOnClickListener {
             val bundle = bundleOf()
             bundle.putString("userId", userId)
             requireView().findNavController()
                 .navigate(R.id.action_timeSlotDetailsFragment_to_otherProfileFragment, bundle)
         }
+
+        rateButton.setOnClickListener {
+            val rateFragment =
+                RateAdvDialogFragment(
+                    idAdv,
+                    sharedVM,
+                    rateButton
+                )
+            rateFragment.show(requireActivity().supportFragmentManager, "rate")
+        }
+
         chatButton.setOnClickListener {
             val bundle = Bundle()
             val idAdv = arguments?.getString("id")
@@ -326,5 +368,87 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             }
         }
     }
+
+}
+
+
+class RateAdvDialogFragment(
+    private val idAdv: String,
+    private val sharedVM: SharedViewModel,
+    private val rateButton: Button,
+) :
+    DialogFragment() {
+    private lateinit var ratingBar: RatingBar
+    private var advRating: Double = 0.0
+    private lateinit var ratingText: TextInputEditText
+    private val idAsker = getAskerId(idAdv)
+    private val idBidder = getGiverId(idAdv)
+
+    @SuppressLint("InflateParams")
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return activity?.let {
+            val builder = AlertDialog.Builder(it)
+            // Get the layout inflater
+            val inflater = requireActivity().layoutInflater;
+            // Inflate and set the layout for the dialog
+
+            val view = inflater.inflate(R.layout.dialog_rate, null)
+            // Pass null as the parent view because its going in the dialog layout
+            //val userId = arguments?.getString("userId")
+            ratingBar = view.findViewById(R.id.ratingBar)
+            ratingText = view.findViewById(R.id.edit_rating_description_text)
+
+            ratingBar.setOnRatingBarChangeListener { rb, rating, fromUser ->
+                advRating = rating.toDouble()
+            }
+
+            builder.setView(view)
+                // Add action buttons
+                .setPositiveButton(R.string.submit,
+                    DialogInterface.OnClickListener { dialog, id ->
+                        val userEmail = sharedVM.currentUser.value!!.email
+                        if (advRating < 0.5) {
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.rating_min_err,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            val otherUserId = if (userEmail == idAsker) {
+                                idBidder
+                            } else {
+                                idAsker
+                            }
+
+                            rateButton.visibility = View.GONE
+                            sharedVM.submitNewRating(
+                                userEmail,
+                                otherUserId,
+                                idAdv,
+                                advRating,
+                                ratingText.text.toString()
+                            )
+                        }
+                        getDialog()?.dismiss()
+                    })
+                .setNegativeButton(R.string.cancel,
+                    DialogInterface.OnClickListener { dialog, id ->
+                        getDialog()?.cancel()
+                    })
+            builder.create()
+        } ?: throw IllegalStateException("Activity cannot be null")
+    }
+
+
+    fun getAskerId(idAdv: String): String {
+        return sharedVM.conversations.value!!.values.filter { conv -> !conv.closed && conv.idAdv == idAdv }
+            .getOrNull(0)!!.idAsker
+    }
+
+    fun getGiverId(idAdv: String): String {
+        return sharedVM.conversations.value!!.values.filter { conv -> !conv.closed && conv.idAdv == idAdv }
+            .getOrNull(0)!!.idBidder
+    }
+
 
 }

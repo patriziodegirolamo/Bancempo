@@ -1,10 +1,13 @@
 package com.bancempo.fragments
 
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -25,16 +28,21 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
     private lateinit var locationEd: TextInputEditText
     private lateinit var skillsEd: TextInputEditText
     private lateinit var creditEd: TextInputEditText
+    private lateinit var ratingBar: RatingBar
+    private lateinit var ratingNum: TextView
 
     private lateinit var photo: ImageView
     private lateinit var chipGroup: ChipGroup
     private var loadImg = true
 
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
 
+        ratingBar = view.findViewById(R.id.ratingBar)
+        ratingNum = view.findViewById(R.id.rating_num)
         fullNameEd = view.findViewById(R.id.textViewFullName_ed)
         photo = view.findViewById(R.id.profile_pic)
         nicknameEd = view.findViewById(R.id.textViewNickname_ed)
@@ -47,6 +55,8 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         chipGroup = view.findViewById(R.id.chipGroup)
 
         sharedVM.currentUser.observe(viewLifecycleOwner) { user ->
+            ratingBar.rating = user.rating.toFloat()
+            ratingNum.setText(user.rating.toString())
             fullNameEd.setText(user.fullname)
             nicknameEd.setText(user.nickname)
             emailEd.setText(user.email)
@@ -64,6 +74,15 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
                 chip.isCheckable = false
                 chipGroup.addView(chip)
             }
+
+            ratingBar.setOnTouchListener( View.OnTouchListener{ v, event ->
+                if(event.action == MotionEvent.ACTION_UP){
+                    println("rating: Show rating of this user")
+                    //TODO: apri la pagina con i ratings
+
+                }
+                return@OnTouchListener true
+            })
 
             setFragmentResultListener("backFromEdit") { _, _ ->
                 loadImg = false

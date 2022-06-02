@@ -55,6 +55,14 @@
     <string name="noCredit">L\'altro utente non ha credito sufficiente. Puoi attendere che lo maturi entro la data prevista o rifiutare la sua richiesta</string>
     <string name="no_skill_at_all">Sorry, no available skills!</string>
 
+    <string name="rate">Rate</string>
+    <string name="rating">Rating</string>
+    <string name="rating_submit_succ">Rating successfully submitted!</string>
+    <string name="rating_text_hint">(Optional) How was it? Share your experience...</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="rating_header">Rate your experience below: </string>
+    <string name="rating_min_err">The minimum rating is 0.5 star.</string>
 
 </resources>
 

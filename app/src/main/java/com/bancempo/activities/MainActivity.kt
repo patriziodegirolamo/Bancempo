@@ -72,12 +72,16 @@ class MainActivity : AppCompatActivity() {
 
 
         sharedVM.messages.observe(this){
-
         }
 
         sharedVM.users.observe(this){
         }
 
+        sharedVM.ratings.observe(this){
+        }
+
+        sharedVM.myReceivedRatings.observe(this){
+        }
 
         navView.setNavigationItemSelectedListener {
             when (it.itemId) {
