@@ -195,7 +195,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     fun loadImageUser(iv: ImageView, view: View, user: User) {
         if (user.imageUser != "") {
-            val myRef = storageReference.getReferenceFromUrl(user.imageUser!!)
+            val myRef = storageReference.getReferenceFromUrl(user.imageUser)
             val pb = view.findViewById<ProgressBar>(R.id.progressBar)
             if (pb != null)
                 pb.visibility = View.VISIBLE
@@ -925,14 +925,14 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         advRating: Double,
         advRatingText: String
     ) {
-        val receiver = users.value!!.get(idReceiver)!!
-        val userRating = receiver.rating
-        val amount = ratings.value!!.values.filter { rating -> rating.idReceiver == idReceiver}.size
-        val newRating = if (amount == 0) {
-            advRating
-        } else {
-            (userRating + advRating) / amount + 1
-        }
+        var amount = 0.0
+
+        val nRatings = ratings.value!!.values.map { rating ->
+            amount += rating.rating
+        }.size
+
+        val newRating = (amount + advRating)/(nRatings + 1)
+
         db.collection("users").document(idReceiver).update("rating", newRating)
         createNewRating(idAuthor, idReceiver, idAdv, advRating, advRatingText)
     }

@@ -26,14 +26,15 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/smallAdv_image"
+                android:id="@+id/iv_profileImage"
                 android:layout_width="110dp"
                 android:layout_height="match_parent"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
-                android:contentDescription="adv image or profile image"
+                android:contentDescription="@string/profile_image"
                 android:scaleType="centerCrop"
-                android:src="@drawable/example_profile_pic" />
+
+                />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,18 +44,18 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
-                android:layout_toEndOf="@id/smallAdv_image"
+                android:layout_toEndOf="@id/iv_profileImage"
                 android:orientation="vertical"
                 android:outlineProvider="none">
 
 
                 <TextView
-                    android:id="@+id/tvSmallAdvTitle"
+                    android:id="@+id/tvAuthor"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:gravity="center_horizontal"
                     android:maxLines="2"
-                    android:text="@string/small_adv_title"
+                    android:text="@string/author"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toTopOf="@+id/ratingBar"
@@ -73,7 +74,7 @@
                     app:layout_constraintBottom_toTopOf="@id/ratingDescription"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tvSmallAdvTitle" />
+                    app:layout_constraintTop_toBottomOf="@id/tvAuthor" />
 
                 <TextView
                     android:id="@+id/ratingDescription"

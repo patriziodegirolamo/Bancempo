@@ -91,8 +91,9 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
         ratingBar.setOnTouchListener( View.OnTouchListener{ v, event ->
             if(event.action == MotionEvent.ACTION_UP){
                 println("rating: Show rating of this user")
-                //TODO: apri la pagina con i ratings
-
+                val bundle = Bundle()
+                bundle.putString("userId", user.email)
+                findNavController().navigate(R.id.action_otherProfileFragment_to_ratingsFragment, bundle)
             }
             return@OnTouchListener true
         })
