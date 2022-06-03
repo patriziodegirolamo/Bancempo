@@ -127,15 +127,16 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             if (myInterests != null && myInterests) {
                 //Page MY INTERESTS
                 (activity as AppCompatActivity).supportActionBar?.title = "My Interests"
-                val interests: MutableList<SmallAdv> = mutableListOf()
+                var interests: MutableList<SmallAdv> = mutableListOf()
 
                 rv.layoutManager = LinearLayoutManager(context)
 
-                sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
-                    val advs = sharedVM.advs.value
+                sharedVM.advs.observe(viewLifecycleOwner) { advs ->
+                    val convs = sharedVM.conversations.value
 
+                    interests = mutableListOf()
                     //Trovo gli annunci per cui ho una conversazione in stato CLOSED = FALSE e BOOKED = FALSE
-                    if (advs != null && convs != null) {
+                    if(advs != null && convs != null){
                         val myOpenedConvs = convs.values.filter { conv ->
                             conv.idAsker == sharedVM.currentUser.value!!.email && !conv.closed
                         }
@@ -146,11 +147,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             if (filtered.isNotEmpty()) {
                                 interests.add(interests.size, filtered.elementAt(0))
                             }
-
                         }
                         renderAdvList(interests.toList(), false, false)
                     }
-
                     //Filter by SearchBar
                     sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextChange(newText: String): Boolean {
@@ -172,7 +171,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         }
 
                     })
-                }
+                    }
             } else if (myReservations != null && myReservations) {
                 //Page MY RESERVATIONS
                 (activity as AppCompatActivity).supportActionBar?.title = "My Reservations"
@@ -189,28 +188,25 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     ) {
                         if (pos == 0) {
                             //BY ME
-                            //Sono gli interests che però sono booked
-                            sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
-                                reservations = mutableListOf()
-                                val advs = sharedVM.bookedAdvs.value
+                        //Sono gli interests che però sono booked
+                            sharedVM.bookedAdvs.observe(viewLifecycleOwner) { advs ->
+                                val convs = sharedVM.conversations.value
 
+                                reservations = mutableListOf()
+                                //Trovo gli annunci per cui ho una conversazione in stato CLOSED = FALSE e BOOKED = FALSE
                                 if (advs != null && convs != null) {
                                     val myOpenedConvs = convs.values.filter { conv ->
                                         conv.idAsker == sharedVM.currentUser.value!!.email && !conv.closed
                                     }
+
                                     myOpenedConvs.forEach { conv ->
                                         val filtered =
-                                            advs.values.filter { adv -> adv.id == conv.idAdv }
-
+                                            advs.values.filter { adv -> adv.id == conv.idAdv}
                                         if (filtered.isNotEmpty()) {
-                                            println("--------------SIZE ${reservations.size}")
-                                            reservations.add(
-                                                reservations.size,
-                                                filtered.elementAt(0)
-                                            )
+                                            reservations.add(reservations.size, filtered.elementAt(0))
                                         }
                                     }
-                                    renderAdvList(reservations.toList(), false, true)
+                                    renderAdvList(reservations.toList(), false, false)
                                 }
                             }
                         } else if (pos == 1) {

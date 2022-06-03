@@ -42,9 +42,6 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         val navView = findViewById<NavigationView>(R.id.nav_view)
 
-
-
-
         NavigationUI.setupWithNavController(binding.navView, navController)
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
 
@@ -83,10 +80,18 @@ class MainActivity : AppCompatActivity() {
         sharedVM.myReceivedRatings.observe(this){
         }
 
+
         navView.setNavigationItemSelectedListener {
+            var myInterests = false
+            var myReservations = false
+            var myAdvs = false
+
             when (it.itemId) {
                 R.id.goToTimeSlotList -> {
-                    if (navController.currentDestination?.id != R.id.timeSlotListFragment) {
+                    if (!myAdvs) {
+                        myInterests = false
+                        myReservations = false
+                        myAdvs = true
 
                         navController.navigate(R.id.timeSlotListFragment)
                     }
@@ -97,6 +102,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.goToShowProfile -> {
                     if (navController.currentDestination?.id != R.id.showProfileFragment) {
+                        myInterests = false
+                        myReservations = false
+                        myAdvs = false
+
                         navController.navigate(R.id.showProfileFragment)
                     }
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
@@ -108,8 +117,11 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.goToInterestsList -> {
                     println("-----INT LIST")
-                    if (navController.currentDestination?.id != R.id.timeSlotListFragment) {
+                    if (!myInterests) {
                         println("-----INT LIST")
+                        myInterests = true
+                        myReservations = false
+                        myAdvs = false
                         val bundle = Bundle()
                         bundle.putBoolean("myInterests", true)
 
@@ -121,8 +133,12 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.goToBookedList -> {
                     println("-----INT LIST")
-                    if (navController.currentDestination?.id != R.id.timeSlotListFragment) {
+                    if (!myReservations) {
                         println("-----INT LIST")
+                        myInterests = false
+                        myReservations = true
+                        myAdvs = false
+
                         val bundle = Bundle()
                         bundle.putBoolean("myReservations", true)
 
