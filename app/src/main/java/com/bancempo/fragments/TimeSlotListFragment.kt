@@ -27,6 +27,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 //TODO BARRA DI RICERCA IN COMBO CON ALTRI FILTRI
 
@@ -330,16 +332,37 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         var newAdvs: List<SmallAdv> = listOf()
 
                         if(s != null && s.isNotEmpty() && s.isNotBlank()) {
-                            skill.split(",").forEach {
-                                newAdvs = searchListOfAdvs.filter { x ->
-                                    x.userId != sharedVM.authUser.value!!.email &&
-                                            x.location.lowercase()
-                                                .contains(s.toString().lowercase()) &&
-                                            checkSkills(x.skill, it)
-                                }.toList()
+                            if(sb.query.toString() == "") {
+                                skill.split(",").forEach {
+                                    newAdvs = searchListOfAdvs.filter { x ->
+                                        x.userId != sharedVM.authUser.value!!.email &&
+                                                x.location.lowercase()
+                                                    .contains(s.toString().lowercase()) &&
+                                                checkSkills(x.skill, it)
+                                    }.toList()
+                                }
+                            }else {
+                                skill.split(",").forEach {
+                                    newAdvs = searchListOfAdvs.filter { x ->
+                                        x.userId != sharedVM.authUser.value!!.email &&
+                                                x.location.lowercase()
+                                                    .contains(s.toString().lowercase()) &&
+                                                checkSkills(x.skill, it) && x.title.lowercase()
+                                            .contains(sb.query.toString().lowercase())
+                                    }.toList()
+                                }
                             }
                         } else{
-                            newAdvs = searchListOfAdvs
+                            if(sb.query.toString() != ""){
+                                skill.split(",").forEach {
+                                    newAdvs = searchListOfAdvs.filter { x ->
+                                        x.userId != sharedVM.authUser.value!!.email &&
+                                                checkSkills(x.skill, it) &&
+                                                x.title.lowercase()
+                                                    .contains(sb.query.toString().lowercase())
+                                    }.toList()
+                                }
+                            } else newAdvs = searchListOfAdvs
                         }
 
                         println("-------------NEWADVS $newAdvs")
@@ -371,31 +394,60 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             var newAdvs: List<SmallAdv> = listOf()
 
                             if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+                                if(sb.query.toString() != ""){
+                                    skill.split(",").forEach {
+                                        newAdvs = searchListOfAdvs.filter { x ->
+                                            x.userId != sharedVM.authUser.value!!.email &&
+                                                    x.location.lowercase()
+                                                        .contains(
+                                                            searchLocation.text.toString().lowercase()
+                                                        ) &&
+                                                    checkSkills(x.skill, it)
+                                                    && x.title.lowercase()
+                                                .contains(sb.query.toString().lowercase())
+                                        }.toList()
+                                    }
+                                } else {
 
-                                skill.split(",").forEach {
-                                    newAdvs = searchListOfAdvs.filter { x ->
-                                        x.userId != sharedVM.authUser.value!!.email &&
-                                                x.location.lowercase()
-                                                    .contains(
-                                                        searchLocation.text.toString().lowercase()
-                                                    ) &&
-                                                checkSkills(x.skill, it)
-                                    }.toList()
+                                    skill.split(",").forEach {
+                                        newAdvs = searchListOfAdvs.filter { x ->
+                                            x.userId != sharedVM.authUser.value!!.email &&
+                                                    x.location.lowercase()
+                                                        .contains(
+                                                            searchLocation.text.toString()
+                                                                .lowercase()
+                                                        ) &&
+                                                    checkSkills(x.skill, it)
+                                        }.toList()
+                                    }
                                 }
 
                             } else {
-                                skill.split(",").forEach {
-                                    newAdvs = searchListOfAdvs.filter { x ->
-                                        x.userId != sharedVM.authUser.value!!.email && checkSkills(
-                                            x.skill,
-                                            it
-                                        )
-                                    }.toList()
+                                if(sb.query.toString() != ""){
+                                    skill.split(",").forEach {
+                                        newAdvs = searchListOfAdvs.filter { x ->
+                                            x.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(x.skill, it)
+                                                    && x.title.lowercase()
+                                                .contains(sb.query.toString().lowercase())
+                                        }.toList()
+                                    }
+                                }else {
+                                    skill.split(",").forEach {
+                                        newAdvs = searchListOfAdvs.filter { x ->
+                                            x.userId != sharedVM.authUser.value!!.email && checkSkills(
+                                                x.skill,
+                                                it
+                                            )
+                                        }.toList()
+                                    }
                                 }
                             }
+
                             renderAdvList(newAdvs, false, false)
 
                         } else {
+                            println("--------------- QUA")
                             dateFilter.setCompoundDrawablesWithIntrinsicBounds(
                                 0,
                                 0,
@@ -406,29 +458,67 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             var newAdvs: List<SmallAdv> = listOf()
 
                             skill.split(",").forEach {
+                                println("------${s.toString().trim()}")
+                                searchListOfAdvs.forEach { x ->
+                                    println("--------${x.date}")
+                                }
+
                                 newAdvs = searchListOfAdvs.filter { x ->
                                     x.userId != sharedVM.authUser.value!!.email &&
-                                            x.date == s.toString().trim() && checkSkills(
-                                        x.skill,
-                                        it
-                                    )
+                                            x.date == s.toString().trim() && checkSkills(x.skill, it)
                                 }.toList()
                             }
 
-                            if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+                            println("--------------- $newAdvs")
 
-                                skill.split(",").forEach {
-                                    newAdvs = searchListOfAdvs.filter { x ->
-                                        x.userId != sharedVM.authUser.value!!.email &&
-                                                x.location.lowercase()
-                                                    .contains(
-                                                        searchLocation.text.toString().lowercase()
-                                                    ) &&
-                                                checkSkills(x.skill, it) && x.date == s.toString()
-                                            .trim()
-                                    }.toList()
+                            if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+                                if(sb.query.toString() != ""){
+                                    skill.split(",").forEach {
+                                        newAdvs = searchListOfAdvs.filter { x ->
+                                            x.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(x.skill, it) &&
+                                                    x.location.lowercase()
+                                                        .contains(
+                                                            searchLocation.text.toString()
+                                                                .lowercase()
+                                                        )
+                                                    && x.title.lowercase()
+                                                .contains(
+                                                    sb.query.toString().lowercase()
+                                                ) && x.date == s.toString().trim()
+                                        }.toList()
+                                    }
+                                } else {
+                                    skill.split(",").forEach {
+                                        newAdvs = searchListOfAdvs.filter { x ->
+                                            x.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(x.skill, it) &&
+                                                    x.location.lowercase()
+                                                        .contains(
+                                                            searchLocation.text.toString()
+                                                                .lowercase()
+                                                        ) && x.date == s.toString().trim()
+                                        }.toList()
+                                    }
+                                }
+                            } else {
+                                if(sb.query.toString() != ""){
+                                    skill.split(",").forEach {
+                                        newAdvs = searchListOfAdvs.filter { x ->
+                                            x.userId != sharedVM.authUser.value!!.email &&
+                                                    checkSkills(x.skill, it) &&
+                                                    x.title.lowercase()
+                                                        .contains(
+                                                            sb.query.toString().lowercase()
+                                                        ) && x.date == s.toString().trim()
+                                        }.toList()
+                                    }
+
+                                    println("--------------- $newAdvs")
+
                                 }
                             }
+
                             renderAdvList(newAdvs, false, false)
                         }
                     }
@@ -467,6 +557,40 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                     it
                                 )
                             }.toList()
+                        }
+
+
+                        if (dateFilter.text.toString() != getString(R.string.date)) {
+                            if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
+                                skill.split(",").forEach {
+                                    newAdvs = searchListOfAdvs.filter { x ->
+                                        x.userId != sharedVM.authUser.value!!.email &&
+                                                x.title.lowercase()
+                                                    .contains(newText.lowercase()) && checkSkills(
+                                            x.skill,
+                                            it
+                                        )
+                                                && x.date == dateFilter.text.toString().trim() &&
+                                        x.location.lowercase()
+                                            .contains(
+                                                searchLocation.text.toString()
+                                                    .lowercase()
+                                            )
+                                    }.toList()
+                                }
+                            } else {
+                                skill.split(",").forEach {
+                                    newAdvs = searchListOfAdvs.filter { x ->
+                                        x.userId != sharedVM.authUser.value!!.email &&
+                                                x.title.lowercase()
+                                                    .contains(newText.lowercase()) && checkSkills(
+                                            x.skill,
+                                            it
+                                        )
+                                                && x.date == dateFilter.text.toString().trim()
+                                    }.toList()
+                                }
+                            }
                         }
 
                         renderAdvList(newAdvs, false, false)
@@ -875,7 +999,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             this.year = year
             this.month = month
             this.day = day
-            date.text = ("${day}/${(month + 1)}/${year} ")
+            val dateFormatter = LocalDate.of(year, month + 1, day)
+            val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            val dateFormatted = dateFormatter.format(formatter)
+
+            date.setText(dateFormatted.toString())
         }
 
     }
