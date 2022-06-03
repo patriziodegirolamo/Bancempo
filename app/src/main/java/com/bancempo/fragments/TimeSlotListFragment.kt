@@ -266,7 +266,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
                     rv.layoutManager = LinearLayoutManager(context)
 
-                    renderAdvList(sadvs.values.toList().sortedBy { adv -> adv.title }, true, false)
+                    renderAdvList(sadvs.values.filter { adv -> !adv.booked }.toList().sortedBy { adv -> adv.title }, true, false)
 
                     //FILTER BY SEARCHBAR
                     sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

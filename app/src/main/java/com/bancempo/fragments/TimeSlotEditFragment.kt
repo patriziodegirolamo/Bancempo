@@ -185,7 +185,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 bundle.putString("description", descriptionEdit.text.toString())
                 bundle.putString("time", timeslotEdit.text.toString())
                 bundle.putString("duration", durationEdit.text.toString())
-                bundle.putString("location", locationEdit.text.toString())
+                bundle.putString("location", locationEdit.text.toString().trim())
                 bundle.putString("note", noteEdit.text.toString())
                 if (modify) {
                     //MODIFY THE ADV ON FIRESTORE
@@ -253,7 +253,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             text.error = "Please, fill in this field!"
             return false
         } else {
-            if (text.hint == "Description" || text.hint == "Note") {
+            if (text.hint == "Description") {
                 return if (textEdit.text?.length!! > 200) {
                     text.error = "Your ${text.hint} is too long."
                     false
@@ -323,9 +323,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             valid = false
         }
         if (!validateTextInput(location, locationEdit)) {
-            valid = false
-        }
-        if (!validateTextInput(note, noteEdit)) {
             valid = false
         }
         if (!validateTextInput(duration, durationEdit)) {

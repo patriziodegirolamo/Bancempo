@@ -44,7 +44,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         super.onViewCreated(view, savedInstanceState)
 
         val rv = view.findViewById<RecyclerView>(R.id.recycler_gchat)
-        rv.layoutManager = LinearLayoutManager(context)
+
+        val llm = LinearLayoutManager(context)
+        llm.stackFromEnd = true
+        rv.layoutManager = llm
         rv.adapter =
             MessageAdapter(listOf(), sharedVM)
 
@@ -205,8 +208,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         sharedVM.messages.observe(viewLifecycleOwner) { messagesConv ->
             if (currentConversation != null) {
                 messagesConv.values.filter { msg -> msg.idConv == currentConversation!!.idConv }
-                rv.adapter =
-                    MessageAdapter(messagesConv.values.sortedBy { x -> x.date }.toList(), sharedVM)
+
+                val newAdapter = MessageAdapter(messagesConv.values.sortedBy { x -> x.date }.toList(), sharedVM)
+                newAdapter.notifyItemInserted(0)
+                rv.adapter = newAdapter
             }
             else{
                 rv.adapter =

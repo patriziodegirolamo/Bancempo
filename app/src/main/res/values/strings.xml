@@ -13,10 +13,10 @@
     <string name="use_camera">Use Camera</string>
     <string name="camera_not_available">Camera not available</string>
     <string name="sharedPrefsName">com.example.myapp.PREFERENCE_FILE_KEY</string>
-    <string name="navdrawer_time_slot_list">Your Advertisements</string>
+    <string name="navdrawer_time_slot_list">My Advertisements</string>
     <string name="navdrawer_show_profile">Profile</string>
-    <string name="navdrawer_interests_list">Your Interests</string>
-    <string name="navdrawer_booked_list">Your Reservations</string>
+    <string name="navdrawer_interests_list">My Interests</string>
+    <string name="navdrawer_booked_list">My Reservations</string>
     <string name="label_timeSlotEditFragment">Edit Advertisement</string>
     <string name="label_showProfileFragment">Profile</string>
     <string name="label_timeSlotDetailsFragment">Advertisement Details</string>
