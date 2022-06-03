@@ -28,6 +28,10 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 
 class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
@@ -146,25 +150,24 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
         sharedVM.ratings.observe(viewLifecycleOwner) { ratings ->
-            //TODO: da visualizzare solo se l'adv è terminato
-            val adv = sharedVM.advs.value!!.get(idAdv)!!
+            val adv = sharedVM.bookedAdvs.value!!.get(idAdv)
+            val currentDate = LocalDate.now()
+            val formatter =  DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            val currentDateFormatted = currentDate.format(formatter)
 
-            println("rating: ${ratings.values}")
-            if(adv.booked){
-                val list = ratings.values.filter { x ->
-                    x.idAdv == idAdv && x.idAuthor == sharedVM.currentUser.value!!.email
+            println("------- $currentDateFormatted ${adv?.date}")
+
+            //TODO CAMBIARE >= IN >
+            if(adv != null && currentDateFormatted >= adv.date) {
+                    val list = ratings.values.filter { x ->
+                        x.idAdv == idAdv && x.idAuthor == sharedVM.currentUser.value!!.email
+                    }
+                    if (list.isEmpty()) {
+                        rateButton.visibility = View.VISIBLE
+                    } else {
+                        rateButton.visibility = View.GONE
+                    }
                 }
-                if (list.isEmpty()) {
-                    rateButton.visibility = View.VISIBLE
-                } else {
-                    rateButton.visibility = View.GONE
-                }
-            }
-            else{
-                rateButton.visibility = View.GONE
-            }
-
-
         }
 
 

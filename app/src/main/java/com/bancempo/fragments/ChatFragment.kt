@@ -173,7 +173,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             acceptButton.setOnClickListener{
             println("now: setta $idAdv come accepted")
 
-            if(asker != null && asker.credit > amountOfTime){
+            if(asker != null && asker.credit >= amountOfTime){
                 sharedVM.bookAdv(idAdv)
                 sharedVM.createNewTransaction(idBidder, idAsker!!, amountOfTime)
                 acceptButton.visibility = View.GONE

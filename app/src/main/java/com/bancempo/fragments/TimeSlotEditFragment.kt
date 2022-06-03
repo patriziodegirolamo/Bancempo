@@ -23,7 +23,11 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.Date as Date
 
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
@@ -416,9 +420,13 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         @SuppressLint("SetTextI18n")
         override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
             this.year = year
-            this.month = month
+            this.month = month + 1
             this.day = day
-            date.setText("${day}/${(month + 1)}/${year}")
+            val dateFormatter = LocalDate.of(year, month + 1, day)
+            val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            val dateFormatted = dateFormatter.format(formatter)
+
+            date.setText(dateFormatted.toString())
         }
 
     }
