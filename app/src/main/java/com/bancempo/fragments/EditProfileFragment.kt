@@ -55,6 +55,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private lateinit var chipGroup: ChipGroup
 
+    private lateinit var confirmationButton: Button
+
     private val REQUEST_IMAGE_CAPTURE = 1
     private val SELECT_PICTURE = 200
 
@@ -78,6 +80,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         skills = view.findViewById(R.id.skills)
         skillsEd = view.findViewById(R.id.editTextSkills)
         chipGroup = view.findViewById(R.id.chipGroup)
+        confirmationButton = view.findViewById(R.id.confirmationButton)
 
         skillsEd.setOnClickListener {
             skills.error = null
@@ -186,35 +189,29 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
 
 
-        //handling on back pressed
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (validation()) {
-                        var chipText = ""
-                        for (i in 0 until chipGroup.childCount) {
-                            val chip = chipGroup.getChildAt(i) as Chip
-                            if (i == chipGroup.childCount - 1) {
-                                chipText += "${chip.text}"
+        confirmationButton.setOnClickListener {
+            if (validation()) {
+                var chipText = ""
+                for (i in 0 until chipGroup.childCount) {
+                    val chip = chipGroup.getChildAt(i) as Chip
+                    if (i == chipGroup.childCount - 1) {
+                        chipText += "${chip.text}"
 
-                            } else {
-                                chipText += "${chip.text},"
-                            }
-                        }
-                        if (btm != null) {
-                            sharedVM.uploadBitmap(btm!!, view, chipText)
-                        } else {
-                            sharedVM.updateUser(view, chipText, updatingImg = false)
-                        }
-
-
-
-                        setFragmentResult("backFromEdit", bundleOf(Pair("chipText", chipText)))
-                        findNavController().popBackStack()
+                    } else {
+                        chipText += "${chip.text},"
                     }
                 }
-            })
+                if (btm != null) {
+                    sharedVM.uploadBitmap(btm!!, view, chipText)
+                } else {
+                    sharedVM.updateUser(view, chipText, updatingImg = false)
+                }
+
+                setFragmentResult("backFromEdit", bundleOf(Pair("chipText", chipText)))
+                findNavController().popBackStack()
+            }
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

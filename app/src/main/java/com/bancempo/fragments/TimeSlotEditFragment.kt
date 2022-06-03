@@ -187,27 +187,56 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                 bundle.putString("duration", durationEdit.text.toString())
                 bundle.putString("location", locationEdit.text.toString())
                 bundle.putString("note", noteEdit.text.toString())
-                bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
+                if (modify) {
+                    //MODIFY THE ADV ON FIRESTORE
+                    val id = arguments?.getString("id")
 
-                var chipText = ""
-                var count = 0
-                for (i in 0 until chipGroup.childCount) {
-                    val chip = chipGroup.getChildAt(i) as Chip
-                    if (chip.isChecked) {
-                        if (count == chipGroup.checkedChipIds.size - 1) {
-                            chipText += "${chip.text}"
+                    //bundle.putString("userId", sharedVM.currentUser.value!!.email)
 
-                        } else {
-                            chipText += "${chip.text},"
+                    var chipText = ""
+                    var count = 0
+                    for (i in 0 until chipGroup.childCount) {
+                        val chip = chipGroup.getChildAt(i) as Chip
+                        if (chip.isChecked) {
+                            if (count == chipGroup.checkedChipIds.size - 1) {
+                                chipText += "${chip.text}"
+
+                            } else {
+                                chipText += "${chip.text},"
+                            }
+                            count += 1
                         }
-                        count += 1
                     }
-                }
-                bundle.putString("skill", chipText)
+                    bundle.putString("skill", chipText)
 
-                sharedVM.addNewAdv(bundle)
-                setFragmentResult("confirmationOkCreate", bundleOf())
-                findNavController().popBackStack()
+                    sharedVM.modifyAdv(id!!, bundle)
+
+                    val modifyFromList = arguments?.getBoolean("modifyFromList")
+                    if (modifyFromList == false) {
+                        setFragmentResult("confirmationOkModifyToDetails", bundle)
+                    }
+                    findNavController().popBackStack()
+                } else {
+                    var chipText = ""
+                    var count = 0
+                    for (i in 0 until chipGroup.childCount) {
+                        val chip = chipGroup.getChildAt(i) as Chip
+                        if (chip.isChecked) {
+                            if (count == chipGroup.checkedChipIds.size - 1) {
+                                chipText += "${chip.text}"
+
+                            } else {
+                                chipText += "${chip.text},"
+                            }
+                            count += 1
+                        }
+                    }
+                    bundle.putString("skill", chipText)
+
+                    sharedVM.addNewAdv(bundle)
+                    setFragmentResult("confirmationOkCreate", bundleOf())
+                    findNavController().popBackStack()
+                }
             }
         }
 
@@ -216,58 +245,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             // Responds to when slider's value is changed
             durationEdit.setText(value.toString())
         }
-
-
-        //handling on back pressed
-        requireActivity()
-            .onBackPressedDispatcher
-            .addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    if (modify) {
-                        if (validation()) {
-                            val bundle = Bundle()
-
-                            //MODIFY THE ADV ON FIRESTORE
-                            val id = arguments?.getString("id")
-                            bundle.putString("title", titleEdit.text.toString())
-                            bundle.putString("date", dateEdit.text.toString())
-                            bundle.putString("description", descriptionEdit.text.toString())
-                            bundle.putString("time", timeslotEdit.text.toString())
-                            bundle.putString("duration", durationEdit.text.toString())
-                            bundle.putString("location", locationEdit.text.toString())
-                            bundle.putString("note", noteEdit.text.toString())
-                            bundle.putString("userId", "de96wgyM8s4GvwM6HFPr")
-
-                            var chipText = ""
-                            var count = 0
-                            for (i in 0 until chipGroup.childCount) {
-                                val chip = chipGroup.getChildAt(i) as Chip
-                                if (chip.isChecked) {
-                                    if (count == chipGroup.checkedChipIds.size - 1) {
-                                        chipText += "${chip.text}"
-
-                                    } else {
-                                        chipText += "${chip.text},"
-                                    }
-                                    count += 1
-                                }
-                            }
-                            bundle.putString("skill", chipText)
-
-                            sharedVM.modifyAdv(id!!, bundle)
-
-                            val modifyFromList = arguments?.getBoolean("modifyFromList")
-                            if (modifyFromList == false) {
-                                setFragmentResult("confirmationOkModifyToDetails", bundle)
-                            }
-                            findNavController().popBackStack()
-                        }
-                    } else {
-                        findNavController().popBackStack()
-                    }
-                }
-            })
-
 
     }
 
