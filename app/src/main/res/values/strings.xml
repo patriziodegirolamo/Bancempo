@@ -89,6 +89,7 @@
     <string name="example_date">June 10</string>
     <string name="example_message">This is a Message</string>
     <string name="example_time">10:00</string>
+    <string name="account">Account</string>
 
 </resources>
 
