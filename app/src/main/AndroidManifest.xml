@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Bancempo">
         <activity
-            android:name=".SignInActivity"
+            android:name=".activities.SignInActivity"
             android:exported="false" />
         <activity
             android:name=".activities.MainActivity"

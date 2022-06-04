@@ -13,7 +13,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.bancempo.SignInActivity
 import com.bancempo.databinding.ActivityMainBinding
 import com.bancempo.models.SharedViewModel
 import com.firebase.ui.auth.AuthUI
@@ -116,9 +115,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.goToInterestsList -> {
-                    println("-----INT LIST")
                     if (!myInterests) {
-                        println("-----INT LIST")
                         myInterests = true
                         myReservations = false
                         myAdvs = false
@@ -132,9 +129,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.goToBookedList -> {
-                    println("-----INT LIST")
                     if (!myReservations) {
-                        println("-----INT LIST")
                         myInterests = false
                         myReservations = true
                         myAdvs = false
@@ -155,7 +150,6 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize Firebase Auth and check if the user is signed in
         auth = Firebase.auth
-        println("-----------auth" + auth.currentUser)
         if (auth.currentUser == null) {
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
@@ -183,10 +177,10 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.findNavController()
 
-        var emtxt = drawer.findViewById<TextView>(R.id.email_text)
-        var ustxt = drawer.findViewById<TextView>(R.id.username_text)
-        ustxt.setText(sharedVM.currentUser?.value?.nickname!!)
-        emtxt.setText(auth.currentUser?.email!!)
+        val emtxt = drawer.findViewById<TextView>(R.id.email_text)
+        val ustxt = drawer.findViewById<TextView>(R.id.username_text)
+        ustxt.text = sharedVM.currentUser.value?.nickname!!
+        emtxt.text = auth.currentUser?.email!!
         return NavigationUI.navigateUp(navController, drawer)
     }
 
