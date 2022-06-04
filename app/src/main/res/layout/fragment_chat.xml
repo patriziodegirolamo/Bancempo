@@ -93,19 +93,21 @@
                 android:id="@+id/refuseProposal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="5dp"
+                android:background="#FFFFFF"
                 android:contentDescription="@string/button_to_refuse_the_proposal"
-                android:src="@drawable/ic_icons8_cross_24"
+                android:src="@drawable/ic_icons8_rimuovi"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/acceptProposal"
-                app:layout_constraintStart_toEndOf="@+id/textAcceptOrRefuse"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageButton
                 android:id="@+id/acceptProposal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="#FFFFFF"
                 android:contentDescription="@string/button_to_accept_the_proposal"
-                android:src="@drawable/ic_icons8_ok_24"
+                android:src="@drawable/ic_icons8_ok"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/refuseProposal" />
