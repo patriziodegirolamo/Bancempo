@@ -175,7 +175,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         //CREATE A NEW ADV
         confirmButton.setOnClickListener {
-            if (validation()) {
+
+                if (validation()) {
                 val bundle = Bundle()
                 bundle.putString("title", titleEdit.text.toString())
                 bundle.putString("date", dateEdit.text.toString())
@@ -235,6 +236,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     findNavController().popBackStack()
                 }
             }
+            else
+                println("Whatttt")
         }
 
         //handler slider

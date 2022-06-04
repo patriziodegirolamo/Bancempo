@@ -51,7 +51,7 @@
     <string name="fui_sign_in_with_phone" />
     <string name="fui_sign_in_with_google" translation_description="Sign in button text">Sign in with Google</string>
     <string name="date">Date </string>
-    <string name="time">Tate </string>
+    <string name="time">Time </string>
     <string name="noCredit">The other user does not have enough credit. You can wait or decline his request.</string>
     <string name="no_skill_at_all">Sorry, no available skills!</string>
 

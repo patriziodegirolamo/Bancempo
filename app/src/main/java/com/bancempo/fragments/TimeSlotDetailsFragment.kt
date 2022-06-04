@@ -120,7 +120,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
 
-
+        rateButton.visibility = View.VISIBLE
         var createNewConv: Boolean? = false
         idAdv = arguments?.getString("id")!!
 
@@ -266,8 +266,9 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             val bundle = Bundle()
             bundle.putString("idAdv", idAdv)
             rd.arguments = bundle
-
             rd.show(parentFragmentManager, "rateDialog")
+            rateButton.visibility = View.GONE
+
         }
 
         chatButton.setOnClickListener {
@@ -406,6 +407,7 @@ class RateAdvDialogFragment :
             ratingBar = view.findViewById(R.id.ratingBar)
             ratingText = view.findViewById(R.id.edit_rating_description_text)
 
+
             ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
                 advRating = rating.toDouble()
             }
@@ -428,7 +430,7 @@ class RateAdvDialogFragment :
 
                             Toast.makeText(
                                 requireContext(),
-                                "$idAdv $otherUserId",
+                                "Review completed!",
                                 Toast.LENGTH_SHORT
                             ).show()
 

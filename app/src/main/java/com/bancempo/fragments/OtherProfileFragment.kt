@@ -4,10 +4,7 @@ package com.bancempo.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.RatingBar
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -29,7 +26,7 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
     private lateinit var creditEd: TextInputEditText
     private lateinit var ratingBar: RatingBar
     private lateinit var ratingNum: TextView
-
+    private lateinit var  completeRatingBar: LinearLayout
 
 
     private lateinit var photo: ImageView
@@ -51,7 +48,7 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
         locationEd = view.findViewById(R.id.textViewLocation_ed)
         descriptionEd = view.findViewById(R.id.textViewDescription_ed)
         creditEd = view.findViewById(R.id.tvCredit_ed)
-
+        completeRatingBar=view.findViewById(R.id.complete_rating_bar)
         skillsEd = view.findViewById(R.id.textViewSkills_ed)
         chipGroup = view.findViewById(R.id.chipGroup)
 
@@ -60,7 +57,7 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
 
         val numRatings = sharedVM.ratings.value!!.values
             .filter { x -> x.idReceiver == user.email }.size
-
+        completeRatingBar.visibility = View.VISIBLE
         ratingBar.rating = user.rating.toFloat()
         ratingNum.text = " ( ".plus(numRatings.toString()).plus(" ) ")
         fullNameEd.setText(user.fullname)
@@ -91,7 +88,7 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
         }
 
         ratingBar.setOnTouchListener( View.OnTouchListener{ _, event ->
-            if(event.action == MotionEvent.ACTION_UP){
+            if(event.action == MotionEvent.ACTION_UP && numRatings>0){
                 println("rating: Show rating of this user")
                 val bundle = Bundle()
                 bundle.putString("userId", user.email)

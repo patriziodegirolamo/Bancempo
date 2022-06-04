@@ -118,16 +118,18 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <RatingBar
                     android:id="@+id/ratingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="5dp"
                     android:clickable="true"
                     android:contentDescription="@string/rating"
                     android:isIndicator="true"
-                    android:numStars="5" />
+                    android:numStars="5"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/rating_num"
