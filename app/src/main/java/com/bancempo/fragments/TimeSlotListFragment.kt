@@ -34,7 +34,7 @@ import java.time.format.DateTimeFormatter
 
 class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
-    private var adv_gen: Boolean = false
+    private var advGen: Boolean = false
     private val sharedVM: SharedViewModel by activityViewModels()
     private lateinit var spinnerSort: Spinner
     private lateinit var locationFilter: TextView
@@ -52,9 +52,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         var sortButton = menu.findItem(R.id.sort)
         var filterButton = menu.findItem(R.id.filter)
 
-        if(adv_gen){
-            sortButton.setVisible(true)
-            filterButton.setVisible(true)
+        if(advGen){
+            sortButton.isVisible = true
+            filterButton.isVisible = true
         }
 
 
@@ -65,17 +65,17 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         val fab = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
-        rv = view.findViewById<RecyclerView>(R.id.recyclerView)
-        emptyListTV = view.findViewById<TextView>(R.id.empty_list_tv)
+        rv = view.findViewById(R.id.recyclerView)
+        emptyListTV = view.findViewById(R.id.empty_list_tv)
         val sb = view.findViewById<SearchView>(R.id.search_bar)
 
         val skill = arguments?.getString("skill")
 
-        spinnerSort = view.findViewById<Spinner>(R.id.sort_spinner)
-        reservedSpinner = view.findViewById<Spinner>(R.id.reservedSpinner)
-        locationFilter = view.findViewById<TextView>(R.id.filterLocation)
-        searchLocation = view.findViewById<EditText>(R.id.searchLocation)
-        dateFilter = view.findViewById<TextView>(R.id.filterDate)
+        spinnerSort = view.findViewById(R.id.sort_spinner)
+        reservedSpinner = view.findViewById(R.id.reservedSpinner)
+        locationFilter = view.findViewById(R.id.filterLocation)
+        searchLocation = view.findViewById(R.id.searchLocation)
+        dateFilter = view.findViewById(R.id.filterDate)
         val myInterests = arguments?.getBoolean("myInterests")
         val myReservations = arguments?.getBoolean("myReservations")
 
@@ -95,14 +95,14 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 spinnerSort.adapter = adapter
             }
 
-            var first_click_searchLocation = true
+            var firstClickSearchlocation = true
             locationFilter.setOnClickListener {
-                if (first_click_searchLocation == true) {
+                if (firstClickSearchlocation) {
                     searchLocation.isVisible = true
-                    first_click_searchLocation = false
+                    firstClickSearchlocation = false
                 } else {
                     searchLocation.isVisible = false
-                    first_click_searchLocation = true
+                    firstClickSearchlocation = true
                 }
             }
 
@@ -154,9 +154,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextChange(newText: String): Boolean {
 
-                            val newMyInterestsAdvs: List<SmallAdv>
-
-                            newMyInterestsAdvs = interests.filter { x ->
+                            val newMyInterestsAdvs: List<SmallAdv> = interests.filter { x ->
                                 x.title.lowercase()
                                     .contains(newText.lowercase())
                             }.toList()
@@ -178,7 +176,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 var reservations: MutableList<SmallAdv> = mutableListOf()
                 rv.layoutManager = LinearLayoutManager(context)
 
-                reservedSpinner.setOnItemSelectedListener(object :
+                reservedSpinner.onItemSelectedListener = object :
                     AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
                         parent: AdapterView<*>,
@@ -188,7 +186,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     ) {
                         if (pos == 0) {
                             //BY ME
-                        //Sono gli interests che però sono booked
+                            //Sono gli interests che però sono booked
                             sharedVM.bookedAdvs.observe(viewLifecycleOwner) { advs ->
                                 val convs = sharedVM.conversations.value
 
@@ -225,15 +223,13 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     }
 
                     override fun onNothingSelected(arg0: AdapterView<*>?) {}
-                })
+                }
 
                 //Filter by SearchBar
                 sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextChange(newText: String): Boolean {
 
-                        val newMyInterestsAdvs: List<SmallAdv>
-
-                        newMyInterestsAdvs = reservations.filter { x ->
+                        val newMyInterestsAdvs: List<SmallAdv> = reservations.filter { x ->
                             x.title.lowercase()
                                 .contains(newText.lowercase())
                         }.toList()
@@ -270,9 +266,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                         override fun onQueryTextChange(newText: String): Boolean {
 
-                            var newMyAdvs: List<SmallAdv>
-
-                            newMyAdvs =
+                            val newMyAdvs: List<SmallAdv> =
                                 sadvs.values.toList().sortedBy { adv -> adv.title }.filter { x ->
                                     x.title.lowercase()
                                         .contains(newText.lowercase())
@@ -291,7 +285,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             }
         } else {
             fab.isVisible = false
-            adv_gen = true
+            advGen = true
             sharedVM.advs.observe(viewLifecycleOwner) { sadvs ->
 
                 var searchListOfAdvs: MutableList<SmallAdv> = sadvs.values.toMutableList()
@@ -319,6 +313,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     ) {
                     }
 
+                    @SuppressLint("SetTextI18n")
                     override fun onTextChanged(
                         s: CharSequence?,
                         start: Int,
@@ -365,9 +360,9 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         renderAdvList(newAdvs, false, false)
 
                         if (dateFilter.text.toString() != getString(R.string.date)) {
-                            dateFilter.setText(dateFilter.text.toString() + " ")
+                            dateFilter.setText(dateFilter.text.toString().plus(" "))
                             dateFilter.setText(dateFilter.text.trim())
-                            dateFilter.setText(dateFilter.text.toString() + " ")
+                            dateFilter.setText(dateFilter.text.toString().plus(" "))
                         }
 
                     }
@@ -601,7 +596,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 })
 
                 //SORT ADVS
-                spinnerSort.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+                spinnerSort.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
                         parent: AdapterView<*>,
                         view: View?,
@@ -924,7 +919,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     }
 
                     override fun onNothingSelected(arg0: AdapterView<*>?) {}
-                })
+                }
 
             }
         }
@@ -999,7 +994,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
             val dateFormatted = dateFormatter.format(formatter)
 
-            date.setText(dateFormatted.toString())
+            date.text = dateFormatted.toString()
         }
 
     }
@@ -1015,10 +1010,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 )
                 if (cv != null) {
 
-                    if (cv.isVisible)
-                        cv.isVisible = false
-                    else
-                        cv.isVisible = true
+                    cv.isVisible = !cv.isVisible
 
                 }
                 true
@@ -1029,10 +1021,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 )
                 if (sp != null) {
 
-                    if (sp.isVisible)
-                        sp.isVisible = false
-                    else
-                        sp.isVisible = true
+                    sp.isVisible = !sp.isVisible
 
                 }
                 true

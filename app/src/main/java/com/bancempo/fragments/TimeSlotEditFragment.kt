@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.View
 import android.widget.*
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -23,11 +22,9 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.Date as Date
 
 
 class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
@@ -58,8 +55,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
     private var skillsString: String? = ""
 
     private lateinit var skills: List<String>
-    private lateinit var skills_error: TextInputLayout
-    private lateinit var skills_errorEdit: TextInputEditText
+    private lateinit var skillsError: TextInputLayout
+    private lateinit var skillsErrorEdit: TextInputEditText
 
     private lateinit var slider: Slider
 
@@ -83,8 +80,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         duration = view.findViewById(R.id.edit_duration)
         durationEdit = view.findViewById(R.id.edit_duration_text)
         chipGroup = view.findViewById(R.id.chipGroup)
-        skills_error = view.findViewById(R.id.skills_error)
-        skills_errorEdit = view.findViewById(R.id.error_skills_text)
+        skillsError = view.findViewById(R.id.skills_error)
+        skillsErrorEdit = view.findViewById(R.id.error_skills_text)
 
         slider = view.findViewById(R.id.slider)
         titleEdit.setText(arguments?.getString("title"))
@@ -103,7 +100,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         note.error = null
         date.error = null
         timeslot.error = null
-        skills_error.error = null
+        skillsError.error = null
 
         val createNewAdv = arguments?.getBoolean("createNewAdv")
         val modify = createNewAdv == null || createNewAdv == false
@@ -198,11 +195,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     for (i in 0 until chipGroup.childCount) {
                         val chip = chipGroup.getChildAt(i) as Chip
                         if (chip.isChecked) {
-                            if (count == chipGroup.checkedChipIds.size - 1) {
-                                chipText += "${chip.text}"
+                            chipText += if (count == chipGroup.checkedChipIds.size - 1) {
+                                "${chip.text}"
 
                             } else {
-                                chipText += "${chip.text},"
+                                "${chip.text},"
                             }
                             count += 1
                         }
@@ -222,11 +219,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     for (i in 0 until chipGroup.childCount) {
                         val chip = chipGroup.getChildAt(i) as Chip
                         if (chip.isChecked) {
-                            if (count == chipGroup.checkedChipIds.size - 1) {
-                                chipText += "${chip.text}"
+                            chipText += if (count == chipGroup.checkedChipIds.size - 1) {
+                                "${chip.text}"
 
                             } else {
-                                chipText += "${chip.text},"
+                                "${chip.text},"
                             }
                             count += 1
                         }
@@ -328,7 +325,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         if (!validateTextInput(duration, durationEdit)) {
             valid = false
         }
-        if (!validateSkills(skills, skills_error)) {
+        if (!validateSkills(skills, skillsError)) {
             valid = false
         }
         return valid

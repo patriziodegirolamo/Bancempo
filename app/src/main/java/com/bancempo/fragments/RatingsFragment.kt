@@ -25,14 +25,11 @@ class RatingsFragment : Fragment(R.layout.reviews) {
         val userId = arguments?.getString("userId")
 
         sharedVM.ratings.observe(viewLifecycleOwner){ ratings ->
-            val user = sharedVM.users.value!![userId]!!
-            val nickname = user.nickname
-            val url = user.imageUser
 
             rv.adapter = ReviewsAdapter(
                 ratings.values.filter { x -> x.idReceiver == userId }
                     .sortedBy { x -> x.rating}.toList()
-                , nickname, url)
+                , sharedVM)
         }
 
     }

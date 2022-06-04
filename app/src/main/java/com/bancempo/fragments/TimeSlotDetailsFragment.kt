@@ -115,7 +115,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         descriptionEd.setText(arguments?.getString("description"))
         dateEd.setText(arguments?.getString("date"))
         timeEd.setText(arguments?.getString("time"))
-        advof.setText("Adv of ".plus(userId))
+        advof.text = "Adv of ".plus(userId)
         durationEd.setText(arguments?.getString("duration"))
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
@@ -143,7 +143,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
 
         sharedVM.ratings.observe(viewLifecycleOwner) { ratings ->
-            val adv = sharedVM.bookedAdvs.value!!.get(idAdv)
+            val adv = sharedVM.bookedAdvs.value!![idAdv]
             val currentDate = LocalDate.now()
             val formatter =  DateTimeFormatter.ofPattern("yyyy/MM/dd")
             val currentDateFormatted = currentDate.format(formatter)
@@ -342,11 +342,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 var chipText = ""
                 for (i in 0 until chipGroup.childCount) {
                     val chip = chipGroup.getChildAt(i) as Chip
-                    if (i == chipGroup.childCount - 1) {
-                        chipText += "${chip.text}"
+                    chipText += if (i == chipGroup.childCount - 1) {
+                        "${chip.text}"
 
                     } else {
-                        chipText += "${chip.text},"
+                        "${chip.text},"
                     }
                 }
 
@@ -373,7 +373,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 }
 
 
-class RateAdvDialogFragment() :
+class RateAdvDialogFragment :
     DialogFragment() {
     private lateinit var ratingBar: RatingBar
     private var advRating: Double = 0.0
@@ -406,13 +406,13 @@ class RateAdvDialogFragment() :
             ratingBar = view.findViewById(R.id.ratingBar)
             ratingText = view.findViewById(R.id.edit_rating_description_text)
 
-            ratingBar.setOnRatingBarChangeListener { rb, rating, fromUser ->
+            ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
                 advRating = rating.toDouble()
             }
 
             builder.setView(view)
                 // Add action buttons
-                .setPositiveButton(R.string.submit ) { dialog, id ->
+                .setPositiveButton(R.string.submit ) { _, _ ->
                         if (advRating < 0.5) {
                             Toast.makeText(
                                 requireContext(),
@@ -442,21 +442,21 @@ class RateAdvDialogFragment() :
 
                         }
 
-                        getDialog()?.dismiss()
+                        dialog?.dismiss()
                     }
-                .setNegativeButton(R.string.cancel) { dialog, id ->
-                        getDialog()?.cancel()
+                .setNegativeButton(R.string.cancel) { _, _ ->
+                        dialog?.cancel()
                     }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }
 
-    fun getAskerId(idAdv: String): String {
+    private fun getAskerId(idAdv: String): String {
         return sharedVM.conversations.value!!.values.filter { conv -> !conv.closed && conv.idAdv == idAdv }
             .getOrNull(0)!!.idAsker
     }
 
-    fun getGiverId(idAdv: String): String {
+    private fun getGiverId(idAdv: String): String {
         return sharedVM.conversations.value!!.values.filter { conv -> !conv.closed && conv.idAdv == idAdv }
             .getOrNull(0)!!.idBidder
     }

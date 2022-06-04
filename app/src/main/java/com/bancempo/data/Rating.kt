@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
 import com.bancempo.models.GlideApp
+import com.bancempo.models.SharedViewModel
 import com.google.firebase.storage.FirebaseStorage
 
 data class Rating(
@@ -19,11 +20,11 @@ data class Rating(
     val ratingText: String
 )
 
-class ReviewsAdapter(private val data: List<Rating>, private val nickname: String, private val url: String) :
+class ReviewsAdapter(private val data: List<Rating>, private val sharedVM: SharedViewModel
+) :
     RecyclerView.Adapter<ReviewsAdapter.ReviewsViewHolder>() {
 
     class ReviewsViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-
         val imageUser: ImageView = v.findViewById(R.id.iv_profileImage)
         val author: TextView = v.findViewById(R.id.tvAuthor)
         val ratingBar: RatingBar = v.findViewById(R.id.ratingBar)
@@ -40,11 +41,11 @@ class ReviewsAdapter(private val data: List<Rating>, private val nickname: Strin
     }
 
     override fun onBindViewHolder(holder: ReviewsViewHolder, position: Int) {
-
+        val author = sharedVM.users.value!![data[position].idAuthor]!!
         val storageReference = FirebaseStorage.getInstance()
-        val userRef = storageReference.getReferenceFromUrl(url)
+        val userRef = storageReference.getReferenceFromUrl(author.imageUser)
 
-        holder.author.text = nickname
+        holder.author.text = author.nickname
         holder.ratingBar.rating = data[position].rating.toFloat()
         holder.description.text = data[position].ratingText
 

@@ -17,6 +17,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.bancempo.R.id.Search_bar
+import java.util.*
 
 
 class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
@@ -37,12 +38,7 @@ class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
                 val sb = view?.findViewById<SearchView>(
                     Search_bar)
                 if (sb != null) {
-
-                    if(sb.isVisible)
-                        sb.isVisible=false
-                    else
-                        sb.isVisible=true
-
+                    sb.isVisible = !sb.isVisible
                 }
                 true
             }
@@ -61,7 +57,7 @@ class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
         sharedVM.services.observe(viewLifecycleOwner) { services ->
 
 
-            emptyListTV = view.findViewById<TextView>(R.id.empty_list_tv)
+            emptyListTV = view.findViewById(R.id.empty_list_tv)
             val rv = view.findViewById<RecyclerView>(R.id.rvSkill)
             rv.layoutManager = LinearLayoutManager(findNavController().context)
 
@@ -81,7 +77,7 @@ class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
             sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
                     val searchListOfSkills = services.values.filter { x ->
-                        x.title.toLowerCase().contains(newText.toLowerCase())
+                        x.title.lowercase(Locale.getDefault()).contains(newText.lowercase(Locale.getDefault()))
                     }
                     val newAdapter = ItemAdapter(searchListOfSkills.toList())
                     if (searchListOfSkills.isEmpty()) {
