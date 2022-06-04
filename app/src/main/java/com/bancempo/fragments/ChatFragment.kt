@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,8 +32,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var refuseButton: ImageButton
     private lateinit var tvNoCredit: TextView
 
-    private lateinit var name_chat: TextView
-    private lateinit var email_chat: TextView
+    private lateinit var nameChat: TextView
+    private lateinit var emailChat: TextView
 
 
     private lateinit var textMsg: EditText
@@ -60,13 +58,12 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         tvNoCredit = view.findViewById(R.id.tvNoCredit)
         tvNoCredit.visibility = View.GONE
 
-        email_chat = view.findViewById(R.id.email_chat)
-        name_chat = view.findViewById(R.id.name_chat)
+        emailChat = view.findViewById(R.id.email_chat)
+        nameChat = view.findViewById(R.id.name_chat)
 
-        var idB = arguments?.getString("idBidder")!!
-        email_chat.setText(idB)
-       //  var nameB = arguments?.getString("fullname")!!
-       // name_chat.setText(nameB)
+        val idB = arguments?.getString("idBidder")!!
+        emailChat.text = idB
+
 
         //TODO("CAMBIARE DINAMICAMENTE FOTO E NOME COMPLETO BIDDER")
 
@@ -74,14 +71,15 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         textMsg = view.findViewById(R.id.edit_gchat_message)
 
         textAcceptOrRefuse = view.findViewById(R.id.textAcceptOrRefuse)
-        acceptButton = view.findViewById<ImageButton>(R.id.acceptProposal)
-        refuseButton = view.findViewById<ImageButton>(R.id.refuseProposal)
+        acceptButton = view.findViewById(R.id.acceptProposal)
+        refuseButton = view.findViewById(R.id.refuseProposal)
 
 
         //Appena apro la chat se non è una conversazione nuova devo caricare i messaggi
         val createNewConv = arguments?.getBoolean("newConv")!!
         if(!createNewConv){
-            currentConversation = sharedVM.conversations.value!!.values.filter { conv -> conv.idAdv == idAdv && !conv.closed }.get(0)
+            currentConversation = sharedVM.conversations.value!!.values
+                .filter { conv -> conv.idAdv == idAdv && !conv.closed }[0]
             sharedVM.loadMessages(currentConversation!!.idConv)
         }
         else{
@@ -126,7 +124,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                             convs.values.filter { conv -> conv.idAdv == idAdv && !conv.closed }
 
                         if(filteredConvs.isNotEmpty()){
-                            currentConversation = filteredConvs.get(0)
+                            currentConversation = filteredConvs[0]
                             sharedVM.loadMessages(currentConversation!!.idConv)
                             textMsg.setText("")
                         }
@@ -169,7 +167,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         if( _convs.isNotEmpty()) {
             idConv = _convs[0].idConv
             idAsker = _convs[0].idAsker
-            asker = sharedVM.users.value!!.get(idAsker)
+            asker = sharedVM.users.value!![idAsker]
         }
 
         val amountOfTime = duration.toDouble()

@@ -2,7 +2,6 @@ package com.bancempo.fragments
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -14,7 +13,6 @@ import android.provider.MediaStore
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -43,12 +41,10 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private lateinit var fullNameEd: TextInputEditText
     private lateinit var descriptionEd: TextInputEditText
     private lateinit var nicknameEd: TextInputEditText
-    private lateinit var emailEd: TextInputEditText
     private lateinit var locationEd: TextInputEditText
     private lateinit var skillsEd: TextInputEditText
 
     private lateinit var nickname: TextInputLayout
-    private lateinit var email: TextInputLayout
     private lateinit var location: TextInputLayout
     private lateinit var skills: TextInputLayout
     private lateinit var description: TextInputLayout
@@ -60,7 +56,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private val REQUEST_IMAGE_CAPTURE = 1
     private val SELECT_PICTURE = 200
 
-    var btm: Bitmap? = null
+    private var btm: Bitmap? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -71,8 +67,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         fullNameEd = view.findViewById(R.id.editTextFullName)
         nickname = view.findViewById(R.id.nick_name)
         nicknameEd = view.findViewById(R.id.editTextNickname)
-        email = view.findViewById(R.id.email)
-        emailEd = view.findViewById(R.id.editTextEmail)
         location = view.findViewById(R.id.location)
         locationEd = view.findViewById(R.id.editTextLocation)
         description = view.findViewById(R.id.description)
@@ -92,8 +86,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                 var valid = true
                 for (i in 0 until chipGroup.childCount) {
                     val chip = chipGroup.getChildAt(i) as Chip
-                    if (skillsEd.text.toString().toUpperCase() == chip.text.toString()
-                            .toUpperCase()
+                    if (skillsEd.text.toString().uppercase(Locale.getDefault()) == chip.text.toString()
+                            .uppercase(Locale.getDefault())
                     ) {
                         valid = false
                         break
@@ -103,14 +97,13 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     addChip(skillsEd.text.toString())
                     skillsEd.setText("")
                 } else {
-                    skills.setError("This skill has been already inserted!")
+                    skills.error = "This skill has been already inserted!"
                 }
             }
         }
 
         fullNameEd.setText(arguments?.getString("fullname"))
         nicknameEd.setText(arguments?.getString("nickname"))
-        emailEd.setText(arguments?.getString("email"))
         locationEd.setText(arguments?.getString("location"))
         descriptionEd.setText(arguments?.getString("description"))
         var skillsString: String? = arguments?.getString("skill")
@@ -125,21 +118,21 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     chip.isCloseIconVisible = true
 
                     chip.setOnCloseIconClickListener {
-                        if (sharedVM.myAdvs.value!!.values.filter { x ->
+                        if (sharedVM.myAdvs.value!!.values.any { x ->
                                 x.skill.split(",").contains(chip.text)
-                            }.isNotEmpty()) {
+                            }) {
                             activity?.let {
                                 val builder = AlertDialog.Builder(it)
                                 builder.apply {
                                     setPositiveButton(
-                                        "Yes, I am sure",
-                                        DialogInterface.OnClickListener { _, _ ->
-                                            chipGroup.removeView(chip)
-                                        })
+                                        "Yes, I am sure"
+                                    ) { _, _ ->
+                                        chipGroup.removeView(chip)
+                                    }
                                     setNegativeButton(
-                                        "No, turn back",
-                                        DialogInterface.OnClickListener { _, _ ->
-                                        })
+                                        "No, turn back"
+                                    ) { _, _ ->
+                                    }
                                 }
                                 builder.setTitle("Removing Advertisments")
                                 builder.setMessage(R.string.advs_delete_message)
@@ -190,15 +183,16 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
 
         confirmationButton.setOnClickListener {
+            println("conferma")
             if (validation()) {
                 var chipText = ""
                 for (i in 0 until chipGroup.childCount) {
                     val chip = chipGroup.getChildAt(i) as Chip
-                    if (i == chipGroup.childCount - 1) {
-                        chipText += "${chip.text}"
+                    chipText += if (i == chipGroup.childCount - 1) {
+                        "${chip.text}"
 
                     } else {
-                        chipText += "${chip.text},"
+                        "${chip.text},"
                     }
                 }
                 if (btm != null) {
@@ -209,6 +203,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
                 setFragmentResult("backFromEdit", bundleOf(Pair("chipText", chipText)))
                 findNavController().popBackStack()
+            }
+            else{
+                println("no valido")
             }
         }
 
@@ -233,12 +230,12 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private fun validateTextInput(text: TextInputLayout, textEdit: TextInputEditText): Boolean {
         if (textEdit.text.isNullOrEmpty()) {
-            if (text.hint != "Nickname") {
+            return if (text.hint != "Nickname") {
                 text.error = "Please, fill in this field!"
-                return false
+                false
             } else {
-                textEdit.setError("Please, fill in this field!")
-                return false
+                textEdit.error = "Please, fill in this field!"
+                false
             }
         } else {
             if (text.hint == "Description") {
@@ -259,21 +256,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                 }
             } else if (text.hint == "Nickname") {
                 return if (textEdit.text?.length!! > 25) {
-                    textEdit.setError("Your ${text.hint} is too long.")
+                    textEdit.error = "Your ${text.hint} is too long."
                     false
                 } else {
                     text.error = null
                     true
                 }
-            } else if (text.hint == "Email") {
-                return if (textEdit.text?.length!! > 40) {
-                    text.error = "Your ${text.hint} is too long."
-                    false
-                } else {
-                    text.error = null
-                    return true
-                }
-            } else return false
+            }
+            else return false
 
         }
 
@@ -293,12 +283,10 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             valid = false
         }
 
-        if (!validateTextInput(email, emailEd)) {
-            valid = false
-        }
         if (!validateTextInput(location, locationEd)) {
             valid = false
         }
+
         return valid
     }
 
@@ -358,7 +346,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
     }
 
-    fun updateProfilePictureFromURI(uri: Uri): Bitmap {
+    private fun updateProfilePictureFromURI(uri: Uri): Bitmap {
         val bmp: Bitmap = MediaStore.Images.Media.getBitmap(context?.contentResolver, uri)
         val ins: InputStream? = context?.contentResolver?.openInputStream(uri)
 
@@ -391,8 +379,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     @SuppressLint("SetTextI18n")
     private fun addChip(text: String) {
         val chip = Chip(context)
-        val lower = text.substring(1, text.length).toLowerCase()
-        val upper = text.capitalize().substring(0, 1)
+        val lower = text.substring(1, text.length).lowercase(Locale.getDefault())
+        val upper = text.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            .substring(0, 1)
         chip.text = upper + lower
         chip.isCloseIconVisible = true
         chip.setOnCloseIconClickListener {
