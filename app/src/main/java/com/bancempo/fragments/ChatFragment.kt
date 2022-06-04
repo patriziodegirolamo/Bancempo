@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.bancempo.models.SharedViewModel
 
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
+
     private val sharedVM: SharedViewModel by activityViewModels()
 
     private var currentConversation: Conversation? = null
@@ -34,6 +36,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private lateinit var nameChat: TextView
     private lateinit var emailChat: TextView
+
+    private lateinit var photochat: ImageView
+
 
 
     private lateinit var textMsg: EditText
@@ -60,9 +65,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         emailChat = view.findViewById(R.id.email_chat)
         nameChat = view.findViewById(R.id.name_chat)
+        photochat = view.findViewById(R.id.photochat)
+
 
         val idB = arguments?.getString("idBidder")!!
         emailChat.text = idB
+        nameChat.text = sharedVM.users.value!!.get(idBidder)!!.fullname
+        sharedVM.loadImageUser(photochat, view, sharedVM.users.value!!.get(idBidder)!!)
+        (activity as AppCompatActivity).supportActionBar?.title = title.toString()
 
 
         //TODO("CAMBIARE DINAMICAMENTE FOTO E NOME COMPLETO BIDDER")
