@@ -17,6 +17,7 @@
         android:contentDescription="@string/rating"
         android:numStars="5"
         android:isIndicator="false"
+        android:stepSize="1.0"
         android:layout_margin="16dp"/>
 
     <com.google.android.material.textfield.TextInputEditText

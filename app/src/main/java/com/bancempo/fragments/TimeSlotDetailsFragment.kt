@@ -3,12 +3,8 @@ package com.bancempo.fragments
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Button
 import android.widget.RatingBar
 import android.widget.TextView
@@ -22,15 +18,12 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bancempo.R
-import com.bancempo.data.Rating
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
@@ -267,13 +260,12 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         }
 
         rateButton.setOnClickListener {
-            val rateFragment =
-                RateAdvDialogFragment(
-                    idAdv,
-                    sharedVM,
-                    rateButton
-                )
-            rateFragment.show(requireActivity().supportFragmentManager, "rate")
+            val rd = RateAdvDialogFragment()
+            val bundle = Bundle()
+            bundle.putString("idAdv", idAdv)
+            rd.arguments = bundle
+
+            rd.show(parentFragmentManager, "rateDialog")
         }
 
         chatButton.setOnClickListener {
@@ -372,32 +364,43 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         }
     }
 
+
+
+
+
 }
 
 
-class RateAdvDialogFragment(
-    private val idAdv: String,
-    private val sharedVM: SharedViewModel,
-    private val rateButton: Button,
-) :
+class RateAdvDialogFragment() :
     DialogFragment() {
     private lateinit var ratingBar: RatingBar
     private var advRating: Double = 0.0
     private lateinit var ratingText: TextInputEditText
-    private val idAsker = getAskerId(idAdv)
-    private val idBidder = getGiverId(idAdv)
+    private val sharedVM: SharedViewModel by activityViewModels()
+    /*
+
+
+     */
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        dialog?.dismiss()
+    }
 
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             val builder = AlertDialog.Builder(it)
-            // Get the layout inflater
-            val inflater = requireActivity().layoutInflater;
-            // Inflate and set the layout for the dialog
+            val inflater = requireActivity().layoutInflater
 
             val view = inflater.inflate(R.layout.dialog_rate, null)
-            // Pass null as the parent view because its going in the dialog layout
-            //val userId = arguments?.getString("userId")
+
+            val idAdv = arguments?.getString("idAdv")!!
+            val idAsker = getAskerId(idAdv)
+            val idBidder = getGiverId(idAdv)
+            val userEmail = sharedVM.currentUser.value!!.email
+
+
             ratingBar = view.findViewById(R.id.ratingBar)
             ratingText = view.findViewById(R.id.edit_rating_description_text)
 
@@ -407,9 +410,7 @@ class RateAdvDialogFragment(
 
             builder.setView(view)
                 // Add action buttons
-                .setPositiveButton(R.string.submit,
-                    DialogInterface.OnClickListener { dialog, id ->
-                        val userEmail = sharedVM.currentUser.value!!.email
+                .setPositiveButton(R.string.submit ) { dialog, id ->
                         if (advRating < 0.5) {
                             Toast.makeText(
                                 requireContext(),
@@ -423,7 +424,12 @@ class RateAdvDialogFragment(
                                 idAsker
                             }
 
-                            rateButton.visibility = View.GONE
+                            Toast.makeText(
+                                requireContext(),
+                                "$idAdv $otherUserId",
+                                Toast.LENGTH_SHORT
+                            ).show()
+
                             sharedVM.submitNewRating(
                                 userEmail,
                                 otherUserId,
@@ -431,17 +437,17 @@ class RateAdvDialogFragment(
                                 advRating,
                                 ratingText.text.toString()
                             )
+
                         }
+
                         getDialog()?.dismiss()
-                    })
-                .setNegativeButton(R.string.cancel,
-                    DialogInterface.OnClickListener { dialog, id ->
+                    }
+                .setNegativeButton(R.string.cancel) { dialog, id ->
                         getDialog()?.cancel()
-                    })
+                    }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }
-
 
     fun getAskerId(idAdv: String): String {
         return sharedVM.conversations.value!!.values.filter { conv -> !conv.closed && conv.idAdv == idAdv }
