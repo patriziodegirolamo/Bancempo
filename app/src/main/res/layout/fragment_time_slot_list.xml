@@ -120,10 +120,10 @@
         android:entries="@array/reserved"
         android:spinnerMode="dropdown"
         android:theme="@style/Theme.MaterialComponents.Light"
-        app:layout_constraintBottom_toTopOf="@+id/sort_spinner"
+        app:layout_constraintBottom_toTopOf="@id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar" />
+        app:layout_constraintTop_toBottomOf="@id/sort_spinner" />
 
 
 
@@ -165,7 +165,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sort_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/reservedSpinner" />
 
     <TextView
         android:id="@+id/empty_list_tv"

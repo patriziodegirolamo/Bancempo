@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:backgroundTint="#250606">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -59,11 +60,11 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="@string/title"
+                                    app:boxStrokeWidth="0dp"
+                                    app:boxStrokeWidthFocused="0dp"
                                     app:endIconMode="clear_text"
                                     app:placeholderText="Insert title"
-                                    app:startIconDrawable="@drawable/ic_icons8_etichetta_50"
-                                    app:boxStrokeWidth="0dp"
-                                    app:boxStrokeWidthFocused="0dp">
+                                    app:startIconDrawable="@drawable/ic_icons8_etichetta_50">
 
                                     <com.google.android.material.textfield.TextInputEditText
                                         android:id="@+id/edit_title_text"
@@ -170,9 +171,9 @@
                             android:hint="@string/date"
                             android:inputType="none"
                             android:textColorHint="@color/black"
-                            app:startIconDrawable="@drawable/ic_icons8_calendario_50"
                             app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
+                            app:boxStrokeWidthFocused="0dp"
+                            app:startIconDrawable="@drawable/ic_icons8_calendario_50">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_date_text"
@@ -208,9 +209,9 @@
                             android:focusable="false"
                             android:hint="@string/time"
                             android:inputType="none"
-                            app:startIconDrawable="@drawable/ic_icons8_orologio_50"
                             app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
+                            app:boxStrokeWidthFocused="0dp"
+                            app:startIconDrawable="@drawable/ic_icons8_orologio_50">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_time_text"
@@ -249,9 +250,9 @@
                             android:focusable="false"
                             android:hint="@string/duration_in_hours"
                             android:inputType="none"
-                            app:startIconDrawable="@drawable/ic_icons8_hourglass_50"
                             app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
+                            app:boxStrokeWidthFocused="0dp"
+                            app:startIconDrawable="@drawable/ic_icons8_hourglass_50">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_duration_text"
@@ -286,11 +287,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/location"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
                             app:endIconMode="clear_text"
                             app:placeholderText="Insert location"
-                            app:startIconDrawable="@drawable/ic_icons8_segnaposto_50"
-                            app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
+                            app:startIconDrawable="@drawable/ic_icons8_segnaposto_50">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_location_text"
@@ -325,11 +326,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="@string/note"
+                            app:boxStrokeWidth="0dp"
+                            app:boxStrokeWidthFocused="0dp"
                             app:endIconMode="clear_text"
                             app:placeholderText="Insert note"
-                            app:startIconDrawable="@drawable/ic_icons8_nota_64"
-                            app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
+                            app:startIconDrawable="@drawable/ic_icons8_nota_64">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_note_text"
@@ -382,6 +383,16 @@
                 </com.google.android.material.chip.ChipGroup>
 
                 <Button
+                    android:id="@+id/button_rate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/divider_color"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/rate"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <Button
                     android:id="@+id/button_chat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -396,14 +407,6 @@
                     android:textAlignment="center" />
             </LinearLayout>
 
-
-            <Button
-                android:id="@+id/button_rate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/rate"
-                android:visibility="gone"
-                tools:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

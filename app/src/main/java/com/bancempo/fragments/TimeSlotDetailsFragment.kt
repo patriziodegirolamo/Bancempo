@@ -120,7 +120,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
 
-        rateButton.visibility = View.VISIBLE
         var createNewConv: Boolean? = false
         idAdv = arguments?.getString("id")!!
 
@@ -267,7 +266,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
             bundle.putString("idAdv", idAdv)
             rd.arguments = bundle
             rd.show(parentFragmentManager, "rateDialog")
-            rateButton.visibility = View.GONE
 
         }
 
