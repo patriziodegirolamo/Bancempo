@@ -50,8 +50,11 @@ class MainActivity : AppCompatActivity() {
                 val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
                 val emtxt = drawer.findViewById<TextView>(R.id.email_text)
                 val ustxt = drawer.findViewById<TextView>(R.id.username_text)
-                ustxt.text = user.nickname
-                emtxt.text = user.email
+
+                if(emtxt != null && ustxt!= null){
+                    ustxt.text = user.nickname
+                    emtxt.text = user.email
+                }
             }
         }
 

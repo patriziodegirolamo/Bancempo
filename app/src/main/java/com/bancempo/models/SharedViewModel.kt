@@ -138,45 +138,55 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         loadAllRatings()
     }
 
+
     fun uploadBitmap(btm: Bitmap, view: View, skillsString: String) {
+
+        val user = currentUser.value!!
+        val email = user.email
+        val toDelete = user.imageUser
+
         val creationTimeNewImage = System.currentTimeMillis()
-        val emailTruncated = currentUser.value!!.email.split("@")[0]
+        val emailTruncated = email.split("@")[0]
         val imageName = "profile_".plus(creationTimeNewImage.toString()).plus(".jpg")
         val url = "$rootStorageDirectory/$emailTruncated/$imageName"
-        val toDelete = currentUser.value!!.imageUser.isNotEmpty()
         val myNewRef = storageReference.getReferenceFromUrl(url)
-
         val baos = ByteArrayOutputStream()
         btm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
+
+
         myNewRef.putBytes(data).addOnSuccessListener {
-            if (toDelete) {
-                val myOldRef = storageReference.getReferenceFromUrl(currentUser.value?.imageUser!!)
-                myOldRef.delete().addOnSuccessListener {
-                    db.collection("users").document(authUser.value!!.email!!)
-                        .update("imageUser", myNewRef.toString())
-                        .addOnSuccessListener {
+            db.collection("users").document(email)
+                .update("imageUser", myNewRef.toString())
+                .addOnSuccessListener {
+                    updateUser(view, skillsString, true)
+                    if(toDelete.isNotEmpty()) {
+                        val myOldRef = storageReference.getReferenceFromUrl(toDelete)
+                        myOldRef.delete()
+                            .addOnFailureListener {
+                                Toast.makeText(
+                                    app.applicationContext,
+                                    "There was a problem on deleting old Image",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                    }
 
-                            val photo = view.findViewById<ImageView>(R.id.profile_pic)
-                            photo.setImageBitmap(btm)
-                            updateUser(view, skillsString, true)
-                        }
-                        .addOnFailureListener { }
-                }.addOnFailureListener {
                 }
-            } else {
-                db.collection("users").document(authUser.value!!.email!!)
-                    .update("imageUser", myNewRef.toString())
-                    .addOnSuccessListener { }
-                    .addOnFailureListener { }
-            }
+                .addOnFailureListener{
+                    Toast.makeText(app.applicationContext, "There was a problem on deleting old Image", Toast.LENGTH_SHORT).show()
+                }
 
-        }.addOnFailureListener {
-            Toast.makeText(app.applicationContext, "----------------Error", Toast.LENGTH_SHORT)
-                .show()
+        }.addOnFailureListener{
+            Toast.makeText(
+                app.applicationContext,
+                "There was a problem on adding new Image",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }
+
 
     fun loadImageUserById(userId: String, view: View) {
         db.collection("users").document(userId).get()
@@ -240,7 +250,6 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
         val fullname = view.findViewById<TextInputEditText>(R.id.editTextFullName).text.toString()
         val nickname = view.findViewById<TextInputEditText>(R.id.editTextNickname).text.toString()
-        //val email = view.findViewById<TextInputEditText>(R.id.editTextEmail).text.toString()
         val location = view.findViewById<TextInputEditText>(R.id.editTextLocation).text.toString()
         val description =
             view.findViewById<TextInputEditText>(R.id.editTextDescription).text.toString()
