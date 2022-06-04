@@ -45,10 +45,14 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, binding.drawerLayout)
 
 
-        sharedVM.currentUser.observe(this) {
-        }
-
-        sharedVM.authUser.observe(this) {
+        sharedVM.currentUser.observe(this) { user ->
+            if(user != null){
+                val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
+                val emtxt = drawer.findViewById<TextView>(R.id.email_text)
+                val ustxt = drawer.findViewById<TextView>(R.id.username_text)
+                ustxt.text = user.nickname
+                emtxt.text = user.email
+            }
         }
 
         sharedVM.services.observe(this) {
@@ -65,7 +69,6 @@ class MainActivity : AppCompatActivity() {
 
         sharedVM.conversations.observe(this){
         }
-
 
         sharedVM.messages.observe(this){
         }
@@ -173,14 +176,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.findNavController()
 
-        val emtxt = drawer.findViewById<TextView>(R.id.email_text)
-        val ustxt = drawer.findViewById<TextView>(R.id.username_text)
-        ustxt.text = sharedVM.currentUser.value?.nickname!!
-        emtxt.text = auth.currentUser?.email!!
         return NavigationUI.navigateUp(navController, drawer)
     }
 
