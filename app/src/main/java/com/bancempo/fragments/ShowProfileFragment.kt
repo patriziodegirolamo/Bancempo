@@ -55,8 +55,10 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         chipGroup = view.findViewById(R.id.chipGroup)
 
         sharedVM.currentUser.observe(viewLifecycleOwner) { user ->
+            val numRatings = sharedVM.ratings.value!!.values
+                .filter { x -> x.idReceiver == user.email }.size
             ratingBar.rating = user.rating.toFloat()
-            ratingNum.setText(user.rating.toString())
+            ratingNum.text = " ( ".plus(numRatings.toString()).plus(" ) ")
             fullNameEd.setText(user.fullname)
             nicknameEd.setText(user.nickname)
             emailEd.setText(user.email)
@@ -75,7 +77,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
                 chipGroup.addView(chip)
             }
 
-            ratingBar.setOnTouchListener( View.OnTouchListener{ v, event ->
+            ratingBar.setOnTouchListener( View.OnTouchListener{ _, event ->
                 if(event.action == MotionEvent.ACTION_UP){
                     val bundle = Bundle()
                     bundle.putString("userId", user.email)
@@ -135,11 +137,11 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         var chipText = ""
         for (i in 0 until chipGroup.childCount) {
             val chip = chipGroup.getChildAt(i) as Chip
-            if (i == chipGroup.childCount - 1) {
-                chipText += "${chip.text}"
+            chipText += if (i == chipGroup.childCount - 1) {
+                "${chip.text}"
 
             } else {
-                chipText += "${chip.text},"
+                "${chip.text},"
             }
         }
         bundle.putString("skill", chipText)

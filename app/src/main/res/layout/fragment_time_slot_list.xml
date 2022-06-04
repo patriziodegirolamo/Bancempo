@@ -50,19 +50,19 @@
                 <TextView
                     android:id="@+id/filterLocation"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="2"
-                    android:drawableEnd="@drawable/ic_baseline_add_location_24"
-                    android:text="Location"
+                    android:text="@string/location"
                     android:textAlignment="textStart"
                     android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:drawableEndCompat="@drawable/ic_baseline_add_location_24" />
 
                 <EditText
                     android:id="@+id/searchLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Search..."
+                    android:hint="@string/search"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
                     android:textAlignment="center"
@@ -82,11 +82,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alpha="3"
-                    android:drawableEnd="@drawable/ic_baseline_today_24"
                     android:text="@string/date"
                     android:textAlignment="textStart"
                     android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    app:drawableEndCompat="@drawable/ic_baseline_today_24" />
 
             </LinearLayout>
 
@@ -100,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:contentDescription="Sort spinner"
+        android:contentDescription="@string/sort_spinner"
         android:dropDownWidth="wrap_content"
         android:entries="@array/sort"
         android:spinnerMode="dropdown"
@@ -116,7 +116,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="false"
-        android:contentDescription="Reserved spinner"
+        android:contentDescription="@string/reserved_spinner"
         android:dropDownWidth="wrap_content"
         android:entries="@array/reserved"
         android:spinnerMode="dropdown"
@@ -126,13 +126,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardView6" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/sort_spinner"
-        app:layout_constraintTop_toBottomOf="@id/search_bar"
-        tools:layout_editor_absoluteX="411dp"></LinearLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -149,7 +143,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_icons8_plus_50"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck"
+        android:contentDescription="@string/add"/>
 
     <LinearLayout
         android:id="@+id/linearLayout6"

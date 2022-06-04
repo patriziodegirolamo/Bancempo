@@ -22,11 +22,12 @@
                 android:id="@+id/imageView2"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                tools:srcCompat="@drawable/example_profile_pic" />
+                tools:srcCompat="@drawable/example_profile_pic"
+                android:contentDescription="@string/profile_image"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linearLayout8"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
@@ -92,7 +93,7 @@
                 android:id="@+id/refuseProposal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="Button to refuse the proposal"
+                android:contentDescription="@string/button_to_refuse_the_proposal"
                 android:src="@drawable/ic_icons8_cross_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/acceptProposal"
@@ -103,7 +104,7 @@
                 android:id="@+id/acceptProposal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="Button to accept the proposal"
+                android:contentDescription="@string/button_to_accept_the_proposal"
                 android:src="@drawable/ic_icons8_ok_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -156,7 +157,7 @@
             android:layout_marginStart="16dp"
             android:layout_toStartOf="@+id/button_gchat_send"
             android:background="@android:color/transparent"
-            android:hint="Enter Message"
+            android:hint="@string/enter_message"
             android:inputType="text"
             android:maxLines="6"
             android:minHeight="48dp"
@@ -168,7 +169,7 @@
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackground"
-            android:contentDescription="Send message"
+            android:contentDescription="@string/send_message"
             android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_24"
             android:textColor="@color/black" />
 

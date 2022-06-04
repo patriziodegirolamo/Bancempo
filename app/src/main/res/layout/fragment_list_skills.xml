@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:queryHint="Search skills"
         tools:layout_conversion_absoluteHeight="48dp"
-        tools:layout_conversion_absoluteWidth="379dp"></androidx.appcompat.widget.SearchView>
+        tools:layout_conversion_absoluteWidth="379dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSkill"

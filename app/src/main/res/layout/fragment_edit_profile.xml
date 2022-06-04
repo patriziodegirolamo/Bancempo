@@ -81,7 +81,7 @@
                                 android:id="@+id/nick_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:hint="Nickname"
+                                android:hint="@string/nickname"
                                 app:endIconMode="clear_text">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -89,8 +89,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/light_primary_color"
-                                    android:drawableLeft="@drawable/ic_icons8_posta_elettronica_30"
-                                    android:text="Nickname"
+                                    android:drawableStart="@drawable/ic_icons8_posta_elettronica_30"
+                                    android:text="@string/nickname"
                                     android:textColor="@color/black" />
 
                             </com.google.android.material.textfield.TextInputLayout>
@@ -126,7 +126,7 @@
                             android:id="@+id/full_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Full Name"
+                            android:hint="@string/full_name"
                             app:endIconMode="clear_text"
                             app:startIconDrawable="@drawable/ic_icons8_nome_64">
 
@@ -156,7 +156,7 @@
                             android:id="@+id/email"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Email"
+                            android:hint="@string/email"
                             app:endIconMode="clear_text"
                             app:startIconDrawable="@drawable/ic_icons8_email_64">
 
@@ -185,7 +185,7 @@
                             android:id="@+id/location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Location"
+                            android:hint="@string/location"
                             app:endIconMode="clear_text"
                             app:startIconDrawable="@drawable/ic_icons8_segnaposto_50">
 
@@ -216,7 +216,7 @@
                             android:id="@+id/description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Description"
+                            android:hint="@string/description"
                             app:endIconMode="clear_text"
                             app:startIconDrawable="@drawable/ic_icons8_documento_50">
 
@@ -249,7 +249,7 @@
                             android:id="@+id/skills"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Skills"
+                            android:hint="@string/skills"
                             app:placeholderText="Insert a skill"
                             app:endIconMode="custom"
                             app:endIconDrawable="@drawable/ic_icons8_ok"
@@ -285,7 +285,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="40dp"
                 android:backgroundTint="@color/dark_primary_color"
-                android:text="Save changes"/>
+                android:text="@string/save_changes"/>
 
         </LinearLayout>
     </ScrollView>

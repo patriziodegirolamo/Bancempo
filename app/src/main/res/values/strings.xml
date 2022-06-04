@@ -52,6 +52,7 @@
     <string name="fui_sign_in_with_phone" />
     <string name="fui_sign_in_with_google" translation_description="Sign in button text">Sign in with Google</string>
     <string name="date">Date </string>
+    <string name="time">Tate </string>
     <string name="noCredit">L\'altro utente non ha credito sufficiente. Puoi attendere che lo maturi entro la data prevista o rifiutare la sua richiesta</string>
     <string name="no_skill_at_all">Sorry, no available skills!</string>
 
@@ -65,6 +66,29 @@
     <string name="rating_min_err">The minimum rating is 0.5 star.</string>
     <string name="author">Author</string>
     <string name="profile_image">profile image</string>
+    <string name="numReviews">0</string>
+    <string name="credits_in_hours">Credits (h)</string>
+    <string name="button_to_refuse_the_proposal">Button to refuse the proposal</string>
+    <string name="button_to_accept_the_proposal">Button to accept the proposal</string>
+    <string name="enter_message">Enter Message</string>
+    <string name="send_message">Send message</string>
+    <string name="save_changes">Save changes</string>
+    <string name="title">Title</string>
+    <string name="duration_in_hours">Duration (h)</string>
+    <string name="note">Note</string>
+    <string name="chat">Chat</string>
+    <string name="choose_date">CHOOSE DATE</string>
+    <string name="choose_time_slot">CHOOSE TIME-SLOT</string>
+    <string name="slider_to_select_duration_in_hours">Slider to select duration in hours</string>
+    <string name="search">Search...</string>
+    <string name="sort_spinner">Sort spinner</string>
+    <string name="reserved_spinner">Reserved spinner</string>
+    <string name="add">add</string>
+    <string name="user_icon">User Icon</string>
+    <string name="delete_adv">delete adv</string>
+    <string name="example_date">June 10</string>
+    <string name="example_message">This is a Message</string>
+    <string name="example_time">10:00</string>
 
 </resources>
 

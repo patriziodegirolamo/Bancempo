@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingVertical="-30dp">
@@ -83,12 +82,12 @@
                                 android:layout_height="wrap_content"
                                 android:backgroundTint="@color/light_primary_color"
                                 android:clickable="false"
-                                android:drawableLeft="@drawable/ic_icons8_posta_elettronica_30"
+                                android:drawableStart="@drawable/ic_icons8_posta_elettronica_30"
                                 android:enabled="false"
                                 android:focusable="false"
                                 android:focusableInTouchMode="false"
                                 android:inputType="none"
-                                android:text="Nickname"
+                                android:text="@string/nickname"
                                 android:textColor="@color/black" />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -141,7 +140,7 @@
                         android:id="@+id/rating_num"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0.0" />
+                        android:text="@string/numReviews" />
 
                 </LinearLayout>
 
@@ -162,7 +161,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            android:hint="Credits (h)"
+                            android:hint="@string/credits_in_hours"
                             android:inputType="none"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp"
@@ -202,7 +201,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            android:hint="Full Name"
+                            android:hint="@string/full_name"
                             android:inputType="none"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp"
@@ -241,7 +240,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            android:hint="Email"
+                            android:hint="@string/email"
                             android:inputType="none"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp"
@@ -280,7 +279,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            android:hint="Location"
+                            android:hint="@string/location"
                             android:inputType="none"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp"
@@ -319,12 +318,10 @@
                             android:id="@+id/textViewDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Description"
+                            android:hint="@string/description"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp"
                             app:startIconDrawable="@drawable/ic_icons8_documento_50">
-
-                            >
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/textViewDescription_ed"
@@ -359,14 +356,12 @@
                             android:id="@+id/textViewSkills"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Skills"
+                            android:hint="@string/skills"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp"
                             app:endIconMode="clear_text"
                             app:placeholderText="Insert note"
                             app:startIconDrawable="@drawable/ic_icons8_skills_24">
-
-                            >
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/textViewSkills_ed"

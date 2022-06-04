@@ -58,7 +58,7 @@
                                     android:id="@+id/title_adv"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="Title"
+                                    android:hint="@string/title"
                                     app:endIconMode="clear_text"
                                     app:placeholderText="Insert title"
                                     app:startIconDrawable="@drawable/ic_icons8_etichetta_50"
@@ -75,7 +75,8 @@
                                         android:focusable="false"
                                         android:focusableInTouchMode="false"
                                         android:inputType="none"
-                                        android:textColor="@color/black" />
+                                        android:textColor="@color/black"
+                                        tools:ignore="TooDeepLayout" />
 
                                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -101,14 +102,12 @@
                                     android:id="@+id/description_adv"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:hint="Description"
+                                    android:hint="@string/description"
                                     app:boxStrokeWidth="0dp"
                                     app:boxStrokeWidthFocused="0dp"
                                     app:endIconMode="clear_text"
                                     app:placeholderText="Insert description"
                                     app:startIconDrawable="@drawable/ic_icons8_documentobianco_50">
-
-                                    >
 
                                     <com.google.android.material.textfield.TextInputEditText
                                         android:id="@+id/edit_description_text"
@@ -168,7 +167,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            android:hint="Date"
+                            android:hint="@string/date"
                             android:inputType="none"
                             android:textColorHint="@color/black"
                             app:startIconDrawable="@drawable/ic_icons8_calendario_50"
@@ -207,7 +206,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            android:hint="Time"
+                            android:hint="@string/time"
                             android:inputType="none"
                             app:startIconDrawable="@drawable/ic_icons8_orologio_50"
                             app:boxStrokeWidth="0dp"
@@ -248,7 +247,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="false"
                             android:focusable="false"
-                            android:hint="Duration (h)"
+                            android:hint="@string/duration_in_hours"
                             android:inputType="none"
                             app:startIconDrawable="@drawable/ic_icons8_hourglass_50"
                             app:boxStrokeWidth="0dp"
@@ -286,14 +285,12 @@
                             android:id="@+id/edit_duration"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Location"
+                            android:hint="@string/location"
                             app:endIconMode="clear_text"
                             app:placeholderText="Insert location"
                             app:startIconDrawable="@drawable/ic_icons8_segnaposto_50"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp">
-
-                            >
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_location_text"
@@ -327,14 +324,12 @@
                             android:id="@+id/note_adv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Note"
+                            android:hint="@string/note"
                             app:endIconMode="clear_text"
                             app:placeholderText="Insert note"
                             app:startIconDrawable="@drawable/ic_icons8_nota_64"
                             app:boxStrokeWidth="0dp"
                             app:boxStrokeWidthFocused="0dp">
-
-                            >
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/edit_note_text"
@@ -358,7 +353,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:hint="Skills"
+                    android:hint="@string/skills"
                     app:boxStrokeWidth="0dp"
                     app:boxStrokeWidthFocused="0dp"
                     app:endIconMode="clear_text"
@@ -391,7 +386,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="40dp"
-                    android:text="Chat" />
+                    android:text="@string/chat" />
 
                 <TextView
                     android:id="@+id/slotNotAvailable"

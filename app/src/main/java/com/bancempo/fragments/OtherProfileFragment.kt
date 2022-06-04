@@ -10,7 +10,6 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import com.bancempo.R
 import com.bancempo.models.SharedViewModel
@@ -57,10 +56,13 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
         chipGroup = view.findViewById(R.id.chipGroup)
 
         val userId = arguments?.getString("userId")
-        val user = sharedVM.users.value!!.get(userId)!!
+        val user = sharedVM.users.value!![userId]!!
+
+        val numRatings = sharedVM.ratings.value!!.values
+            .filter { x -> x.idReceiver == user.email }.size
 
         ratingBar.rating = user.rating.toFloat()
-        ratingNum.setText(user.rating.toString())
+        ratingNum.text = " ( ".plus(numRatings.toString()).plus(" ) ")
         fullNameEd.setText(user.fullname)
         nicknameEd.setText(user.nickname)
         emailEd.setText(user.email)
@@ -88,7 +90,7 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
             loadImg = true
         }
 
-        ratingBar.setOnTouchListener( View.OnTouchListener{ v, event ->
+        ratingBar.setOnTouchListener( View.OnTouchListener{ _, event ->
             if(event.action == MotionEvent.ACTION_UP){
                 println("rating: Show rating of this user")
                 val bundle = Bundle()

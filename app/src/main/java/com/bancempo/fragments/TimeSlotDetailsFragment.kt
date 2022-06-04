@@ -152,9 +152,11 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
 
             //TODO CAMBIARE >= IN >
             if(adv != null && currentDateFormatted >= adv.date) {
+                println("--------entrato")
                     val list = ratings.values.filter { x ->
                         x.idAdv == idAdv && x.idAuthor == sharedVM.currentUser.value!!.email
                     }
+                println("------------${list.size}")
                     if (list.isEmpty()) {
                         rateButton.visibility = View.VISIBLE
                     } else {
