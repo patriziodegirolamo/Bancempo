@@ -1,8 +1,6 @@
-package com.bancempo
+package com.bancempo.data
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +10,10 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.bancempo.R
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
-import java.io.File
 
 
 data class SmallAdv(
@@ -47,7 +45,6 @@ class SmallAdvAdapter(
         private val delete: FloatingActionButton = v.findViewById(R.id.delete_adv)
         private val edit: FloatingActionButton = v.findViewById(R.id.edit_adv)
         private val image: ImageView = v.findViewById(R.id.smallAdv_image)
-        private val res = v.context.resources
         private val db = FirebaseFirestore.getInstance()
 
 
@@ -57,15 +54,13 @@ class SmallAdvAdapter(
             position: Int,
             isMyAdvs: Boolean,
             sharedVM: SharedViewModel,
-            reservationPage: Boolean,
-            view: View
+            view: View,
         ) {
             title.text = adv.title
             date.text = "Date: ${adv.date}"
             time.text = "Time: ${adv.time}"
-            location.text = "${adv.location}"
+            location.text = adv.location
             duration.text = "Duration: ${adv.duration}"
-            loadProfileImage()
 
             if (isMyAdvs) {
                 edit.isVisible = true
@@ -112,29 +107,6 @@ class SmallAdvAdapter(
             edit.setOnClickListener(null)
         }
 
-        private fun loadProfileImage(): Bitmap {
-
-            val fileDir = "/data/user/0/com.bancempo/app_imageDir"
-            val profilePictureFileName = "profile.jpeg"
-
-            return File(fileDir, profilePictureFileName)
-                .run {
-                    when (exists()) {
-                        true -> BitmapFactory.decodeFile(
-                            File(
-                                fileDir,
-                                profilePictureFileName
-                            ).absolutePath
-                        )
-                        false -> BitmapFactory.decodeResource(
-                            res, R.drawable.profile_pic_default
-                        )
-                    }
-                }.also {
-                    image.setImageBitmap(it)
-                }
-        }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SmallAdvHolder {
@@ -147,7 +119,7 @@ class SmallAdvAdapter(
 
     //ti dice quale elemento della lista è correntemente visibile e la sua posizione il lista
     override fun onBindViewHolder(holder: SmallAdvHolder, position: Int) {
-        holder.bind(data[position], position, isMyAdvs, sharedVM, reservationPage, holder.itemView)
+        holder.bind(data[position], position, isMyAdvs, sharedVM, holder.itemView)
 
         holder.itemView.setOnClickListener {
 

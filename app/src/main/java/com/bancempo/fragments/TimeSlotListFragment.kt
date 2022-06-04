@@ -17,11 +17,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
-import com.bancempo.SmallAdv
+import com.bancempo.data.SmallAdv
 import com.bancempo.models.SharedViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
-import com.bancempo.SmallAdvAdapter as SmallAdvAdapter1
+import com.bancempo.data.SmallAdvAdapter as SmallAdvAdapter1
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -948,7 +948,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     }
 
     private fun renderAdvList(advList: List<SmallAdv>, myAdv: Boolean, reservationPage: Boolean) {
-        val adapter: com.bancempo.SmallAdvAdapter?
+        val adapter: com.bancempo.data.SmallAdvAdapter?
 
         if (!myAdv) {
             adapter =

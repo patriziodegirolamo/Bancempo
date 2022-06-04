@@ -1,6 +1,5 @@
 package com.bancempo.data
 
-import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
 import com.bancempo.models.GlideApp
-import com.bancempo.models.SharedViewModel
-import com.bumptech.glide.Glide
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import kotlin.coroutines.coroutineContext
 
 data class Rating(
     val idAuthor: String,
@@ -22,15 +17,7 @@ data class Rating(
     val idAdv: String,
     val rating: Double,
     val ratingText: String
-) {
-    constructor() : this(
-        "",
-        "",
-        "",
-        0.0,
-        ""
-    )
-}
+)
 
 class ReviewsAdapter(private val data: List<Rating>, private val nickname: String, private val url: String) :
     RecyclerView.Adapter<ReviewsAdapter.ReviewsViewHolder>() {

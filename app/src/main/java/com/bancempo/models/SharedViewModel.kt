@@ -7,13 +7,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.RatingBar
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.bancempo.R
-import com.bancempo.Skill
-import com.bancempo.SmallAdv
+import com.bancempo.data.Skill
+import com.bancempo.data.SmallAdv
 import com.bancempo.data.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -31,7 +30,6 @@ import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 import kotlin.collections.HashMap
 
 

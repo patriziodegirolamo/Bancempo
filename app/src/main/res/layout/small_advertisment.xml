@@ -33,7 +33,7 @@
                 android:layout_centerVertical="true"
                 android:contentDescription="@string/profile_image"
                 android:scaleType="centerCrop"
-                android:src="@drawable/example_profile_pic" />
+                 />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -136,7 +136,7 @@
                 android:layout_marginEnd="46dp"
                 android:backgroundTint="@color/divider_color_light"
                 android:clickable="true"
-                android:contentDescription="edit adv"
+                android:contentDescription="@string/edit_adv"
                 android:contextClickable="true"
                 android:tag="fab"
                 app:fabSize="mini"

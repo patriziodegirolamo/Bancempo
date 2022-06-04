@@ -1,18 +1,11 @@
 package com.bancempo.data
 
-import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.bancempo.R
-import com.bancempo.SmallAdv
-import com.bancempo.SmallAdvAdapter
 import com.bancempo.models.SharedViewModel
 
 
@@ -37,9 +30,9 @@ class MessageAdapter(private val messageList: List<Message>, private val sharedV
     override fun getItemCount(): Int = messageList.size
 
     inner class MyMessageViewHolder(v: View): RecyclerView.ViewHolder(v){
-        val dateMsg = v.findViewById<TextView>(R.id.text_gchat_date_me)
-        val textMsg = v.findViewById<TextView>(R.id.text_gchat_message_me)
-        val timeMsg = v.findViewById<TextView>(R.id.text_gchat_timestamp_me)
+        private val dateMsg = v.findViewById<TextView>(R.id.text_gchat_date_me)
+        private val textMsg = v.findViewById<TextView>(R.id.text_gchat_message_me)
+        private val timeMsg = v.findViewById<TextView>(R.id.text_gchat_timestamp_me)
 
         fun bind(mes: Message){
             val arrDate = mes.date.split(" ")
@@ -54,10 +47,10 @@ class MessageAdapter(private val messageList: List<Message>, private val sharedV
     }
 
     inner class OtherMessageViewHolder(v: View): RecyclerView.ViewHolder(v){
-        val nickname = v.findViewById<TextView>(R.id.text_gchat_user_other)
-        val dateMsg = v.findViewById<TextView>(R.id.text_gchat_date_other)
-        val textMsg = v.findViewById<TextView>(R.id.text_gchat_message_other)
-        val timeMsg = v.findViewById<TextView>(R.id.text_gchat_timestamp_other)
+        private val nickname = v.findViewById<TextView>(R.id.text_gchat_user_other)
+        private val dateMsg = v.findViewById<TextView>(R.id.text_gchat_date_other)
+        private val textMsg = v.findViewById<TextView>(R.id.text_gchat_message_other)
+        private val timeMsg = v.findViewById<TextView>(R.id.text_gchat_timestamp_other)
 
         fun bind(mes: Message){
             val arrDate = mes.date.split(" ")
@@ -78,9 +71,9 @@ class MessageAdapter(private val messageList: List<Message>, private val sharedV
     }
 
     override fun getItemViewType(position: Int): Int {
-        if(sharedVM.currentUser.value!!.email == messageList[position].from)
-            return Const.MYMESSAGE
-        else return Const.OTHERMESSAGE
+        return if(sharedVM.currentUser.value!!.email == messageList[position].from)
+            Const.MYMESSAGE
+        else Const.OTHERMESSAGE
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

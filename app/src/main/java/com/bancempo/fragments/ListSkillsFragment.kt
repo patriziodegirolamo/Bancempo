@@ -8,13 +8,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bancempo.ItemAdapter
+import com.bancempo.data.ItemAdapter
 import com.bancempo.R
 import com.bancempo.models.SharedViewModel
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.TextView
 import androidx.core.view.isVisible
 import com.bancempo.R.id.Search_bar

@@ -1,4 +1,4 @@
-package com.bancempo
+package com.bancempo.data
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.bancempo.R
 
 data class Skill(val title: String, val creationTime: String, val createdBy: String)
 
