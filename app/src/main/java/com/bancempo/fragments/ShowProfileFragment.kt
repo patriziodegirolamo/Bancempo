@@ -60,7 +60,6 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
             val numRatings = sharedVM.ratings.value!!.values
                 .filter { x -> x.idReceiver == user.email }.size
 
-            println("---- rating $numRatings")
             if (numRatings > 0) {
                 noRatings.visibility = View.GONE
                 completeRatingBar.visibility = View.VISIBLE
