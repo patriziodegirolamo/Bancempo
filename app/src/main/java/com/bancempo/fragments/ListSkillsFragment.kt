@@ -36,7 +36,8 @@ class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
         return when (item.itemId) {
             R.id.search -> {
                 val sb = view?.findViewById<SearchView>(
-                    Search_bar)
+                    Search_bar
+                )
                 if (sb != null) {
                     sb.isVisible = !sb.isVisible
                 }
@@ -77,7 +78,8 @@ class ListSkillsFragment : Fragment(R.layout.fragment_list_skills) {
             sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextChange(newText: String): Boolean {
                     val searchListOfSkills = services.values.filter { x ->
-                        x.title.lowercase(Locale.getDefault()).contains(newText.lowercase(Locale.getDefault()))
+                        x.title.lowercase(Locale.getDefault())
+                            .contains(newText.lowercase(Locale.getDefault()))
                     }
                     val newAdapter = ItemAdapter(searchListOfSkills.toList())
                     if (searchListOfSkills.isEmpty()) {

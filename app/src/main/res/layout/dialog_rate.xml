@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="@string/rating_header"/>
+        android:text="@string/rating_header" />
 
     <RatingBar
         android:id="@+id/ratingBar"
@@ -18,7 +18,7 @@
         android:numStars="5"
         android:isIndicator="false"
         android:stepSize="1.0"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/edit_rating_description_text"

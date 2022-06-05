@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.*
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -29,7 +28,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
     private lateinit var ratingBar: RatingBar
     private lateinit var ratingNum: TextView
     private lateinit var noRatings: TextView
-    private lateinit var  completeRatingBar: LinearLayout
+    private lateinit var completeRatingBar: LinearLayout
 
 
     private lateinit var photo: ImageView
@@ -51,8 +50,8 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
         locationEd = view.findViewById(R.id.textViewLocation_ed)
         descriptionEd = view.findViewById(R.id.textViewDescription_ed)
         creditEd = view.findViewById(R.id.tvCredit_ed)
-        completeRatingBar=view.findViewById(R.id.complete_rating_bar)
-        noRatings= view.findViewById(R.id.noRatings)
+        completeRatingBar = view.findViewById(R.id.complete_rating_bar)
+        noRatings = view.findViewById(R.id.noRatings)
 
         skillsEd = view.findViewById(R.id.textViewSkills_ed)
         chipGroup = view.findViewById(R.id.chipGroup)
@@ -62,8 +61,7 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
                 .filter { x -> x.idReceiver == user.email }.size
 
             println("---- rating $numRatings")
-            if(numRatings>0)
-            {
+            if (numRatings > 0) {
                 noRatings.visibility = View.GONE
                 completeRatingBar.visibility = View.VISIBLE
                 ratingBar.rating = user.rating.toFloat()
@@ -87,11 +85,14 @@ class ShowProfileFragment : Fragment(R.layout.fragment_show_profile) {
                 chipGroup.addView(chip)
             }
 
-            ratingBar.setOnTouchListener( View.OnTouchListener{ _, event ->
-                if(event.action == MotionEvent.ACTION_UP){
+            ratingBar.setOnTouchListener(View.OnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
                     val bundle = Bundle()
                     bundle.putString("userId", user.email)
-                    findNavController().navigate(R.id.action_showProfileFragment_to_ratingsFragment, bundle)
+                    findNavController().navigate(
+                        R.id.action_showProfileFragment_to_ratingsFragment,
+                        bundle
+                    )
                 }
                 return@OnTouchListener true
             })

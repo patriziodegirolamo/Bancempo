@@ -53,8 +53,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
     private lateinit var confirmationButton: Button
 
-    private val REQUEST_IMAGE_CAPTURE = 1
-    private val SELECT_PICTURE = 200
+    private val requestImageCapture = 1
+    private val selectPicture = 200
 
     private var btm: Bitmap? = null
 
@@ -86,7 +86,8 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                 var valid = true
                 for (i in 0 until chipGroup.childCount) {
                     val chip = chipGroup.getChildAt(i) as Chip
-                    if (skillsEd.text.toString().uppercase(Locale.getDefault()) == chip.text.toString()
+                    if (skillsEd.text.toString()
+                            .uppercase(Locale.getDefault()) == chip.text.toString()
                             .uppercase(Locale.getDefault())
                     ) {
                         valid = false
@@ -183,7 +184,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
 
         confirmationButton.setOnClickListener {
-            println("conferma")
             if (validation()) {
                 var chipText = ""
                 for (i in 0 until chipGroup.childCount) {
@@ -203,9 +203,6 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
                 setFragmentResult("backFromEdit", bundleOf(Pair("chipText", chipText)))
                 findNavController().popBackStack()
-            }
-            else{
-                println("no valido")
             }
         }
 
@@ -238,32 +235,36 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                 false
             }
         } else {
-            if (text.hint == "Description") {
-                return if (textEdit.text?.length!! > 200) {
-                    text.error = "Your ${text.hint} is too long."
-                    false
-                } else {
-                    text.error = null
-                    true
+            when (text.hint) {
+                "Description" -> {
+                    return if (textEdit.text?.length!! > 200) {
+                        text.error = "Your ${text.hint} is too long."
+                        false
+                    } else {
+                        text.error = null
+                        true
+                    }
                 }
-            } else if (text.hint == "Full Name" || text.hint == "Location") {
-                return if (textEdit.text?.length!! > 40) {
-                    text.error = "Your ${text.hint} is too long."
-                    false
-                } else {
-                    text.error = null
-                    return true
+                "Full Name", "Location" -> {
+                    return if (textEdit.text?.length!! > 40) {
+                        text.error = "Your ${text.hint} is too long."
+                        false
+                    } else {
+                        text.error = null
+                        return true
+                    }
                 }
-            } else if (text.hint == "Nickname") {
-                return if (textEdit.text?.length!! > 25) {
-                    textEdit.error = "Your ${text.hint} is too long."
-                    false
-                } else {
-                    text.error = null
-                    true
+                "Nickname" -> {
+                    return if (textEdit.text?.length!! > 25) {
+                        textEdit.error = "Your ${text.hint} is too long."
+                        false
+                    } else {
+                        text.error = null
+                        true
+                    }
                 }
+                else -> return false
             }
-            else return false
 
         }
 
@@ -304,7 +305,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                     // pass the constant to compare it with the returned requestCode
                     startActivityForResult(
                         Intent.createChooser(i, "Select Picture"),
-                        SELECT_PICTURE
+                        selectPicture
                     )
 
                 }
@@ -322,7 +323,7 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private fun dispatchTakePictureIntent() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            startActivityForResult(takePictureIntent, requestImageCapture)
         } catch (e: ActivityNotFoundException) {
             // display error state to the user
             Toast.makeText(context, R.string.camera_not_available, Toast.LENGTH_SHORT).show()
@@ -334,11 +335,11 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
+        if (requestCode == requestImageCapture && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             val bitmapPhoto = data.extras?.get("data") as Bitmap
             btm = bitmapPhoto
             photo.setImageBitmap(bitmapPhoto)
-        } else if (requestCode == SELECT_PICTURE && resultCode == AppCompatActivity.RESULT_OK && data != null) {
+        } else if ((requestCode == selectPicture) && (resultCode == AppCompatActivity.RESULT_OK) && (data != null)) {
             val uriPhoto = data.data
             val bitmapPhoto = updateProfilePictureFromURI(uriPhoto!!)
             btm = bitmapPhoto
@@ -380,8 +381,9 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private fun addChip(text: String) {
         val chip = Chip(context)
         val lower = text.substring(1, text.length).lowercase(Locale.getDefault())
-        val upper = text.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-            .substring(0, 1)
+        val upper =
+            text.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                .substring(0, 1)
         chip.text = upper + lower
         chip.isCloseIconVisible = true
         chip.setOnCloseIconClickListener {

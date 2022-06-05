@@ -160,7 +160,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                 .update("imageUser", myNewRef.toString())
                 .addOnSuccessListener {
                     updateUser(view, skillsString, true)
-                    if(toDelete.isNotEmpty()) {
+                    if (toDelete.isNotEmpty()) {
                         val myOldRef = storageReference.getReferenceFromUrl(toDelete)
                         myOldRef.delete()
                             .addOnFailureListener {
@@ -173,11 +173,15 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                     }
 
                 }
-                .addOnFailureListener{
-                    Toast.makeText(app.applicationContext, "There was a problem on deleting old Image", Toast.LENGTH_SHORT).show()
+                .addOnFailureListener {
+                    Toast.makeText(
+                        app.applicationContext,
+                        "There was a problem on deleting old Image",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
 
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Toast.makeText(
                 app.applicationContext,
                 "There was a problem on adding new Image",
@@ -272,8 +276,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                 for (doc in r!!) {
                     initialList.add(doc.id)
                 }
-                val toAdd = finalList.minus(initialList)
-                val toDelete = initialList.minus(finalList)
+                val toAdd = finalList.minus(initialList.toSet())
+                val toDelete = initialList.minus(finalList.toSet())
 
                 val user = User(
                     fullname,
@@ -301,7 +305,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                 val convsToDelete = mutableListOf<Conversation>()
                 for (advtoDel in advsToDelete) {
                     //elimino tutte le conversazioni a chiuse relative agli annunci da eliminare
-                    convsToDelete.addAll(conversations.value!!.values.filter { x -> x.idAdv == advtoDel.id})
+                    convsToDelete.addAll(conversations.value!!.values.filter { x -> x.idAdv == advtoDel.id })
                 }
 
                 db.runBatch { batch ->
@@ -514,7 +518,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             .whereEqualTo("booked", false)
             .orderBy("creationTime", Query.Direction.DESCENDING)
             .addSnapshotListener { r, e ->
-                if (e == null){
+                if (e == null) {
                     val advMap: HashMap<String, SmallAdv> = hashMapOf()
                     for (doc in r!!) {
                         val date = doc.getString("date")
@@ -556,7 +560,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             .whereEqualTo("booked", true)
             .orderBy("creationTime", Query.Direction.DESCENDING)
             .addSnapshotListener { r, e ->
-                if (e == null){
+                if (e == null) {
                     val advMap: HashMap<String, SmallAdv> = hashMapOf()
                     for (doc in r!!) {
                         val date = doc.getString("date")
@@ -803,20 +807,20 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
             batch.update(bidderDocRef, "credit", creditBidder + amountOfTime)
         }
             .addOnSuccessListener {
-            Toast.makeText(app.applicationContext, "Transaction Completed!", Toast.LENGTH_SHORT)
-                .show()
-        }
+                Toast.makeText(app.applicationContext, "Transaction Completed!", Toast.LENGTH_SHORT)
+                    .show()
+            }
             .addOnFailureListener {
                 Toast.makeText(app.applicationContext, "Transaction Failed!", Toast.LENGTH_SHORT)
                     .show()
             }
     }
 
-    private fun deleteMessageOfConv(idConv: String){
+    private fun deleteMessageOfConv(idConv: String) {
         val messagesDocRef = db.collection("messages")
 
         messagesDocRef.whereEqualTo("idConv", idConv).get().addOnSuccessListener { documents ->
-            for(doc in documents){
+            for (doc in documents) {
                 doc.reference.delete()
             }
         }
@@ -897,13 +901,13 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     ) {
         var amount = 0.0
 
-        val nRatings = ratings.value!!.values.filter{ rating ->
+        val nRatings = ratings.value!!.values.filter { rating ->
             rating.idReceiver == idReceiver
         }.map { rating ->
             amount += rating.rating
         }.size
 
-        val newRating = (amount + advRating)/(nRatings + 1)
+        val newRating = (amount + advRating) / (nRatings + 1)
 
         db.collection("users").document(idReceiver).update("rating", newRating)
         createNewRating(idAuthor, idReceiver, idAdv, advRating, advRatingText)

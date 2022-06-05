@@ -26,7 +26,7 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
     private lateinit var creditEd: TextInputEditText
     private lateinit var ratingBar: RatingBar
     private lateinit var ratingNum: TextView
-    private lateinit var  completeRatingBar: LinearLayout
+    private lateinit var completeRatingBar: LinearLayout
 
 
     private lateinit var photo: ImageView
@@ -48,7 +48,7 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
         locationEd = view.findViewById(R.id.textViewLocation_ed)
         descriptionEd = view.findViewById(R.id.textViewDescription_ed)
         creditEd = view.findViewById(R.id.tvCredit_ed)
-        completeRatingBar=view.findViewById(R.id.complete_rating_bar)
+        completeRatingBar = view.findViewById(R.id.complete_rating_bar)
         skillsEd = view.findViewById(R.id.textViewSkills_ed)
         chipGroup = view.findViewById(R.id.chipGroup)
 
@@ -87,12 +87,14 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
             loadImg = true
         }
 
-        ratingBar.setOnTouchListener( View.OnTouchListener{ _, event ->
-            if(event.action == MotionEvent.ACTION_UP && numRatings>0){
-                println("rating: Show rating of this user")
+        ratingBar.setOnTouchListener(View.OnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP && numRatings > 0) {
                 val bundle = Bundle()
                 bundle.putString("userId", user.email)
-                findNavController().navigate(R.id.action_otherProfileFragment_to_ratingsFragment, bundle)
+                findNavController().navigate(
+                    R.id.action_otherProfileFragment_to_ratingsFragment,
+                    bundle
+                )
             }
             return@OnTouchListener true
         })

@@ -154,7 +154,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/divider_color"
-                            android:text="@string/choose_date"/>
+                            android:text="@string/choose_date" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -200,7 +200,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:backgroundTint="@color/divider_color"
-                            android:text="@string/choose_time_slot"/>
+                            android:text="@string/choose_time_slot" />
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
@@ -257,7 +257,7 @@
                     app:trackColor="@color/divider_color"
                     app:trackColorActive="@color/divider_color_dark"
                     app:trackColorInactive="@color/divider_color_light"
-                    android:contentDescription="@string/slider_to_select_duration_in_hours"/>
+                    android:contentDescription="@string/slider_to_select_duration_in_hours" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -351,10 +351,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:singleSelection="false"
-                    android:layout_marginBottom="40dp" >
-                </com.google.android.material.chip.ChipGroup>
-
-
+                    android:layout_marginBottom="40dp"></com.google.android.material.chip.ChipGroup>
 
 
             </LinearLayout>
@@ -367,7 +364,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="40dp"
                 android:backgroundTint="@color/dark_primary_color"
-                android:text="@string/save_changes"/>
+                android:text="@string/save_changes" />
 
         </LinearLayout>
     </ScrollView>

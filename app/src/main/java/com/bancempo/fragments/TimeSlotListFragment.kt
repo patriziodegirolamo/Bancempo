@@ -48,11 +48,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_filter_adv, menu)
-        println("----optionsmenu")
-        var sortButton = menu.findItem(R.id.sort)
-        var filterButton = menu.findItem(R.id.filter)
+        val sortButton = menu.findItem(R.id.sort)
+        val filterButton = menu.findItem(R.id.filter)
 
-        if(advGen){
+        if (advGen) {
             sortButton.isVisible = true
             filterButton.isVisible = true
         }
@@ -127,7 +126,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
             if (myInterests != null && myInterests) {
                 //Page MY INTERESTS
                 (activity as AppCompatActivity).supportActionBar?.title = "My Interests"
-                var interests: MutableList<SmallAdv> = mutableListOf()
+                var interests: MutableList<SmallAdv>
 
                 rv.layoutManager = LinearLayoutManager(context)
 
@@ -136,7 +135,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                     interests = mutableListOf()
                     //Trovo gli annunci per cui ho una conversazione in stato CLOSED = FALSE e BOOKED = FALSE
-                    if(advs != null && convs != null){
+                    if (advs != null && convs != null) {
                         val myOpenedConvs = convs.values.filter { conv ->
                             conv.idAsker == sharedVM.currentUser.value!!.email && !conv.closed
                         }
@@ -169,7 +168,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                         }
 
                     })
-                    }
+                }
             } else if (myReservations != null && myReservations) {
                 //Page MY RESERVATIONS
                 (activity as AppCompatActivity).supportActionBar?.title = "My Reservations"
@@ -199,9 +198,12 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
 
                                     myOpenedConvs.forEach { conv ->
                                         val filtered =
-                                            advs.values.filter { adv -> adv.id == conv.idAdv}
+                                            advs.values.filter { adv -> adv.id == conv.idAdv }
                                         if (filtered.isNotEmpty()) {
-                                            reservations.add(reservations.size, filtered.elementAt(0))
+                                            reservations.add(
+                                                reservations.size,
+                                                filtered.elementAt(0)
+                                            )
                                         }
                                     }
                                     renderAdvList(reservations.toList(), false, false)
@@ -260,7 +262,10 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
                     rv.layoutManager = LinearLayoutManager(context)
 
-                    renderAdvList(sadvs.values.filter { adv -> !adv.booked }.toList().sortedBy { adv -> adv.title }, true, false)
+                    renderAdvList(
+                        sadvs.values.filter { adv -> !adv.booked }.toList()
+                            .sortedBy { adv -> adv.title }, true, false
+                    )
 
                     //FILTER BY SEARCHBAR
                     sb.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -322,8 +327,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                     ) {
                         var newAdvs: List<SmallAdv> = listOf()
 
-                        if(s != null && s.isNotEmpty() && s.isNotBlank()) {
-                            if(sb.query.toString() == "") {
+                        if (s != null && s.isNotEmpty() && s.isNotBlank()) {
+                            if (sb.query.toString() == "") {
                                 skill.split(",").forEach {
                                     newAdvs = searchListOfAdvs.filter { x ->
                                         x.userId != sharedVM.authUser.value!!.email &&
@@ -332,7 +337,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 checkSkills(x.skill, it)
                                     }.toList()
                                 }
-                            }else {
+                            } else {
                                 skill.split(",").forEach {
                                     newAdvs = searchListOfAdvs.filter { x ->
                                         x.userId != sharedVM.authUser.value!!.email &&
@@ -343,8 +348,8 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                     }.toList()
                                 }
                             }
-                        } else{
-                            if(sb.query.toString() != ""){
+                        } else {
+                            if (sb.query.toString() != "") {
                                 skill.split(",").forEach {
                                     newAdvs = searchListOfAdvs.filter { x ->
                                         x.userId != sharedVM.authUser.value!!.email &&
@@ -356,7 +361,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             } else newAdvs = searchListOfAdvs
                         }
 
-                        println("-------------NEWADVS $newAdvs")
                         renderAdvList(newAdvs, false, false)
 
                         if (dateFilter.text.toString() != getString(R.string.date)) {
@@ -385,13 +389,14 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             var newAdvs: List<SmallAdv> = listOf()
 
                             if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
-                                if(sb.query.toString() != ""){
+                                if (sb.query.toString() != "") {
                                     skill.split(",").forEach {
                                         newAdvs = searchListOfAdvs.filter { x ->
                                             x.userId != sharedVM.authUser.value!!.email &&
                                                     x.location.lowercase()
                                                         .contains(
-                                                            searchLocation.text.toString().lowercase()
+                                                            searchLocation.text.toString()
+                                                                .lowercase()
                                                         ) &&
                                                     checkSkills(x.skill, it)
                                                     && x.title.lowercase()
@@ -414,7 +419,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                 }
 
                             } else {
-                                if(sb.query.toString() != ""){
+                                if (sb.query.toString() != "") {
                                     skill.split(",").forEach {
                                         newAdvs = searchListOfAdvs.filter { x ->
                                             x.userId != sharedVM.authUser.value!!.email &&
@@ -423,7 +428,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                 .contains(sb.query.toString().lowercase())
                                         }.toList()
                                     }
-                                }else {
+                                } else {
                                     skill.split(",").forEach {
                                         newAdvs = searchListOfAdvs.filter { x ->
                                             x.userId != sharedVM.authUser.value!!.email && checkSkills(
@@ -438,7 +443,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             renderAdvList(newAdvs, false, false)
 
                         } else {
-                            println("--------------- QUA")
                             dateFilter.setCompoundDrawablesWithIntrinsicBounds(
                                 0,
                                 0,
@@ -449,21 +453,17 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                             var newAdvs: List<SmallAdv> = listOf()
 
                             skill.split(",").forEach {
-                                println("------${s.toString().trim()}")
-                                searchListOfAdvs.forEach { x ->
-                                    println("--------${x.date}")
-                                }
-
                                 newAdvs = searchListOfAdvs.filter { x ->
                                     x.userId != sharedVM.authUser.value!!.email &&
-                                            x.date == s.toString().trim() && checkSkills(x.skill, it)
+                                            x.date == s.toString().trim() && checkSkills(
+                                        x.skill,
+                                        it
+                                    )
                                 }.toList()
                             }
 
-                            println("--------------- $newAdvs")
-
                             if (searchLocation.text.isNotEmpty() || searchLocation.text.isNotBlank()) {
-                                if(sb.query.toString() != ""){
+                                if (sb.query.toString() != "") {
                                     skill.split(",").forEach {
                                         newAdvs = searchListOfAdvs.filter { x ->
                                             x.userId != sharedVM.authUser.value!!.email &&
@@ -493,7 +493,7 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                     }
                                 }
                             } else {
-                                if(sb.query.toString() != ""){
+                                if (sb.query.toString() != "") {
                                     skill.split(",").forEach {
                                         newAdvs = searchListOfAdvs.filter { x ->
                                             x.userId != sharedVM.authUser.value!!.email &&
@@ -504,8 +504,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                                         ) && x.date == s.toString().trim()
                                         }.toList()
                                     }
-
-                                    println("--------------- $newAdvs")
 
                                 }
                             }
@@ -562,11 +560,11 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                                             it
                                         )
                                                 && x.date == dateFilter.text.toString().trim() &&
-                                        x.location.lowercase()
-                                            .contains(
-                                                searchLocation.text.toString()
-                                                    .lowercase()
-                                            )
+                                                x.location.lowercase()
+                                                    .contains(
+                                                        searchLocation.text.toString()
+                                                            .lowercase()
+                                                    )
                                     }.toList()
                                 }
                             } else {
@@ -998,7 +996,6 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
         }
 
     }
-
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

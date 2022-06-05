@@ -19,7 +19,6 @@ class SignInActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignInBinding
 
     // Firebase instance variables
-    //private lateinit var auth: FirebaseAuth
 
     private val signIn: ActivityResultLauncher<Intent> =
         registerForActivityResult(FirebaseAuthUIActivityResultContract(), this::onSignInResult)

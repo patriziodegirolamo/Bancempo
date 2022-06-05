@@ -3,6 +3,7 @@ package com.bancempo.fragments
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,13 +24,14 @@ class RatingsFragment : Fragment(R.layout.reviews) {
         rv.layoutManager = LinearLayoutManager(findNavController().context)
 
         val userId = arguments?.getString("userId")
+        (activity as AppCompatActivity).supportActionBar?.title = "Received Reviews"
 
-        sharedVM.ratings.observe(viewLifecycleOwner){ ratings ->
+        sharedVM.ratings.observe(viewLifecycleOwner) { ratings ->
 
             rv.adapter = ReviewsAdapter(
                 ratings.values.filter { x -> x.idReceiver == userId }
-                    .sortedBy { x -> x.rating}.toList()
-                , sharedVM)
+                    .sortedBy { x -> x.rating }.toList(), sharedVM
+            )
         }
 
     }

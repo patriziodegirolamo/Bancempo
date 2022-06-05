@@ -20,15 +20,18 @@ data class Rating(
     val ratingText: String
 )
 
-class ReviewsAdapter(private val data: List<Rating>, private val sharedVM: SharedViewModel
+class ReviewsAdapter(
+    private val data: List<Rating>, private val sharedVM: SharedViewModel
 ) :
+
     RecyclerView.Adapter<ReviewsAdapter.ReviewsViewHolder>() {
 
     class ReviewsViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        val imageUser: ImageView = v.findViewById(R.id.iv_profileImage)
+        //val imageUser: ImageView = v.findViewById(R.id.iv_profileImage)
         val author: TextView = v.findViewById(R.id.tvAuthor)
         val ratingBar: RatingBar = v.findViewById(R.id.ratingBar)
         val description: TextView = v.findViewById(R.id.ratingDescription)
+
         val view: View = v
 
     }
@@ -42,14 +45,13 @@ class ReviewsAdapter(private val data: List<Rating>, private val sharedVM: Share
 
     override fun onBindViewHolder(holder: ReviewsViewHolder, position: Int) {
         val author = sharedVM.users.value!![data[position].idAuthor]!!
-        val storageReference = FirebaseStorage.getInstance()
-        val userRef = storageReference.getReferenceFromUrl(author.imageUser)
-
         holder.author.text = author.nickname
         holder.ratingBar.rating = data[position].rating.toFloat()
+        if(data[position].ratingText.isNullOrEmpty() || data[position].ratingText.isNullOrBlank()){
+            holder.description.visibility = View.GONE
+        }
+        else
         holder.description.text = data[position].ratingText
-
-        GlideApp.with(holder.view).load(userRef).into(holder.imageUser)
     }
 
     override fun getItemCount(): Int = data.size

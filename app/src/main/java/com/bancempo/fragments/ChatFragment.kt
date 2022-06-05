@@ -40,7 +40,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var photochat: ImageView
 
 
-
     private lateinit var textMsg: EditText
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,9 +69,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         val idB = arguments?.getString("idBidder")!!
         emailChat.text = idB
-        nameChat.text = sharedVM.users.value!!.get(idBidder)!!.fullname
-        sharedVM.loadImageUser(photochat, view, sharedVM.users.value!!.get(idBidder)!!)
-        (activity as AppCompatActivity).supportActionBar?.title = title.toString()
+        nameChat.text = sharedVM.users.value!![idBidder]!!.fullname
+        sharedVM.loadImageUser(photochat, view, sharedVM.users.value!![idBidder]!!)
+        (activity as AppCompatActivity).supportActionBar?.title = title
 
 
         //TODO("CAMBIARE DINAMICAMENTE FOTO E NOME COMPLETO BIDDER")
@@ -87,82 +86,76 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         //Appena apro la chat se non è una conversazione nuova devo caricare i messaggi
         val createNewConv = arguments?.getBoolean("newConv")!!
-        if(!createNewConv){
+        if (!createNewConv) {
             currentConversation = sharedVM.conversations.value!!.values
                 .filter { conv -> conv.idAdv == idAdv && !conv.closed }[0]
             sharedVM.loadMessages(currentConversation!!.idConv)
-        }
-        else{
+        } else {
             //CANCELLARE MESSAGGI
 
         }
 
         //Nei miei annunci posso accettare/rifiutare la richiesta quindi compaiono i bottoni
-        if(idBidder == sharedVM.currentUser.value!!.email){
+        if (idBidder == sharedVM.currentUser.value!!.email) {
             textAcceptOrRefuse.visibility = View.VISIBLE
             acceptButton.visibility = View.VISIBLE
             refuseButton.visibility = View.VISIBLE
-        }
-        else{
+        } else {
             textAcceptOrRefuse.visibility = View.GONE
             acceptButton.visibility = View.GONE
             refuseButton.visibility = View.GONE
         }
 
 //Se l'annuncio è booked non posso visualizzare i bottoni accept/reject
-        sharedVM.bookedAdvs.observe(viewLifecycleOwner){ advs ->
-            val filtered = advs.values.filter { adv -> adv.id == idAdv}
-            if(filtered.isNotEmpty()){
+        sharedVM.bookedAdvs.observe(viewLifecycleOwner) { advs ->
+            val filtered = advs.values.filter { adv -> adv.id == idAdv }
+            if (filtered.isNotEmpty()) {
                 textAcceptOrRefuse.visibility = View.GONE
                 acceptButton.visibility = View.GONE
                 refuseButton.visibility = View.GONE
             }
         }
 
-        sendButton.setOnClickListener{
+        sendButton.setOnClickListener {
             //Quando clicco sul sendButton, se la conversazione non esiste la creo, setto la current conv e visualizzo il messaggio nuovo
-            if(currentConversation == null){
-                if(textMsg.text.isEmpty()){
+            if (currentConversation == null) {
+                if (textMsg.text.isEmpty()) {
                     textMsg.error = "Write a message!"
-                }
-                else{
+                } else {
                     sharedVM.createNewConversation(idAdv, idBidder, textMsg.text.toString())
 
                     sharedVM.conversations.observe(viewLifecycleOwner) { convs ->
-                        println("------------ ${sharedVM.conversations.value}}")
                         val filteredConvs =
                             convs.values.filter { conv -> conv.idAdv == idAdv && !conv.closed }
 
-                        if(filteredConvs.isNotEmpty()){
+                        if (filteredConvs.isNotEmpty()) {
                             currentConversation = filteredConvs[0]
                             sharedVM.loadMessages(currentConversation!!.idConv)
                             textMsg.setText("")
                         }
                     }
                 }
-            }
-            else{
+            } else {
                 //Se la conversazione esiste già aggiungo solo il nuovo messaggio e lo visualizzo
                 if (textMsg.text.isEmpty()) {
                     textMsg.error = "Write a message!"
                 } else {
                     //Se il messaggio nuovo arriva dall'asker verso il bidder
-                        if(idBidder != sharedVM.currentUser.value!!.email) {
-                            sharedVM.createNewMessage(
-                                currentConversation!!.idConv,
-                                textMsg.text.toString(),
-                                to = idBidder,
-                                from = sharedVM.currentUser.value!!.email
-                            )
-                        }
-                    else{
-                            sharedVM.createNewMessage(
-                                currentConversation!!.idConv,
-                                textMsg.text.toString(),
-                                to = currentConversation!!.idAsker,
-                                from = sharedVM.currentUser.value!!.email
-                            )
-                        }
+                    if (idBidder != sharedVM.currentUser.value!!.email) {
+                        sharedVM.createNewMessage(
+                            currentConversation!!.idConv,
+                            textMsg.text.toString(),
+                            to = idBidder,
+                            from = sharedVM.currentUser.value!!.email
+                        )
+                    } else {
+                        sharedVM.createNewMessage(
+                            currentConversation!!.idConv,
+                            textMsg.text.toString(),
+                            to = currentConversation!!.idAsker,
+                            from = sharedVM.currentUser.value!!.email
+                        )
+                    }
                     sharedVM.loadMessages(currentConversation!!.idConv)
                     textMsg.setText("")
                 }
@@ -171,20 +164,20 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
 
         var idConv: String? = null
-        var idAsker : String? = null
-        var asker : User? = null
-        val _convs = sharedVM.conversations.value!!.values.filter { x -> !x.closed && x.idAdv == idAdv}
-        if( _convs.isNotEmpty()) {
-            idConv = _convs[0].idConv
-            idAsker = _convs[0].idAsker
+        var idAsker: String? = null
+        var asker: User? = null
+        val aconvs =
+            sharedVM.conversations.value!!.values.filter { x -> !x.closed && x.idAdv == idAdv }
+        if (aconvs.isNotEmpty()) {
+            idConv = aconvs[0].idConv
+            idAsker = aconvs[0].idAsker
             asker = sharedVM.users.value!![idAsker]
         }
 
         val amountOfTime = duration.toDouble()
-            acceptButton.setOnClickListener{
-            println("now: setta $idAdv come accepted")
+        acceptButton.setOnClickListener {
 
-            if(asker != null && asker.credit >= amountOfTime){
+            if (asker != null && asker.credit >= amountOfTime) {
                 sharedVM.bookAdv(idAdv)
                 sharedVM.createNewTransaction(idBidder, idAsker!!, amountOfTime)
                 acceptButton.visibility = View.GONE
@@ -193,8 +186,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                 tvNoCredit.visibility = View.GONE
 
                 findNavController().popBackStack()
-            }
-            else{
+            } else {
                 acceptButton.isEnabled = false
                 tvNoCredit.visibility = View.VISIBLE
                 //TODO: cosa fare se non ha soldi?
@@ -202,8 +194,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         }
 
-        refuseButton.setOnClickListener{
-            println("now: setta $idConv")
+        refuseButton.setOnClickListener {
             sharedVM.closeConversation(idConv!!)
             acceptButton.visibility = View.GONE
             refuseButton.visibility = View.GONE
@@ -217,11 +208,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             if (currentConversation != null) {
                 messagesConv.values.filter { msg -> msg.idConv == currentConversation!!.idConv }
 
-                val newAdapter = MessageAdapter(messagesConv.values.sortedBy { x -> x.date }.toList(), sharedVM)
+                val newAdapter =
+                    MessageAdapter(messagesConv.values.sortedBy { x -> x.date }.toList(), sharedVM)
                 newAdapter.notifyItemInserted(0)
                 rv.adapter = newAdapter
-            }
-            else{
+            } else {
                 rv.adapter =
                     MessageAdapter(listOf(), sharedVM)
             }

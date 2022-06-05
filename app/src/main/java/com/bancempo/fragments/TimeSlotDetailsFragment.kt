@@ -144,24 +144,22 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         sharedVM.ratings.observe(viewLifecycleOwner) { ratings ->
             val adv = sharedVM.bookedAdvs.value!![idAdv]
             val currentDate = LocalDate.now()
-            val formatter =  DateTimeFormatter.ofPattern("yyyy/MM/dd")
+            val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
             val currentDateFormatted = currentDate.format(formatter)
 
-            println("------- $currentDateFormatted ${adv?.date}")
-
             //TODO CAMBIARE >= IN >
-            if(adv != null && currentDateFormatted >= adv.date) {
-                println("--------entrato")
-                    val list = ratings.values.filter { x ->
-                        x.idAdv == idAdv && x.idAuthor == sharedVM.currentUser.value!!.email
-                    }
-                println("------------${list.size}")
-                    if (list.isEmpty()) {
-                        rateButton.visibility = View.VISIBLE
-                    } else {
-                        rateButton.visibility = View.GONE
-                    }
+            if (adv != null && currentDateFormatted >= adv.date) {
+
+                val list = ratings.values.filter { x ->
+                    x.idAdv == idAdv && x.idAuthor == sharedVM.currentUser.value!!.email
                 }
+
+                if (list.isEmpty()) {
+                    rateButton.visibility = View.VISIBLE
+                } else {
+                    rateButton.visibility = View.GONE
+                }
+            }
         }
 
 
@@ -194,15 +192,13 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     //SE SONO LOGGATO COME ASKER
                     // tutte le conversazioni di quell'annuncio
                     val advConvs = convs.values.filter { conv -> conv.idAdv == idAdv }
-                    println("-------------ADVCONVS $idAdv ${convs.values.filter { conv -> conv.idAdv == idAdv }}")
+
                     //tutte le mie conversazioni di quell'annuncio
                     val myAdvConvs =
                         advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }
-                    println("-------------MYADVCONVS ${advConvs.filter { conv -> conv.idAsker == sharedVM.currentUser.value!!.email }}")
 
                     //tutte le mie conversazioni di quell'annuncio aperte
                     val myAdvsOpened = myAdvConvs.filter { x -> !x.closed }
-                    println("-------------MYADVOPENED ${myAdvConvs.filter { x -> !x.closed }}")
 
                     //tutte le conversazioni di quell'annuncio non mie
                     val otherAdvConvs =
@@ -210,7 +206,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     //tutte le conversazioni di quell'annuncio chiuse non mie
                     val otherAdvsClosed = otherAdvConvs.filter { x -> x.closed }
 
-                    println("now: closed degli altri:${otherAdvsClosed.size}; convs altri:${otherAdvConvs.size}")
                     //NON ESISTONO CONVERSAZIONI PER QUESTO ANNUNCIO
                     if (advConvs.isEmpty()) {
                         //il bottone chat è visibile a tutti gli asker
@@ -229,7 +224,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                             slotUnavailable.text = getString(R.string.conversationRefused)
                             slotUnavailable.isVisible = true
                         } else {
-                            println("------------------ GIUSTO")
                             chatButton.visibility = View.VISIBLE
                             slotUnavailable.isVisible = false
                             createNewConv = false
@@ -237,7 +231,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                     }
                     //ESISTONO DELLE CONVERSAZIONI NON MIE MA TUTTE CHIUSE
                     else if (otherAdvsClosed.size == otherAdvConvs.size) {
-                        println("------------------ GIUSTO")
                         chatButton.visibility = View.VISIBLE
                         slotUnavailable.isVisible = false
                         createNewConv = true
@@ -366,9 +359,6 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
     }
 
 
-
-
-
 }
 
 
@@ -412,41 +402,41 @@ class RateAdvDialogFragment :
 
             builder.setView(view)
                 // Add action buttons
-                .setPositiveButton(R.string.submit ) { _, _ ->
-                        if (advRating < 0.5) {
-                            Toast.makeText(
-                                requireContext(),
-                                R.string.rating_min_err,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                .setPositiveButton(R.string.submit) { _, _ ->
+                    if (advRating < 0.5) {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.rating_min_err,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        val otherUserId = if (userEmail == idAsker) {
+                            idBidder
                         } else {
-                            val otherUserId = if (userEmail == idAsker) {
-                                idBidder
-                            } else {
-                                idAsker
-                            }
-
-                            Toast.makeText(
-                                requireContext(),
-                                "Review completed!",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                            sharedVM.submitNewRating(
-                                userEmail,
-                                otherUserId,
-                                idAdv,
-                                advRating,
-                                ratingText.text.toString()
-                            )
-
+                            idAsker
                         }
 
-                        dialog?.dismiss()
+                        Toast.makeText(
+                            requireContext(),
+                            "Review completed!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        sharedVM.submitNewRating(
+                            userEmail,
+                            otherUserId,
+                            idAdv,
+                            advRating,
+                            ratingText.text.toString()
+                        )
+
                     }
+
+                    dialog?.dismiss()
+                }
                 .setNegativeButton(R.string.cancel) { _, _ ->
-                        dialog?.cancel()
-                    }
+                    dialog?.cancel()
+                }
             builder.create()
         } ?: throw IllegalStateException("Activity cannot be null")
     }

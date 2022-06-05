@@ -46,7 +46,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/profile_pic"
@@ -154,7 +154,6 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="50dp"
                 android:orientation="vertical">
-
 
 
                 <androidx.cardview.widget.CardView

@@ -1,4 +1,5 @@
 package com.bancempo.activities
+
 import com.bancempo.R
 import android.content.Intent
 import android.os.Bundle
@@ -46,12 +47,12 @@ class MainActivity : AppCompatActivity() {
 
 
         sharedVM.currentUser.observe(this) { user ->
-            if(user != null){
+            if (user != null) {
                 val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
                 val emtxt = drawer.findViewById<TextView>(R.id.email_text)
                 val ustxt = drawer.findViewById<TextView>(R.id.username_text)
 
-                if(emtxt != null && ustxt!= null){
+                if (emtxt != null && ustxt != null) {
                     ustxt.text = user.nickname
                     emtxt.text = user.email
                 }
@@ -70,19 +71,19 @@ class MainActivity : AppCompatActivity() {
         sharedVM.bookedAdvs.observe(this) {
         }
 
-        sharedVM.conversations.observe(this){
+        sharedVM.conversations.observe(this) {
         }
 
-        sharedVM.messages.observe(this){
+        sharedVM.messages.observe(this) {
         }
 
-        sharedVM.users.observe(this){
+        sharedVM.users.observe(this) {
         }
 
-        sharedVM.ratings.observe(this){
+        sharedVM.ratings.observe(this) {
         }
 
-        sharedVM.myReceivedRatings.observe(this){
+        sharedVM.myReceivedRatings.observe(this) {
         }
 
 
@@ -160,8 +161,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SignInActivity::class.java))
             finish()
             return
-        }
-        else{
+        } else {
             sharedVM.afterLogin(auth.currentUser!!)
 
         }
@@ -179,7 +179,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.findNavController()
 
         return NavigationUI.navigateUp(navController, drawer)

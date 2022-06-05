@@ -176,7 +176,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         //CREATE A NEW ADV
         confirmButton.setOnClickListener {
 
-                if (validation()) {
+            if (validation()) {
                 val bundle = Bundle()
                 bundle.putString("title", titleEdit.text.toString())
                 bundle.putString("date", dateEdit.text.toString())
@@ -236,8 +236,6 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     findNavController().popBackStack()
                 }
             }
-            else
-                println("Whatttt")
         }
 
         //handler slider
@@ -253,42 +251,49 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             text.error = "Please, fill in this field!"
             return false
         } else {
-            if (text.hint == "Description") {
-                return if (textEdit.text?.length!! > 200) {
-                    text.error = "Your ${text.hint} is too long."
-                    false
-                } else {
-                    text.error = null
-                    true
+            when (text.hint) {
+                "Description" -> {
+                    return if (textEdit.text?.length!! > 200) {
+                        text.error = "Your ${text.hint} is too long."
+                        false
+                    } else {
+                        text.error = null
+                        true
+                    }
                 }
-            } else if (text.hint == "Title" || text.hint == "Location") {
-                return if (textEdit.text?.length!! > 20) {
-                    text.error = "Your ${text.hint} is too long."
-                    false
-                } else {
+                "Title", "Location" -> {
+                    return if (textEdit.text?.length!! > 20) {
+                        text.error = "Your ${text.hint} is too long."
+                        false
+                    } else {
+                        text.error = null
+                        return true
+                    }
+                }
+                "Date" -> {
+                    return if (textEdit.text.toString() == "dd/mm/yyyy") {
+                        text.error = "Please, choose a date for your adv!"
+                        false
+                    } else {
+                        text.error = null
+                        true
+                    }
+                }
+                "Time" -> {
+                    return if (textEdit.text.toString() == "hh:mm") {
+                        text.error = "Please, choose a start time for your adv!"
+                        false
+                    } else {
+                        text.error = null
+                        true
+                    }
+                }
+                "Duration (h)" -> {
                     text.error = null
                     return true
                 }
-            } else if (text.hint == "Date") {
-                return if (textEdit.text.toString() == "dd/mm/yyyy") {
-                    text.error = "Please, choose a date for your adv!"
-                    false
-                } else {
-                    text.error = null
-                    true
-                }
-            } else if (text.hint == "Time") {
-                return if (textEdit.text.toString() == "hh:mm") {
-                    text.error = "Please, choose a start time for your adv!"
-                    false
-                } else {
-                    text.error = null
-                    true
-                }
-            } else if (text.hint == "Duration (h)") {
-                text.error = null
-                return true
-            } else return false
+                else -> return false
+            }
         }
 
     }

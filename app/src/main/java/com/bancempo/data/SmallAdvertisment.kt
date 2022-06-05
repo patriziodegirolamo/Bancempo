@@ -32,7 +32,9 @@ data class SmallAdv(
 )
 
 class SmallAdvAdapter(
-    private val data: List<SmallAdv>, private val isMyAdvs: Boolean, private val reservationPage: Boolean,
+    private val data: List<SmallAdv>,
+    private val isMyAdvs: Boolean,
+    private val reservationPage: Boolean,
     private val sharedVM: SharedViewModel
 ) : RecyclerView.Adapter<SmallAdvAdapter.SmallAdvHolder>() {
 
