@@ -897,7 +897,9 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     ) {
         var amount = 0.0
 
-        val nRatings = ratings.value!!.values.map { rating ->
+        val nRatings = ratings.value!!.values.filter{ rating ->
+            rating.idReceiver == idReceiver
+        }.map { rating ->
             amount += rating.rating
         }.size
 
