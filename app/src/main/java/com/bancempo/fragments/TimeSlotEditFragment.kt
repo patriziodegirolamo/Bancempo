@@ -60,6 +60,8 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
     private lateinit var slider: Slider
 
+    private var modify: Boolean = false
+
 
     @SuppressLint("ResourceAsColor", "ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,7 +105,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         skillsError.error = null
 
         val createNewAdv = arguments?.getBoolean("createNewAdv")
-        val modify = createNewAdv == null || createNewAdv == false
+        modify = createNewAdv == null || createNewAdv == false
 
         val buttonDate = view.findViewById<Button>(R.id.buttonDate)
         buttonDate.setOnClickListener { showDialogOfDatePicker(modify) }
@@ -115,6 +117,11 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
 
         //prendo le skills del profilo utente
         skills = sharedVM.currentUser.value?.skills!!
+
+        if(savedInstanceState != null){
+            skillsString = savedInstanceState.getString("skills")
+        }
+
 
         if (modify) {
             slider.value = durationEdit.text.toString().toFloat()
@@ -242,6 +249,30 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
         slider.addOnChangeListener { _, value, _ ->
             // Responds to when slider's value is changed
             durationEdit.setText(value.toString())
+        }
+
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        if(modify) {
+            var chipText = ""
+            var count = 0
+            for (i in 0 until chipGroup.childCount) {
+                val chip = chipGroup.getChildAt(i) as Chip
+                if (chip.isChecked) {
+                    chipText += if (count == chipGroup.checkedChipIds.size - 1) {
+                        "${chip.text}"
+
+                    } else {
+                        "${chip.text},"
+                    }
+                    count += 1
+                }
+            }
+
+            outState.putString("skills", chipText)
         }
 
     }
@@ -474,5 +505,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
             }
         }
     }
+
+
 }
 

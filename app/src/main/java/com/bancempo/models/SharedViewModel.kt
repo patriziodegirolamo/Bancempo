@@ -296,10 +296,19 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                 val advsToDelete = advs.value!!.values
                     .filter { x ->
                         x.userId == currentUser.value!!.email
-                                && containsSkill(toDelete, x.skill.split(","))
+                                && (containsSkill(toDelete, x.skill.split(",")) == 0)
                                 && !x.booked
                     }
                     .toList()
+
+                val advsToUpdate = advs.value!!.values
+                    .filter { x ->
+                        x.userId == currentUser.value!!.email
+                                && (containsSkill(toDelete, x.skill.split(",")) == 1)
+                                && !x.booked
+                    }
+                    .toList()
+
 
                 //dobbiamo eliminare anche le relative conversazioni con i vari messaggi
                 val convsToDelete = mutableListOf<Conversation>()
@@ -344,7 +353,8 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                             }
                         }
                     }
-                    //in ogni caso elimina tutti i miei annunci associati a questa skill
+                    //elimina tutti i miei annunci associati a questa skill solo se checkSkill ritorna 0
+                    //ovvero se quell'adv contiene soltanto quella skill eliminata
 
                     for (advToDelete in advsToDelete) {
                         val docToDel = advsDocRef.document(advToDelete.id)
@@ -356,6 +366,12 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         batch.delete(docToDel)
                         deleteMessageOfConv(convToDel.idConv)
                     }
+
+                    //altrimenti, se checkSkill ritorna 1 quell'adv ha anche altre skill
+                    //quindi non viene eliminato ma bisogna aggiornare le sue skill togliendo quella eliminata
+                    //usare advsToUpdate
+
+                    //TODO UPDATE SKILL SU DB
 
                     //3rd: replace list of skills in user
                     batch.set(currentUserRef, user)
@@ -375,13 +391,18 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
 
     }
 
-    private fun containsSkill(listToDelete: List<String>, skillsOfAdv: List<String>): Boolean {
+    private fun containsSkill(listToDelete: List<String>, skillsOfAdv: List<String>): Int {
+        println("------------------ QUA")
         for (del in listToDelete) {
-            if (skillsOfAdv.contains(del)) {
-                return true
-            }
+            println("----------- $del")
+            val filtered = skillsOfAdv.filter { sk -> sk != del }
+            println("--------------- $filtered")
+
+            if (filtered.isEmpty()) {
+                return 0
+            } else return 1
         }
-        return false
+        return -1
     }
 
     fun createUserIfDoesNotExists() {
