@@ -222,7 +222,7 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/skills"
                             app:endIconContentDescription="Insert a skill"
-                            app:endIconDrawable="@drawable/ic_icons8_ok"
+                            app:endIconDrawable="@drawable/ic_icons8_ok_24"
                             app:endIconMode="custom"
                             app:placeholderText="Insert a skill"
                             app:startIconDrawable="@drawable/ic_icons8_skills_24">
