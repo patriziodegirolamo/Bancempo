@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.text.Html
 import android.view.*
 import android.widget.Button
 import android.widget.RatingBar
@@ -115,7 +116,7 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         descriptionEd.setText(arguments?.getString("description"))
         dateEd.setText(arguments?.getString("date"))
         timeEd.setText(arguments?.getString("time"))
-        advof.text = "Adv of ".plus(userId)
+        advof.text = Html.fromHtml("<u> Adv of ".plus(userId + "</u>"))
         durationEd.setText(arguments?.getString("duration"))
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
