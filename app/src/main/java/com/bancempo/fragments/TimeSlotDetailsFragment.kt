@@ -156,6 +156,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
                 }
 
                 if (list.isEmpty()) {
+                    if(adv.userId == sharedVM.currentUser.value!!.email){
+                        rateButton.setText("RATE THE ASKER")
+                    } else rateButton.setText("RATE THE BIDDER")
+
                     rateButton.visibility = View.VISIBLE
                 } else {
                     rateButton.visibility = View.GONE

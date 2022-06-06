@@ -387,6 +387,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun createUserIfDoesNotExists() {
+        println("---------------QUA")
         db.collection("users")
             .whereEqualTo("email", authUser.value!!.email)
             .get()
