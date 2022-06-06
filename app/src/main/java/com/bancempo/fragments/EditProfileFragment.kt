@@ -370,12 +370,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         if (requestCode == requestImageCapture && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             val bitmapPhoto = data.extras?.get("data") as Bitmap
             type = bitmapFormat
+            uriStr = null
             btmStr = bitmapToString(bitmapPhoto)
             photo.setImageBitmap(bitmapPhoto)
         } else if ((requestCode == selectPicture) && (resultCode == AppCompatActivity.RESULT_OK) && (data != null)) {
             val uriPhoto = data.data
             val bitmapPhoto = updateProfilePictureFromURI(uriPhoto!!)
             type = uriFormat
+            btmStr = null
             uriStr = uriPhoto
             photo.setImageBitmap(bitmapPhoto)
         }
