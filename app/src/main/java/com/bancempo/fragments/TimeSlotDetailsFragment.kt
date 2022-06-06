@@ -121,6 +121,10 @@ class TimeSlotDetailsFragment : Fragment(R.layout.fragment_time_slot_details) {
         locationEd.setText(arguments?.getString("location"))
         noteEd.setText(arguments?.getString("note"))
 
+        if(noteEd.text.toString() == ""){
+            note.isVisible = false
+        }
+
         var createNewConv: Boolean? = false
         idAdv = arguments?.getString("id")!!
 
