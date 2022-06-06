@@ -293,7 +293,7 @@ class TimeSlotEditFragment : Fragment(R.layout.fragment_time_slot_edit) {
                     }
                 }
                 "Title", "Location" -> {
-                    return if (textEdit.text?.length!! > 20) {
+                    return if (textEdit.text?.length!! > 50) {
                         text.error = "Your ${text.hint} is too long."
                         false
                     } else {

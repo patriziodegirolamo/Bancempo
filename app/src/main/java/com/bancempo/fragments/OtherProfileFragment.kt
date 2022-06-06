@@ -27,6 +27,7 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
     private lateinit var ratingBar: RatingBar
     private lateinit var ratingNum: TextView
     private lateinit var completeRatingBar: LinearLayout
+    private lateinit var noRatings: TextView
 
 
     private lateinit var photo: ImageView
@@ -51,15 +52,22 @@ class OtherProfileFragment : Fragment(R.layout.fragment_show_profile) {
         completeRatingBar = view.findViewById(R.id.complete_rating_bar)
         skillsEd = view.findViewById(R.id.textViewSkills_ed)
         chipGroup = view.findViewById(R.id.chipGroup)
+        noRatings = view.findViewById(R.id.noRatings)
+
 
         val userId = arguments?.getString("userId")
         val user = sharedVM.users.value!![userId]!!
 
         val numRatings = sharedVM.ratings.value!!.values
             .filter { x -> x.idReceiver == user.email }.size
-        completeRatingBar.visibility = View.VISIBLE
-        ratingBar.rating = user.rating.toFloat()
-        ratingNum.text = " ( ".plus(numRatings.toString()).plus(" ) ")
+
+        if (numRatings > 0) {
+            noRatings.visibility = View.GONE
+            completeRatingBar.visibility = View.VISIBLE
+            ratingBar.rating = user.rating.toFloat()
+            ratingNum.text = " ( ".plus(numRatings.toString()).plus(" ) ")
+        }
+
         fullNameEd.setText(user.fullname)
         nicknameEd.setText(user.nickname)
         emailEd.setText(user.email)

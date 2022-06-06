@@ -11,33 +11,9 @@
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/layout/activity_show_profile.xml" value="0.25" />
         <entry key="..\:/Users/feder/Documents/POLITO/Secondo anno/MAD/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/drawable/description_edit.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/drawable/email_edit.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout-land/fragment_edit_profile.xml" value="0.25" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout-land/fragment_show_profile.xml" value="0.25" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/dialog_rate.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_chat.xml" value="0.4148148148148148" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_edit_profile.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_list_skills.xml" value="0.18" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_other_profile.xml" value="0.22" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_ratings.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_show_profile.xml" value="0.38966202783300197" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_time_slot_details.xml" value="0.25" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_time_slot_edit.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/fragment_time_slot_list.xml" value="0.33" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/header_navigation_drawer.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/item_chat_me.xml" value="0.33" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/item_chat_other.xml" value="0.25" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/reviews.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/skill_item.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/small_advertisment.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/layout/small_rating.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/menu/menu_filter.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/menu/menu_filter_adv.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/menu/menu_profile.xml" value="0.1" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/menu/menu_profile_picture.xml" value="0.1" />
+        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab5/MergeFinal/app/src/main/res/layout/fragment_show_profile.xml" value="0.21195652173913043" />
+        <entry key="..\:/Users/giuli/Documents/Poli_LM_Giulia/Anno_2/Semestre_2/Mobile_Application_Development/Labs/Lab5/MergeFinal/app/src/main/res/menu/navdrawer_menu.xml" value="0.7813021702838063" />
         <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/menu/navdrawer_menu.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/patri/OneDrive/Desktop/merge login/Bancempo/app/src/main/res/menu/options_menu.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.19610507246376813" />
         <entry key="app/src/main/res/layout/activity_show_profile.xml" value="0.1" />
       </map>
