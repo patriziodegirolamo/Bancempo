@@ -251,12 +251,21 @@ class TimeSlotListFragment : Fragment(R.layout.fragment_time_slot_list) {
                 (activity as AppCompatActivity).supportActionBar?.title = "My Advertisements"
 
                 fab.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putBoolean("createNewAdv", true)
-                    findNavController().navigate(
-                        R.id.action_timeSlotListFragment_to_timeSlotEditFragment,
-                        bundle
-                    )
+
+                    if(sharedVM.currentUser.value!!.skills.isNotEmpty())
+                    { val bundle = Bundle()
+                        bundle.putBoolean("createNewAdv", true)
+                        findNavController().navigate(
+                            R.id.action_timeSlotListFragment_to_timeSlotEditFragment,
+                            bundle
+                        )}
+                    else
+                        Toast.makeText(
+                            requireContext(),
+                            "Please add skills in profile!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
                 }
 
                 sharedVM.myAdvs.observe(viewLifecycleOwner) { sadvs ->
