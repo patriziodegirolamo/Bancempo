@@ -56,7 +56,12 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
     private val requestImageCapture = 1
     private val selectPicture = 200
 
-    private var btm: Bitmap? = null
+    private var btmStr: String? = null
+    private var uriStr: Uri? = null
+
+    private val uriFormat = 0
+    private val bitmapFormat = 1
+    private var type: Int = -1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -168,13 +173,25 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
             }
         }
 
+        type = savedInstanceState?.getInt("type") ?: -1
         val btmString = savedInstanceState?.getString("btmString")
-        if (btmString == null) {
+        val uriString = savedInstanceState?.getParcelable<Uri?>("uriString")
+
+        //vengo da showprof
+        if (type == -1){
             sharedVM.loadImageUser(photo, view, sharedVM.currentUser.value!!)
-        } else {
-            btm = stringToBitmap(btmString)
-            if (btm != null)
-                photo.setImageBitmap(btm)
+        }
+        else if(type == bitmapFormat){
+            btmStr = btmString
+            if( btmString != null){
+                photo.setImageBitmap(stringToBitmap(btmString))
+            }
+        }
+        else if(type == uriFormat){
+            uriStr = uriString
+            if( uriString != null){
+                photo.setImageURI(uriString)
+            }
         }
 
         //handling on-press small image button
@@ -195,11 +212,22 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
                         "${chip.text},"
                     }
                 }
+
+                if (type == -1){
+                    sharedVM.updateUser(view, chipText, updatingImg = false)
+                }
+
+                sharedVM.uploadBitmap(btmStr, view, chipText, uriStr, context?.contentResolver)
+
+                /*
+
                 if (btm != null) {
                     sharedVM.uploadBitmap(btm!!, view, chipText)
                 } else {
                     sharedVM.updateUser(view, chipText, updatingImg = false)
                 }
+
+                 */
 
                 setFragmentResult("backFromEdit", bundleOf(Pair("chipText", chipText)))
                 findNavController().popBackStack()
@@ -218,9 +246,13 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
         }
         outState.putString("skills", chipText)
 
-        if (btm != null) {
-            val btmString = bitmapToString(btm!!)
-            outState.putString("btmString", btmString)
+
+        outState.putInt("type", type)
+        if(type == uriFormat){
+            outState.putParcelable("uriString", uriStr)
+        }
+        else if( type == bitmapFormat){
+            outState.putString("btmString", btmStr)
         }
     }
 
@@ -337,12 +369,14 @@ class EditProfileFragment : Fragment(R.layout.fragment_edit_profile) {
 
         if (requestCode == requestImageCapture && resultCode == AppCompatActivity.RESULT_OK && data != null) {
             val bitmapPhoto = data.extras?.get("data") as Bitmap
-            btm = bitmapPhoto
+            type = bitmapFormat
+            btmStr = bitmapToString(bitmapPhoto)
             photo.setImageBitmap(bitmapPhoto)
         } else if ((requestCode == selectPicture) && (resultCode == AppCompatActivity.RESULT_OK) && (data != null)) {
             val uriPhoto = data.data
             val bitmapPhoto = updateProfilePictureFromURI(uriPhoto!!)
-            btm = bitmapPhoto
+            type = uriFormat
+            uriStr = uriPhoto
             photo.setImageBitmap(bitmapPhoto)
         }
     }

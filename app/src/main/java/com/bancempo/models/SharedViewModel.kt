@@ -1,9 +1,16 @@
 package com.bancempo.models
 
 import android.app.Application
+import android.content.ContentResolver
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.graphics.drawable.Drawable
+import android.media.ExifInterface
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.MediaStore.Images.Media.getBitmap
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -28,8 +35,11 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
+import java.lang.Exception
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.collections.HashMap
 
 
@@ -138,8 +148,13 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         loadAllRatings()
     }
 
-
-    fun uploadBitmap(btm: Bitmap, view: View, skillsString: String) {
+    fun uploadBitmap(
+        btmStr: String?,
+        view: View,
+        skillsString: String,
+        uriStr: Uri?,
+        contentResolver: ContentResolver?
+    ) {
 
         val user = currentUser.value!!
         val email = user.email
@@ -151,6 +166,17 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         val url = "$rootStorageDirectory/$emailTruncated/$imageName"
         val myNewRef = storageReference.getReferenceFromUrl(url)
         val baos = ByteArrayOutputStream()
+
+        val btm: Bitmap
+        if (btmStr != null){
+            btm = stringToBitmap(btmStr)!!
+        }
+        else if( uriStr != null){
+            btm = updateProfilePictureFromURI(uriStr, contentResolver)
+        }
+        else{
+            return
+        }
         btm.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
 
@@ -915,5 +941,47 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
         db.collection("users").document(idReceiver).update("rating", newRating)
         createNewRating(idAuthor, idReceiver, idAdv, advRating, advRatingText)
     }
+
+    private fun stringToBitmap(encodedString: String): Bitmap? {
+        return try {
+            val encodedByte = Base64.getDecoder().decode(encodedString)
+            val bitmap = BitmapFactory.decodeByteArray(encodedByte, 0, encodedByte.size)
+            bitmap
+        } catch (e: Exception) {
+            e.message
+            null
+        }
+    }
+
+    private fun updateProfilePictureFromURI(uri: Uri, contentResolver: ContentResolver?): Bitmap {
+        val bmp: Bitmap = getBitmap(contentResolver, uri)
+        val ins: InputStream? = contentResolver?.openInputStream(uri)
+
+        val ei = ExifInterface(ins!!)
+        val rotatedBitmap: Bitmap = when (ei.getAttributeInt(
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_UNDEFINED
+        )) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bmp, 90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bmp, 180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bmp, 270f)
+            ExifInterface.ORIENTATION_NORMAL -> bmp
+            else -> bmp
+        }
+
+        ins.close()
+        return rotatedBitmap
+    }
+
+    private fun rotateImage(source: Bitmap, angle: Float): Bitmap {
+        val matrix = Matrix()
+        matrix.postRotate(angle)
+
+        return Bitmap.createBitmap(
+            source, 0, 0, source.width, source.height,
+            matrix, true
+        )
+    }
+
 }
 
