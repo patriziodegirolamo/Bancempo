@@ -400,7 +400,7 @@ class SharedViewModel(private val app: Application) : AndroidViewModel(app) {
                         authUser.value!!.email!!,
                         listOf(),
                         "",
-                        0.0,
+                        5.0,
                         0.0,
                     )
                     db.collection("users").document(authUser.value!!.email!!)
