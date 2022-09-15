@@ -5,9 +5,93 @@
     <string name="email">email@address</string>
     <string name="location">Location</string>
     <string name="skills">Skills</string>
+    <string name="insert_skill">Insert skill</string>
     <string name="description">Description</string>
     <string name="edit">Edit</string>
     <string name="profile_pic">Profile Picture</string>
     <string name="select_image_gallery">Select from Gallery</string>
     <string name="use_camera">Use Camera</string>
+    <string name="camera_not_available">Camera not available</string>
+    <string name="sharedPrefsName">com.example.myapp.PREFERENCE_FILE_KEY</string>
+    <string name="navdrawer_time_slot_list">My Advertisements</string>
+    <string name="navdrawer_show_profile">Profile</string>
+    <string name="navdrawer_interests_list">My Interests</string>
+    <string name="navdrawer_booked_list">My Reservations</string>
+    <string name="label_timeSlotEditFragment">Edit Advertisement</string>
+    <string name="label_showProfileFragment">Profile</string>
+    <string name="label_timeSlotDetailsFragment">Advertisement Details</string>
+    <string name="label_timeSlotListFragment">Advertisements</string>
+    <string name="label_editProfileFragment">Edit Profile</string>
+    <string name="no_data_available">No advertisements yet available. Create one now!</string>
+    <string name="adv_create_succ">Creation successful</string>
+    <string name="adv_edit_succ">Edit successful</string>
+    <string name="prof_edit_succ">Edit successful</string>
+    <string name="adv_delete_succ">Removal successful</string>
+    <string name="unsuccedes">Something went wrong. Please, try again!</string>
+    <string name="no_adv">Sorry, no available advertisements for that search!</string>
+    <string name="no_skill">Sorry, no available skills for that search!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="small_adv_title">Title: </string>
+    <string name="small_adv_date">Date: </string>
+    <string name="small_adv_duration">Duration (h): </string>
+    <string name="small_adv_time">Time: </string>
+    <string name="small_adv_location">Location: </string>
+    <string name="skill_item_title">Title: </string>
+
+    <string name="logout">Logout</string>
+    <string name="login">Login</string>
+    <string name="advs_delete_message"> Are you sure you want to delete all the ads related to this skill?</string>
+    <string name="accept_or_refuse_proposal">Do you want to accept the request?</string>
+    <string name="conversationRefused">The bidder of this adv refused your request!</string>
+    <string name="adv_unavailable">This adv is unavailable at that moment!</string>
+    <string name="arrowright">Arrowright</string>
+    <string name="by_signin_in_you_agree_to_the_terms_of_service_and_how_personal_data_are_processed_as_described_in_the_privacy_policy">By signin in, you agree to the Terms of Service and how personal data are processed as described in the Privacy Policy</string>
+    <string name="logo_login_page">Logo login page</string>
+    <string name="fui_sign_in_with_phone" />
+    <string name="fui_sign_in_with_google" translation_description="Sign in button text">Sign in with Google</string>
+    <string name="date">Date </string>
+    <string name="time">Time </string>
+    <string name="noCredit">The other user does not have enough credit. You can wait or decline his request.</string>
+    <string name="no_skill_at_all">Sorry, no available skills!</string>
+
+    <string name="rate">Rate</string>
+    <string name="rating">Rating</string>
+    <string name="rating_submit_succ">Rating successfully submitted!</string>
+    <string name="rating_text_hint">(Optional) How was it? Share your experience…</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="rating_header">Rate your experience below: </string>
+    <string name="rating_min_err">The minimum rating is 0.5 star.</string>
+    <string name="author">Author</string>
+    <string name="profile_image">profile image</string>
+    <string name="numReviews">0</string>
+    <string name="credits_in_hours">Credits (h)</string>
+    <string name="button_to_refuse_the_proposal">Button to refuse the proposal</string>
+    <string name="button_to_accept_the_proposal">Button to accept the proposal</string>
+    <string name="enter_message">Enter Message</string>
+    <string name="send_message">Send message</string>
+    <string name="save_changes">Save changes</string>
+    <string name="title">Title</string>
+    <string name="duration_in_hours">Duration (h)</string>
+    <string name="note">Note</string>
+    <string name="chat">Chat</string>
+    <string name="choose_date">CHOOSE DATE</string>
+    <string name="choose_time_slot">CHOOSE TIME-SLOT</string>
+    <string name="slider_to_select_duration_in_hours">Slider to select duration in hours</string>
+    <string name="search">Search...</string>
+    <string name="sort_spinner">Sort spinner</string>
+    <string name="reserved_spinner">Reserved spinner</string>
+    <string name="add">Add</string>
+    <string name="user_icon">User Icon</string>
+    <string name="delete_adv">Delete adv</string>
+    <string name="example_date">June 10</string>
+    <string name="example_message">This is a Message</string>
+    <string name="example_time">10:00</string>
+    <string name="account">Account</string>
+    <string name="edit_adv">Edit adv</string>
+    <string name="no_ratings_received_yet">No ratings received yet.</string>
+    <string name="advof">Adv of</string>
+
 </resources>
+

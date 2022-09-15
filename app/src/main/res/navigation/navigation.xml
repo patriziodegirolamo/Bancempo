@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/listSkills">
+
+    <fragment
+        android:id="@+id/timeSlotEditFragment"
+        android:name="com.bancempo.fragments.TimeSlotEditFragment"
+        android:label="@string/label_timeSlotEditFragment">
+        <action
+            android:id="@+id/action_timeSlotEditFragment_to_timeSlotListFragment"
+            app:destination="@id/timeSlotListFragment" />
+        <action
+            android:id="@+id/action_timeSlotEditFragment_to_timeSlotDetailsFragment"
+            app:destination="@id/timeSlotDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/showProfileFragment"
+        android:name="com.bancempo.fragments.ShowProfileFragment"
+        android:label="@string/label_showProfileFragment">
+        <action
+            android:id="@+id/action_showProfileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_showProfileFragment_self"
+            app:destination="@id/showProfileFragment" />
+        <action
+            android:id="@+id/action_showProfileFragment_to_timeSlotListFragment"
+            app:destination="@id/timeSlotListFragment" />
+        <action
+            android:id="@+id/action_showProfileFragment_to_ratingsFragment"
+            app:destination="@id/ratingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/timeSlotDetailsFragment"
+        android:name="com.bancempo.fragments.TimeSlotDetailsFragment"
+        android:label="@string/label_timeSlotDetailsFragment">
+        <action
+            android:id="@+id/action_timeSlotDetailsFragment_to_timeSlotEditFragment"
+            app:destination="@id/timeSlotEditFragment" />
+        <action
+            android:id="@+id/action_timeSlotDetailsFragment_to_timeSlotListFragment"
+            app:destination="@id/timeSlotListFragment" />
+        <action
+            android:id="@+id/action_timeSlotDetailsFragment_to_showProfileFragment"
+            app:destination="@id/showProfileFragment" />
+        <action
+            android:id="@+id/action_timeSlotDetailsFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_timeSlotDetailsFragment_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/timeSlotListFragment"
+        android:name="com.bancempo.fragments.TimeSlotListFragment"
+        android:label="@string/label_timeSlotListFragment">
+        <action
+            android:id="@+id/action_timeSlotListFragment_to_timeSlotEditFragment"
+            app:destination="@id/timeSlotEditFragment" />
+        <action
+            android:id="@+id/action_timeSlotListFragment_to_timeSlotDetailsFragment"
+            app:destination="@id/timeSlotDetailsFragment" />
+        <action
+            android:id="@+id/action_timeSlotListFragment_to_showProfileFragment"
+            app:destination="@id/showProfileFragment" />
+        <action
+            android:id="@+id/action_timeSlotListFragment_self"
+            app:destination="@id/timeSlotListFragment" />
+        <action
+            android:id="@+id/action_timeSlotListFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.bancempo.fragments.EditProfileFragment"
+        android:label="@string/label_editProfileFragment">
+        <action
+            android:id="@+id/action_editProfileFragment_to_showProfileFragment"
+            app:destination="@id/showProfileFragment" />
+        <action
+            android:id="@+id/action_editProfileFragment_self"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_editProfileFragment_to_timeSlotListFragment"
+            app:destination="@id/timeSlotListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listSkills"
+        android:name="com.bancempo.fragments.ListSkillsFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_list_skills">
+        <action
+            android:id="@+id/action_listSkills_to_showProfileFragment"
+            app:destination="@id/showProfileFragment" />
+        <action
+            android:id="@+id/action_listSkills_to_timeSlotListFragment"
+            app:destination="@id/timeSlotListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.bancempo.fragments.ChatFragment"
+        android:label="Chat">
+        <action
+            android:id="@+id/action_chatFragment_to_timeSlotDetailsFragment"
+            app:destination="@id/timeSlotDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.bancempo.fragments.OtherProfileFragment"
+        android:label="Bidder Profile"
+        tools:layout="@layout/fragment_show_profile">
+        <action
+            android:id="@+id/action_otherProfileFragment_to_ratingsFragment"
+            app:destination="@id/ratingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ratingsFragment"
+        android:name="com.bancempo.fragments.RatingsFragment"
+        tools:layout="@layout/reviews" />
+</navigation>

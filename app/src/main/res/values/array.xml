@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sort">
+        <item>Sort by: </item>
+        <item>Ascending date</item>
+        <item>Descending date</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
+    </string-array>
+
+    <string-array name="reserved">
+        <item>Reserved by me</item>
+        <item>Reserved by others</item>
+    </string-array>
+</resources>

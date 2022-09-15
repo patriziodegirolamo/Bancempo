@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "351349020588",
+    "project_id": "bancempo",
+    "storage_bucket": "bancempo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:351349020588:android:701efd111ad25f454c8c09",
+        "android_client_info": {
+          "package_name": "com.bancempo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "351349020588-in970obo0s92ec5iais2oeh1mso9bjtu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bancempo",
+            "certificate_hash": "bf00ac7a0d90d84b1b5c96cfbe0b78241b498968"
+          }
+        },
+        {
+          "client_id": "351349020588-k87oeehmikr7ii2bmfeba7ar4mcq7bev.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bancempo",
+            "certificate_hash": "878d4325953cce7361c2f81cda503b6be0b2336d"
+          }
+        },
+        {
+          "client_id": "351349020588-kne5drrdi8jsepr7rm510p8drcusd4h9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bancempo",
+            "certificate_hash": "4314f28f53a305f5ff8abf4fb5ff723d2a67781e"
+          }
+        },
+        {
+          "client_id": "351349020588-sl3a8i59t231qnklo4qqdjaoheav9e6a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bancempo",
+            "certificate_hash": "82e93d2a5d62ef2500ab824cd4b65879b6e058c0"
+          }
+        },
+        {
+          "client_id": "351349020588-1he0p0899srdf3aaof0pqqsmhkqvrdr4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuiD7RMwOpLGHvTMlCfchY8FvdN1WJW4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "351349020588-1he0p0899srdf3aaof0pqqsmhkqvrdr4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

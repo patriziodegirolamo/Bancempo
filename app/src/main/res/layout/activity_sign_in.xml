@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sign_in_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    tools:context=".activities.SignInActivity">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/top_progress_bar"
+        style="@style/FirebaseUI.TopProgressBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <!-- TODO remove lint ignore once the bug is fixed:
+         https://issuetracker.google.com/issues/38281866-->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="25dp"
+        android:contentDescription="@string/logo_login_page"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logobancempo" />
+
+    <ScrollView
+        android:id="@+id/container"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline3"
+        app:layout_constraintVertical_weight="2">
+
+        <LinearLayout
+            android:id="@+id/btn_holder"
+            style="@style/FirebaseUI.AuthMethodPicker.ButtonHolder"
+            android:gravity="bottom"
+            tools:background="#bfbfbf"
+            tools:layout_height="250dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sign_in_button"
+                style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
+                android:text="@string/fui_sign_in_with_google" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sign_in_phone_button"
+                style="@style/FirebaseUI.Button.AccountChooser.PhoneButton"
+                android:clickable="false"
+                android:enabled="false"
+                android:text="@string/fui_sign_in_with_phone"
+                android:visibility="invisible"
+                tools:ignore="UnusedIds" /> <!-- Used in tests -->
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.66" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/by_signin_in_you_agree_to_the_terms_of_service_and_how_personal_data_are_processed_as_described_in_the_privacy_policy"
+        android:textAlignment="center"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
