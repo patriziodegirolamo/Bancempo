@@ -10,5 +10,4 @@ https://drive.google.com/file/d/1DPwxoo9vypg1jDSWnbfpLxc-4ScUbAd2/view?usp=drive
 
 ## Credits
 This is the final group project of the "Mobile Application Devices" course of the Politecnico di Torino. 
-
 The application was developed by Patrizio de Girolamo, Giulia Medde, Federico Raimondi and Carlos Rosero Asanza
